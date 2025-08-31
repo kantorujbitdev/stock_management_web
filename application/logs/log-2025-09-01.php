@@ -8860,3 +8860,212 @@ DEBUG - 2025-09-01 02:08:29 --> Global POST, GET and COOKIE data sanitized
 INFO - 2025-09-01 02:08:29 --> Input Class Initialized
 INFO - 2025-09-01 02:08:29 --> Language Class Initialized
 ERROR - 2025-09-01 02:08:29 --> 404 Page Not Found: Assets/datatables
+INFO - 2025-09-01 02:10:32 --> Config Class Initialized
+INFO - 2025-09-01 02:10:32 --> Hooks Class Initialized
+DEBUG - 2025-09-01 02:10:32 --> UTF-8 Support Enabled
+INFO - 2025-09-01 02:10:32 --> Utf8 Class Initialized
+INFO - 2025-09-01 02:10:32 --> URI Class Initialized
+INFO - 2025-09-01 02:10:32 --> Router Class Initialized
+INFO - 2025-09-01 02:10:32 --> Output Class Initialized
+INFO - 2025-09-01 02:10:32 --> Security Class Initialized
+DEBUG - 2025-09-01 02:10:32 --> Global POST, GET and COOKIE data sanitized
+INFO - 2025-09-01 02:10:32 --> Input Class Initialized
+INFO - 2025-09-01 02:10:32 --> Language Class Initialized
+INFO - 2025-09-01 02:10:32 --> Loader Class Initialized
+INFO - 2025-09-01 02:10:32 --> Helper loaded: url_helper
+INFO - 2025-09-01 02:10:32 --> Helper loaded: app_helper
+INFO - 2025-09-01 02:10:32 --> Database Driver Class Initialized
+DEBUG - 2025-09-01 02:10:32 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2025-09-01 02:10:32 --> Session: Class initialized using 'files' driver.
+INFO - 2025-09-01 02:10:32 --> Helper loaded: form_helper
+INFO - 2025-09-01 02:10:32 --> Form Validation Class Initialized
+INFO - 2025-09-01 02:10:32 --> Controller Class Initialized
+DEBUG - 2025-09-01 02:10:32 --> Session class already loaded. Second attempt ignored.
+DEBUG - 2025-09-01 02:10:32 --> Form_validation class already loaded. Second attempt ignored.
+INFO - 2025-09-01 02:10:32 --> Model "Kategori_model" initialized
+INFO - 2025-09-01 02:10:32 --> Model "Hak_akses_model" initialized
+INFO - 2025-09-01 02:10:32 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/header.php
+INFO - 2025-09-01 02:10:32 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/sidebar.php
+INFO - 2025-09-01 02:10:32 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/topbar.php
+INFO - 2025-09-01 02:10:32 --> File loaded: C:\xampp\htdocs\stock_management\application\views\master/kategori_list.php
+INFO - 2025-09-01 02:10:32 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/footer.php
+INFO - 2025-09-01 02:10:32 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/js.php
+INFO - 2025-09-01 02:10:32 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/template.php
+INFO - 2025-09-01 02:10:32 --> Final output sent to browser
+DEBUG - 2025-09-01 02:10:32 --> Total execution time: 0.0542
+INFO - 2025-09-01 02:10:32 --> Config Class Initialized
+INFO - 2025-09-01 02:10:32 --> Hooks Class Initialized
+DEBUG - 2025-09-01 02:10:32 --> UTF-8 Support Enabled
+INFO - 2025-09-01 02:10:32 --> Utf8 Class Initialized
+INFO - 2025-09-01 02:10:32 --> URI Class Initialized
+INFO - 2025-09-01 02:10:32 --> Router Class Initialized
+INFO - 2025-09-01 02:10:32 --> Output Class Initialized
+INFO - 2025-09-01 02:10:32 --> Security Class Initialized
+DEBUG - 2025-09-01 02:10:32 --> Global POST, GET and COOKIE data sanitized
+INFO - 2025-09-01 02:10:32 --> Input Class Initialized
+INFO - 2025-09-01 02:10:32 --> Language Class Initialized
+ERROR - 2025-09-01 02:10:32 --> 404 Page Not Found: master/Assets/img
+INFO - 2025-09-01 02:10:33 --> Config Class Initialized
+INFO - 2025-09-01 02:10:33 --> Hooks Class Initialized
+DEBUG - 2025-09-01 02:10:33 --> UTF-8 Support Enabled
+INFO - 2025-09-01 02:10:33 --> Utf8 Class Initialized
+INFO - 2025-09-01 02:10:33 --> URI Class Initialized
+INFO - 2025-09-01 02:10:33 --> Router Class Initialized
+INFO - 2025-09-01 02:10:33 --> Output Class Initialized
+INFO - 2025-09-01 02:10:33 --> Security Class Initialized
+DEBUG - 2025-09-01 02:10:33 --> Global POST, GET and COOKIE data sanitized
+INFO - 2025-09-01 02:10:33 --> Input Class Initialized
+INFO - 2025-09-01 02:10:33 --> Language Class Initialized
+ERROR - 2025-09-01 02:10:33 --> 404 Page Not Found: Assets/datatables
+INFO - 2025-09-01 02:10:43 --> Config Class Initialized
+INFO - 2025-09-01 02:10:43 --> Hooks Class Initialized
+DEBUG - 2025-09-01 02:10:43 --> UTF-8 Support Enabled
+INFO - 2025-09-01 02:10:43 --> Utf8 Class Initialized
+INFO - 2025-09-01 02:10:43 --> URI Class Initialized
+INFO - 2025-09-01 02:10:43 --> Router Class Initialized
+INFO - 2025-09-01 02:10:43 --> Output Class Initialized
+INFO - 2025-09-01 02:10:43 --> Security Class Initialized
+DEBUG - 2025-09-01 02:10:43 --> Global POST, GET and COOKIE data sanitized
+INFO - 2025-09-01 02:10:43 --> Input Class Initialized
+INFO - 2025-09-01 02:10:43 --> Language Class Initialized
+INFO - 2025-09-01 02:10:43 --> Loader Class Initialized
+INFO - 2025-09-01 02:10:43 --> Helper loaded: url_helper
+INFO - 2025-09-01 02:10:43 --> Helper loaded: app_helper
+INFO - 2025-09-01 02:10:43 --> Database Driver Class Initialized
+DEBUG - 2025-09-01 02:10:43 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2025-09-01 02:10:43 --> Session: Class initialized using 'files' driver.
+INFO - 2025-09-01 02:10:43 --> Helper loaded: form_helper
+INFO - 2025-09-01 02:10:43 --> Form Validation Class Initialized
+INFO - 2025-09-01 02:10:43 --> Controller Class Initialized
+DEBUG - 2025-09-01 02:10:43 --> Session class already loaded. Second attempt ignored.
+DEBUG - 2025-09-01 02:10:43 --> Form_validation class already loaded. Second attempt ignored.
+INFO - 2025-09-01 02:10:43 --> Model "Barang_model" initialized
+INFO - 2025-09-01 02:10:43 --> Model "Kategori_model" initialized
+INFO - 2025-09-01 02:10:43 --> Model "Hak_akses_model" initialized
+INFO - 2025-09-01 02:10:43 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/header.php
+INFO - 2025-09-01 02:10:43 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/sidebar.php
+INFO - 2025-09-01 02:10:43 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/topbar.php
+INFO - 2025-09-01 02:10:43 --> File loaded: C:\xampp\htdocs\stock_management\application\views\master/barang_list.php
+INFO - 2025-09-01 02:10:43 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/footer.php
+INFO - 2025-09-01 02:10:43 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/js.php
+INFO - 2025-09-01 02:10:43 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/template.php
+INFO - 2025-09-01 02:10:43 --> Final output sent to browser
+DEBUG - 2025-09-01 02:10:43 --> Total execution time: 0.0390
+INFO - 2025-09-01 02:10:43 --> Config Class Initialized
+INFO - 2025-09-01 02:10:43 --> Hooks Class Initialized
+DEBUG - 2025-09-01 02:10:43 --> UTF-8 Support Enabled
+INFO - 2025-09-01 02:10:43 --> Utf8 Class Initialized
+INFO - 2025-09-01 02:10:43 --> URI Class Initialized
+INFO - 2025-09-01 02:10:43 --> Router Class Initialized
+INFO - 2025-09-01 02:10:43 --> Output Class Initialized
+INFO - 2025-09-01 02:10:43 --> Security Class Initialized
+DEBUG - 2025-09-01 02:10:43 --> Global POST, GET and COOKIE data sanitized
+INFO - 2025-09-01 02:10:43 --> Input Class Initialized
+INFO - 2025-09-01 02:10:43 --> Language Class Initialized
+ERROR - 2025-09-01 02:10:43 --> 404 Page Not Found: master/Assets/img
+INFO - 2025-09-01 02:10:43 --> Config Class Initialized
+INFO - 2025-09-01 02:10:43 --> Hooks Class Initialized
+DEBUG - 2025-09-01 02:10:43 --> UTF-8 Support Enabled
+INFO - 2025-09-01 02:10:43 --> Utf8 Class Initialized
+INFO - 2025-09-01 02:10:43 --> URI Class Initialized
+INFO - 2025-09-01 02:10:43 --> Router Class Initialized
+INFO - 2025-09-01 02:10:43 --> Output Class Initialized
+INFO - 2025-09-01 02:10:43 --> Security Class Initialized
+DEBUG - 2025-09-01 02:10:43 --> Global POST, GET and COOKIE data sanitized
+INFO - 2025-09-01 02:10:43 --> Input Class Initialized
+INFO - 2025-09-01 02:10:43 --> Language Class Initialized
+ERROR - 2025-09-01 02:10:43 --> 404 Page Not Found: Assets/datatables
+INFO - 2025-09-01 02:10:50 --> Config Class Initialized
+INFO - 2025-09-01 02:10:50 --> Hooks Class Initialized
+DEBUG - 2025-09-01 02:10:50 --> UTF-8 Support Enabled
+INFO - 2025-09-01 02:10:50 --> Utf8 Class Initialized
+INFO - 2025-09-01 02:10:50 --> URI Class Initialized
+INFO - 2025-09-01 02:10:50 --> Router Class Initialized
+INFO - 2025-09-01 02:10:50 --> Output Class Initialized
+INFO - 2025-09-01 02:10:50 --> Security Class Initialized
+DEBUG - 2025-09-01 02:10:50 --> Global POST, GET and COOKIE data sanitized
+INFO - 2025-09-01 02:10:50 --> Input Class Initialized
+INFO - 2025-09-01 02:10:50 --> Language Class Initialized
+INFO - 2025-09-01 02:10:50 --> Loader Class Initialized
+INFO - 2025-09-01 02:10:50 --> Helper loaded: url_helper
+INFO - 2025-09-01 02:10:50 --> Helper loaded: app_helper
+INFO - 2025-09-01 02:10:50 --> Database Driver Class Initialized
+DEBUG - 2025-09-01 02:10:50 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2025-09-01 02:10:50 --> Session: Class initialized using 'files' driver.
+INFO - 2025-09-01 02:10:50 --> Helper loaded: form_helper
+INFO - 2025-09-01 02:10:50 --> Form Validation Class Initialized
+INFO - 2025-09-01 02:10:50 --> Controller Class Initialized
+DEBUG - 2025-09-01 02:10:50 --> Session class already loaded. Second attempt ignored.
+DEBUG - 2025-09-01 02:10:50 --> Form_validation class already loaded. Second attempt ignored.
+INFO - 2025-09-01 02:10:50 --> Model "Barang_model" initialized
+INFO - 2025-09-01 02:10:50 --> Model "Kategori_model" initialized
+INFO - 2025-09-01 02:10:50 --> Model "Hak_akses_model" initialized
+INFO - 2025-09-01 02:10:50 --> Model "Perusahaan_model" initialized
+INFO - 2025-09-01 02:10:50 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/header.php
+INFO - 2025-09-01 02:10:50 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/sidebar.php
+INFO - 2025-09-01 02:10:50 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/topbar.php
+INFO - 2025-09-01 02:10:50 --> File loaded: C:\xampp\htdocs\stock_management\application\views\master/barang_form.php
+INFO - 2025-09-01 02:10:50 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/footer.php
+INFO - 2025-09-01 02:10:50 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/js.php
+INFO - 2025-09-01 02:10:50 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/template.php
+INFO - 2025-09-01 02:10:50 --> Final output sent to browser
+DEBUG - 2025-09-01 02:10:50 --> Total execution time: 0.0633
+INFO - 2025-09-01 02:10:50 --> Config Class Initialized
+INFO - 2025-09-01 02:10:50 --> Hooks Class Initialized
+DEBUG - 2025-09-01 02:10:50 --> UTF-8 Support Enabled
+INFO - 2025-09-01 02:10:50 --> Utf8 Class Initialized
+INFO - 2025-09-01 02:10:50 --> URI Class Initialized
+INFO - 2025-09-01 02:10:50 --> Router Class Initialized
+INFO - 2025-09-01 02:10:50 --> Output Class Initialized
+INFO - 2025-09-01 02:10:50 --> Security Class Initialized
+DEBUG - 2025-09-01 02:10:50 --> Global POST, GET and COOKIE data sanitized
+INFO - 2025-09-01 02:10:50 --> Input Class Initialized
+INFO - 2025-09-01 02:10:50 --> Language Class Initialized
+ERROR - 2025-09-01 02:10:50 --> 404 Page Not Found: Barang/assets
+INFO - 2025-09-01 02:10:53 --> Config Class Initialized
+INFO - 2025-09-01 02:10:53 --> Hooks Class Initialized
+DEBUG - 2025-09-01 02:10:53 --> UTF-8 Support Enabled
+INFO - 2025-09-01 02:10:53 --> Utf8 Class Initialized
+INFO - 2025-09-01 02:10:53 --> URI Class Initialized
+INFO - 2025-09-01 02:10:53 --> Router Class Initialized
+INFO - 2025-09-01 02:10:53 --> Output Class Initialized
+INFO - 2025-09-01 02:10:53 --> Security Class Initialized
+DEBUG - 2025-09-01 02:10:53 --> Global POST, GET and COOKIE data sanitized
+INFO - 2025-09-01 02:10:53 --> Input Class Initialized
+INFO - 2025-09-01 02:10:53 --> Language Class Initialized
+INFO - 2025-09-01 02:10:53 --> Loader Class Initialized
+INFO - 2025-09-01 02:10:53 --> Helper loaded: url_helper
+INFO - 2025-09-01 02:10:53 --> Helper loaded: app_helper
+INFO - 2025-09-01 02:10:54 --> Database Driver Class Initialized
+DEBUG - 2025-09-01 02:10:54 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2025-09-01 02:10:54 --> Session: Class initialized using 'files' driver.
+INFO - 2025-09-01 02:10:54 --> Helper loaded: form_helper
+INFO - 2025-09-01 02:10:54 --> Form Validation Class Initialized
+INFO - 2025-09-01 02:10:54 --> Controller Class Initialized
+DEBUG - 2025-09-01 02:10:54 --> Session class already loaded. Second attempt ignored.
+DEBUG - 2025-09-01 02:10:54 --> Form_validation class already loaded. Second attempt ignored.
+INFO - 2025-09-01 02:10:54 --> Model "Barang_model" initialized
+INFO - 2025-09-01 02:10:54 --> Model "Kategori_model" initialized
+INFO - 2025-09-01 02:10:54 --> Model "Hak_akses_model" initialized
+INFO - 2025-09-01 02:10:54 --> Model "Perusahaan_model" initialized
+INFO - 2025-09-01 02:10:54 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/header.php
+INFO - 2025-09-01 02:10:54 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/sidebar.php
+INFO - 2025-09-01 02:10:54 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/topbar.php
+INFO - 2025-09-01 02:10:54 --> File loaded: C:\xampp\htdocs\stock_management\application\views\master/barang_form.php
+INFO - 2025-09-01 02:10:54 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/footer.php
+INFO - 2025-09-01 02:10:54 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/js.php
+INFO - 2025-09-01 02:10:54 --> File loaded: C:\xampp\htdocs\stock_management\application\views\template/template.php
+INFO - 2025-09-01 02:10:54 --> Final output sent to browser
+DEBUG - 2025-09-01 02:10:54 --> Total execution time: 0.0432
+INFO - 2025-09-01 02:10:54 --> Config Class Initialized
+INFO - 2025-09-01 02:10:54 --> Hooks Class Initialized
+DEBUG - 2025-09-01 02:10:54 --> UTF-8 Support Enabled
+INFO - 2025-09-01 02:10:54 --> Utf8 Class Initialized
+INFO - 2025-09-01 02:10:54 --> URI Class Initialized
+INFO - 2025-09-01 02:10:54 --> Router Class Initialized
+INFO - 2025-09-01 02:10:54 --> Output Class Initialized
+INFO - 2025-09-01 02:10:54 --> Security Class Initialized
+DEBUG - 2025-09-01 02:10:54 --> Global POST, GET and COOKIE data sanitized
+INFO - 2025-09-01 02:10:54 --> Input Class Initialized
+INFO - 2025-09-01 02:10:54 --> Language Class Initialized
+ERROR - 2025-09-01 02:10:54 --> 404 Page Not Found: Barang/assets
