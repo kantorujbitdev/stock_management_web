@@ -18,7 +18,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-6">
-                <table class="table table-bordered">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <tr>
                         <th width="150">No Retur</th>
                         <td><?php echo $retur->no_retur; ?></td>
@@ -38,7 +38,7 @@
                 </table>
             </div>
             <div class="col-md-6">
-                <table class="table table-bordered">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <tr>
                         <th width="150">Status</th>
                         <td>
@@ -130,7 +130,7 @@
         </div>
         <?php endif; ?>
         
-        <table class="table table-bordered table-striped">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th>No</th>

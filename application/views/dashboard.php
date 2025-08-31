@@ -131,7 +131,7 @@
         <div class="row">
             <div class="col-md-6">
                 <h5>Informasi Perusahaan</h5>
-                <table class="table table-bordered">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <tr>
                         <th>Nama Perusahaan</th>
                         <td><?php echo $perusahaan->nama_perusahaan ?></td>
@@ -161,7 +161,7 @@
                 <h5>Daftar Gudang</h5>
                 <?php if ($gudang): ?>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>Nama Gudang</th>

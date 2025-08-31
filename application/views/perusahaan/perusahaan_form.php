@@ -2,7 +2,7 @@
 <div class="form-group">
     <label>Gudang</label>
     <div class="table-responsive">
-        <table class="table table-bordered">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th>Nama Gudang</th>

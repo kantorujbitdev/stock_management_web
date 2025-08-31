@@ -30,7 +30,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-6">
-                <table class="table table-bordered">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <tr>
                         <th width="150">No Invoice</th>
                         <td><?php echo $penjualan->no_invoice; ?></td>
@@ -46,7 +46,7 @@
                 </table>
             </div>
             <div class="col-md-6">
-                <table class="table table-bordered">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <tr>
                         <th width="150">Status</th>
                         <td>
@@ -135,7 +135,7 @@
         </div>
         <?php endif; ?>
         
-        <table class="table table-bordered table-striped">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th>No</th>

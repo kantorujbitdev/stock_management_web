@@ -68,7 +68,7 @@
         <h3 class="card-title">Data Stok</h3>
     </div>
     <div class="card-body">
-        <table class="table table-bordered table-striped">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th>No</th>
