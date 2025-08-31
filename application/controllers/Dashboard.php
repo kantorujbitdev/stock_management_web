@@ -15,33 +15,27 @@ class Dashboard extends CI_Controller {
             redirect('auth');
         }
     }
+    
 
     public function index() {
-        $data['title'] = 'Dashboard';
+        // Cek hak akses dashboard
+        $this->hak_akses->cek_akses('dashboard');
         
-        // Get data berdasarkan role
-        if ($this->session->userdata('id_role') == 5) {
-            // Super Admin - lihat semua data
-            $data['total_perusahaan'] = $this->Dashboard_model->get_total_perusahaan();
-            $data['total_gudang'] = $this->Dashboard_model->get_total_gudang();
-            $data['total_barang'] = $this->Dashboard_model->get_total_barang();
-            $data['total_stok'] = $this->Dashboard_model->get_total_stok();
-            $data['total_penjualan'] = $this->Dashboard_model->get_total_penjualan();
-            $data['total_retur'] = $this->Dashboard_model->get_total_retur();
-            $data['grafik_penjualan'] = $this->Dashboard_model->get_grafik_penjualan_bulan();
-            $data['stok_menipis'] = $this->Dashboard_model->get_stok_menipis();
-            $data['penjualan_terakhir'] = $this->Dashboard_model->get_penjualan_terakhir();
-        } else {
-            // User lain - lihat data perusahaannya saja
+        $data['title'] = 'Dashboard';
+        $data['total_barang'] = $this->Dashboard_model->get_total_barang();
+        $data['total_stok'] = $this->Dashboard_model->get_total_stok();
+        $data['penjualan_hari_ini'] = $this->Dashboard_model->get_penjualan_hari_ini();
+        $data['stok_menipis'] = $this->Dashboard_model->get_stok_menipis();
+        
+        // Jika Admin Pusat, load data perusahaan
+        if ($this->session->userdata('id_role') == 5 || $this->session->userdata('id_role') == 1) {
+            $this->load->model('perusahaan/Perusahaan_model');
             $id_perusahaan = $this->session->userdata('id_perusahaan');
-            $data['total_gudang'] = $this->Dashboard_model->get_total_gudang_by_perusahaan($id_perusahaan);
-            $data['total_barang'] = $this->Dashboard_model->get_total_barang_by_perusahaan($id_perusahaan);
-            $data['total_stok'] = $this->Dashboard_model->get_total_stok_by_perusahaan($id_perusahaan);
-            $data['total_penjualan'] = $this->Dashboard_model->get_total_penjualan_by_perusahaan($id_perusahaan);
-            $data['total_retur'] = $this->Dashboard_model->get_total_retur_by_perusahaan($id_perusahaan);
-            $data['grafik_penjualan'] = $this->Dashboard_model->get_grafik_penjualan_bulan_by_perusahaan($id_perusahaan);
-            $data['stok_menipis'] = $this->Dashboard_model->get_stok_menipis_by_perusahaan($id_perusahaan);
-            $data['penjualan_terakhir'] = $this->Dashboard_model->get_penjualan_terakhir_by_perusahaan($id_perusahaan);
+            $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan);
+            
+            // Load gudang untuk perusahaan ini
+            $this->load->model('perusahaan/Gudang_model');
+            $data['gudang'] = $this->Gudang_model->get_gudang_by_perusahaan($id_perusahaan);
         }
         
         $data['content'] = 'dashboard';

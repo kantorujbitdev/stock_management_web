@@ -5,7 +5,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-warehouse"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Stok App</div>
+        <div class="sidebar-brand-text mx-3">Manajemen Stok</div>
     </a>
 
     <!-- Divider -->
@@ -130,24 +130,32 @@
 
     <!-- Nav Item - Laporan (hanya tampil jika user punya akses ke salah satu submenu) -->
     <?php if ($this->hak_akses->cek_akses('laporan_stok') || $this->hak_akses->cek_akses('laporan_penjualan') || $this->hak_akses->cek_akses('laporan_retur') || $this->hak_akses->cek_akses('laporan_transfer')): ?>
-    <li class="nav-item <?php echo is_active('laporan') ?>">
+    <!-- Laporan Menu -->
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLaporan" aria-expanded="true" aria-controls="collapseLaporan">
             <i class="fas fa-chart-line"></i>
             <span>Laporan</span>
         </a>
-        <div id="collapseLaporan" class="collapse <?php echo is_active('laporan') ? 'show' : '' ?>" aria-labelledby="headingLaporan" data-parent="#accordionSidebar">
+        <div id="collapseLaporan" class="collapse" aria-labelledby="headingLaporan" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
+                <!-- Menu Laporan Stok -->
                 <?php if ($this->hak_akses->cek_akses('laporan_stok')): ?>
-                <a class="collapse-item <?php echo is_active('laporan_stok') ?>" href="<?php echo site_url('laporan/stok') ?>">Laporan Stok</a>
+                <a class="collapse-item" href="<?php echo site_url('laporan_stok') ?>">Laporan Stok</a>
                 <?php endif; ?>
+                
+                <!-- Menu Laporan Penjualan -->
                 <?php if ($this->hak_akses->cek_akses('laporan_penjualan')): ?>
-                <a class="collapse-item <?php echo is_active('laporan_penjualan') ?>" href="<?php echo site_url('laporan/penjualan') ?>">Laporan Penjualan</a>
+                <a class="collapse-item" href="<?php echo site_url('laporan_penjualan') ?>">Laporan Penjualan</a>
                 <?php endif; ?>
+                
+                <!-- Menu Laporan Retur -->
                 <?php if ($this->hak_akses->cek_akses('laporan_retur')): ?>
-                <a class="collapse-item <?php echo is_active('laporan_retur') ?>" href="<?php echo site_url('laporan/retur') ?>">Laporan Retur</a>
+                <a class="collapse-item" href="<?php echo site_url('laporan_retur') ?>">Laporan Retur</a>
                 <?php endif; ?>
+                
+                <!-- Menu Laporan Transfer -->
                 <?php if ($this->hak_akses->cek_akses('laporan_transfer')): ?>
-                <a class="collapse-item <?php echo is_active('laporan_transfer') ?>" href="<?php echo site_url('laporan/transfer') ?>">Laporan Transfer</a>
+                <a class="collapse-item" href="<?php echo site_url('laporan_transfer') ?>">Laporan Transfer</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -156,18 +164,22 @@
 
     <!-- Nav Item - Pengaturan (hanya tampil jika user punya akses ke salah satu submenu) -->
     <?php if ($this->hak_akses->cek_akses('pengaturan_sistem') || $this->hak_akses->cek_akses('backup')): ?>
-    <li class="nav-item <?php echo is_active('pengaturan') ?>">
+    <!-- Pengaturan Menu -->
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePengaturan" aria-expanded="true" aria-controls="collapsePengaturan">
             <i class="fas fa-cogs"></i>
             <span>Pengaturan</span>
         </a>
-        <div id="collapsePengaturan" class="collapse <?php echo is_active('pengaturan') ? 'show' : '' ?>" aria-labelledby="headingPengaturan" data-parent="#accordionSidebar">
+        <div id="collapsePengaturan" class="collapse" aria-labelledby="headingPengaturan" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
+                <!-- Menu Pengaturan Sistem -->
                 <?php if ($this->hak_akses->cek_akses('pengaturan_sistem')): ?>
-                <a class="collapse-item <?php echo is_active('pengaturan_sistem') ?>" href="<?php echo site_url('pengaturan/sistem') ?>">Pengaturan Sistem</a>
+                <a class="collapse-item" href="<?php echo site_url('pengaturan') ?>">Pengaturan Sistem</a>
                 <?php endif; ?>
+                
+                <!-- Menu Backup Database -->
                 <?php if ($this->hak_akses->cek_akses('backup')): ?>
-                <a class="collapse-item <?php echo is_active('backup') ?>" href="<?php echo site_url('pengaturan/backup') ?>">Backup Database</a>
+                <a class="collapse-item" href="<?php echo site_url('backup') ?>">Backup Database</a>
                 <?php endif; ?>
             </div>
         </div>
