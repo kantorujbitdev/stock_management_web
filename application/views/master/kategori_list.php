@@ -1,60 +1,55 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-class Kategori_model extends CI_Model {
-
-    public function __construct() {
-        parent::__construct();
-        $this->load->database();
-    }
-
-    // Get all kategori
-    public function get_all_kategori() {
-        $this->db->select('kategori.*, perusahaan.nama_perusahaan');
-        $this->db->from('kategori');
-        $this->db->join('perusahaan', 'perusahaan.id_perusahaan = kategori.id_perusahaan');
-        return $this->db->get()->result();
-    }
-
-    // Get kategori by perusahaan
-    public function get_kategori_by_perusahaan($id_perusahaan) {
-        $this->db->select('kategori.*, perusahaan.nama_perusahaan');
-        $this->db->from('kategori');
-        $this->db->join('perusahaan', 'perusahaan.id_perusahaan = kategori.id_perusahaan');
-        $this->db->where('kategori.id_perusahaan', $id_perusahaan);
-        return $this->db->get()->result();
-    }
-
-    // Get kategori by id
-    public function get_kategori_by_id($id) {
-        $this->db->select('kategori.*, perusahaan.nama_perusahaan');
-        $this->db->from('kategori');
-        $this->db->join('perusahaan', 'perusahaan.id_perusahaan = kategori.id_perusahaan');
-        $this->db->where('kategori.id_kategori', $id);
-        return $this->db->get()->row();
-    }
-
-    // Insert kategori
-    public function insert_kategori($data) {
-        return $this->db->insert('kategori', $data);
-    }
-
-    // Update kategori
-    public function update_kategori($id, $data) {
-        $this->db->where('id_kategori', $id);
-        return $this->db->update('kategori', $data);
-    }
-
-    // Delete kategori
-    public function delete_kategori($id) {
-        // Cek apakah ada barang yang terkait dengan kategori ini
-        $this->db->where('id_kategori', $id);
-        $check = $this->db->get('barang')->num_rows();
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Data Kategori</h3>
+        <div class="card-tools">
+            <a href="<?php echo site_url('kategori/add'); ?>" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Tambah Kategori
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <?php if ($this->session->flashdata('success')): ?>
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <i class="icon fas fa-check"></i> <?php echo $this->session->flashdata('success'); ?>
+            </div>
+        <?php endif; ?>
         
-        if ($check > 0) {
-            return false; // Tidak bisa dihapus karena ada barang terkait
-        }
+        <?php if ($this->session->flashdata('error')): ?>
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <i class="icon fas fa-ban"></i> <?php echo $this->session->flashdata('error'); ?>
+            </div>
+        <?php endif; ?>
         
-        return $this->db->delete('kategori', array('id_kategori' => $id));
-    }
-}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Kategori</th>
+                    <th>Perusahaan</th>
+                    <th>Deskripsi</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $no = 1; foreach ($kategori as $k): ?>
+                <tr>
+                    <td><?php echo $no++; ?></td>
+                    <td><?php echo $k->nama_kategori; ?></td>
+                    <td><?php echo $k->nama_perusahaan; ?></td>
+                    <td><?php echo $k->deskripsi; ?></td>
+                    <td>
+                        <a href="<?php echo site_url('kategori/edit/' . $k->id_kategori); ?>" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="<?php echo site_url('kategori/delete/' . $k->id_kategori); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -23,7 +23,7 @@
  
     <!-- Nav Item - Master Data (hanya tampil jika user punya akses ke salah satu submenu) -->
     <?php if ($this->hak_akses->cek_akses('kategori') || $this->hak_akses->cek_akses('barang') || $this->hak_akses->cek_akses('supplier') || $this->hak_akses->cek_akses('pelanggan')): ?>
-    <!-- Master Data Menu -->
+        <!-- Master Data Menu -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMaster" aria-expanded="true" aria-controls="collapseMaster">
                 <i class="fas fa-database"></i>
@@ -67,27 +67,37 @@
 
     <!-- Nav Item - Manajemen Stok (hanya tampil jika user punya akses ke salah satu submenu) -->
     <?php if ($this->hak_akses->cek_akses('stok_awal') || $this->hak_akses->cek_akses('penerimaan') || $this->hak_akses->cek_akses('transfer') || $this->hak_akses->cek_akses('penyesuaian') || $this->hak_akses->cek_akses('riwayat')): ?>
-    <li class="nav-item <?php echo is_active('stok') ?>">
+    <!-- Manajemen Stok Menu -->
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStok" aria-expanded="true" aria-controls="collapseStok">
             <i class="fas fa-boxes"></i>
             <span>Manajemen Stok</span>
         </a>
-        <div id="collapseStok" class="collapse <?php echo is_active('stok') ? 'show' : '' ?>" aria-labelledby="headingStok" data-parent="#accordionSidebar">
+        <div id="collapseStok" class="collapse" aria-labelledby="headingStok" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
+                <!-- Menu Stok Awal -->
                 <?php if ($this->hak_akses->cek_akses('stok_awal')): ?>
-                <a class="collapse-item <?php echo is_active('stok_awal') ?>" href="<?php echo site_url('stok/stok_awal') ?>">Stok Awal</a>
+                <a class="collapse-item" href="<?php echo site_url('stok_awal') ?>">Stok Awal</a>
                 <?php endif; ?>
+                
+                <!-- Menu Penerimaan Barang -->
                 <?php if ($this->hak_akses->cek_akses('penerimaan')): ?>
-                <a class="collapse-item <?php echo is_active('penerimaan') ?>" href="<?php echo site_url('stok/penerimaan') ?>">Penerimaan Barang</a>
+                <a class="collapse-item" href="<?php echo site_url('penerimaan') ?>">Penerimaan Barang</a>
                 <?php endif; ?>
+                
+                <!-- Menu Transfer Stok -->
                 <?php if ($this->hak_akses->cek_akses('transfer')): ?>
-                <a class="collapse-item <?php echo is_active('transfer') ?>" href="<?php echo site_url('stok/transfer') ?>">Transfer Stok</a>
+                <a class="collapse-item" href="<?php echo site_url('transfer') ?>">Transfer Stok</a>
                 <?php endif; ?>
-                <?php if ($this->hak_akses->cek_akses('penyesuaian')): ?>
-                <a class="collapse-item <?php echo is_active('penyesuaian') ?>" href="<?php echo site_url('stok/penyesuaian') ?>">Penyesuaian Stok</a>
+                
+                <!-- Menu Penyesuaian Stok (hanya Super Admin) -->
+                <?php if ($this->session->userdata('id_role') == 5 && $this->hak_akses->cek_akses('penyesuaian')): ?>
+                <a class="collapse-item" href="<?php echo site_url('penyesuaian') ?>">Penyesuaian Stok</a>
                 <?php endif; ?>
+                
+                <!-- Menu Riwayat Stok -->
                 <?php if ($this->hak_akses->cek_akses('riwayat')): ?>
-                <a class="collapse-item <?php echo is_active('riwayat') ?>" href="<?php echo site_url('stok/riwayat') ?>">Riwayat Stok</a>
+                <a class="collapse-item" href="<?php echo site_url('riwayat') ?>">Riwayat Stok</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -96,22 +106,26 @@
 
     <!-- Nav Item - Penjualan (hanya tampil jika user punya akses ke salah satu submenu) -->
     <?php if ($this->hak_akses->cek_akses('penjualan') || $this->hak_akses->cek_akses('retur')): ?>
-    <li class="nav-item <?php echo is_active('penjualan') ?>">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePenjualan" aria-expanded="true" aria-controls="collapsePenjualan">
-            <i class="fas fa-shopping-cart"></i>
-            <span>Penjualan</span>
-        </a>
-        <div id="collapsePenjualan" class="collapse <?php echo is_active('penjualan') ? 'show' : '' ?>" aria-labelledby="headingPenjualan" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <?php if ($this->hak_akses->cek_akses('penjualan')): ?>
-                <a class="collapse-item <?php echo is_active('penjualan') ?>" href="<?php echo site_url('penjualan') ?>">Penjualan</a>
-                <?php endif; ?>
-                <?php if ($this->hak_akses->cek_akses('retur')): ?>
-                <a class="collapse-item <?php echo is_active('retur') ?>" href="<?php echo site_url('penjualan/retur') ?>">Retur Penjualan</a>
-                <?php endif; ?>
+    <!-- Penjualan Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePenjualan" aria-expanded="true" aria-controls="collapsePenjualan">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Penjualan</span>
+            </a>
+            <div id="collapsePenjualan" class="collapse" aria-labelledby="headingPenjualan" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <!-- Menu Penjualan -->
+                    <?php if ($this->hak_akses->cek_akses('penjualan')): ?>
+                    <a class="collapse-item" href="<?php echo site_url('penjualan') ?>">Penjualan</a>
+                    <?php endif; ?>
+                    
+                    <!-- Menu Retur Penjualan -->
+                    <?php if ($this->hak_akses->cek_akses('retur')): ?>
+                    <a class="collapse-item" href="<?php echo site_url('retur') ?>">Retur Penjualan</a>
+                    <?php endif; ?>
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
     <?php endif; ?>
 
     <!-- Nav Item - Laporan (hanya tampil jika user punya akses ke salah satu submenu) -->

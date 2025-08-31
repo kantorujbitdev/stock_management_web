@@ -1,202 +1,224 @@
-<div class="container-fluid">
-    <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">Dashboard</h1>
-    
-    <!-- Content Row -->
-    <div class="row">
-        <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Barang</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">50</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-boxes fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
+<div class="row">
+    <!-- Total Perusahaan (hanya Super Admin) -->
+    <?php if ($this->session->userdata('id_role') == 5): ?>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3><?php echo $total_perusahaan; ?></h3>
+                <p>Total Perusahaan</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-briefcase"></i>
             </div>
         </div>
+    </div>
+    <?php endif; ?>
 
-        <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Stok</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">1,250</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-warehouse fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
+    <!-- Total Gudang -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3><?php echo $total_gudang; ?></h3>
+                <p>Total Gudang</p>
             </div>
-        </div>
-
-        <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Penjualan Hari Ini</div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-auto">
-                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">15</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pending Requests Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Stok Menipis</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">8</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
+            <div class="icon">
+                <i class="ion ion-home"></i>
             </div>
         </div>
     </div>
 
-    <!-- Content Row -->
-    <div class="row">
-        <!-- Area Chart -->
-        <div class="col-xl-8 col-lg-7">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Grafik Penjualan</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="myAreaChart"></canvas>
-                    </div>
-                </div>
+    <!-- Total Barang -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3><?php echo $total_barang; ?></h3>
+                <p>Total Barang</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-bag"></i>
             </div>
         </div>
+    </div>
 
-        <!-- Pie Chart -->
-        <div class="col-xl-4 col-lg-5">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Penjualan Per Kategori</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-pie pt-4 pb-2">
-                        <canvas id="myPieChart"></canvas>
-                    </div>
-                    <div class="mt-4 text-center small">
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-primary"></i> Elektronik
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-success"></i> Fashion
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-info"></i> Makanan
-                        </span>
-                    </div>
-                </div>
+    <!-- Total Stok -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3><?php echo $total_stok; ?></h3>
+                <p>Total Stok</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-stats-bars"></i>
             </div>
         </div>
     </div>
 </div>
 
-
-<?php if ($this->session->userdata('id_role') == 1 && isset($perusahaan)): ?>
-<!-- Widget Manajemen Perusahaan untuk Admin Pusat -->
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Manajemen Perusahaan Saya</h6>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-6">
-                <h5>Informasi Perusahaan</h5>
-                <table class="table table-bordered">
-                    <tr>
-                        <th>Nama Perusahaan</th>
-                        <td><?php echo $perusahaan->nama_perusahaan ?></td>
-                    </tr>
-                    <tr>
-                        <th>Alamat</th>
-                        <td><?php echo $perusahaan->alamat ?></td>
-                    </tr>
-                    <tr>
-                        <th>Telepon</th>
-                        <td><?php echo $perusahaan->telepon ?></td>
-                    </tr>
-                    <tr>
-                        <th>Status</th>
-                        <td>
-                            <?php if ($perusahaan->status_aktif == 1): ?>
-                                <span class="badge badge-success">Aktif</span>
-                            <?php else: ?>
-                                <span class="badge badge-danger">Tidak Aktif</span>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                </table>
-                <a href="<?php echo site_url('perusahaan/edit/'.$perusahaan->id_perusahaan) ?>" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> Edit Perusahaan</a>
+<div class="row mt-4">
+    <!-- Total Penjualan -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-primary">
+            <div class="inner">
+                <h3><?php echo $total_penjualan; ?></h3>
+                <p>Total Penjualan</p>
             </div>
-            <div class="col-md-6">
-                <h5>Daftar Gudang</h5>
-                <?php if ($gudang): ?>
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Nama Gudang</th>
-                                    <th>Alamat</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($gudang as $g): ?>
-                                <tr>
-                                    <td><?php echo $g->nama_gudang ?></td>
-                                    <td><?php echo $g->alamat ?></td>
-                                    <td>
-                                        <?php if ($g->status_aktif == 1): ?>
-                                            <span class="badge badge-success">Aktif</span>
-                                        <?php else: ?>
-                                            <span class="badge badge-danger">Tidak Aktif</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <a href="<?php echo site_url('gudang/edit/'.$g->id_gudang) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                        <a href="<?php echo site_url('gudang/delete/'.$g->id_gudang) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menonaktifkan gudang ini?')"><i class="fas fa-ban"></i></a>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="icon">
+                <i class="ion ion-cart"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Retur -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-secondary">
+            <div class="inner">
+                <h3><?php echo $total_retur; ?></h3>
+                <p>Total Retur</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-android-exit"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Grafik Penjualan -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Grafik Penjualan Tahun <?php echo date('Y'); ?></h5>
+            </div>
+            <div class="card-body">
+                <canvas id="grafikPenjualan" style="height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stok Menipis -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Stok Menipis</h5>
+            </div>
+            <div class="card-body">
+                <?php if (empty($stok_menipis)): ?>
+                    <p class="text-center">Tidak ada stok yang menipis</p>
                 <?php else: ?>
-                    <p>Belum ada gudang</p>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Barang</th>
+                                <th>Stok</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($stok_menipis as $s): ?>
+                            <tr>
+                                <td>
+                                    <?php echo $s->nama_barang; ?>
+                                    <?php if ($this->session->userdata('id_role') == 5): ?>
+                                        <br><small><?php echo $s->nama_perusahaan; ?> - <?php echo $s->nama_gudang; ?></small>
+                                    <?php else: ?>
+                                        <br><small><?php echo $s->nama_gudang; ?></small>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <span class="badge badge-danger"><?php echo $s->jumlah; ?></span>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 <?php endif; ?>
-                <a href="<?php echo site_url('gudang/add') ?>" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Tambah Gudang</a>
             </div>
         </div>
     </div>
 </div>
-<?php endif; ?>
+
+<div class="row mt-4">
+    <!-- Penjualan Terakhir -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Penjualan Terakhir</h5>
+            </div>
+            <div class="card-body">
+                <?php if (empty($penjualan_terakhir)): ?>
+                    <p class="text-center">Belum ada data penjualan</p>
+                <?php else: ?>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>No Invoice</th>
+                                <th>Tanggal</th>
+                                <th>Pelanggan</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>User</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($penjualan_terakhir as $p): ?>
+                            <tr>
+                                <td><?php echo $p->no_invoice; ?></td>
+                                <td><?php echo date('d-m-Y', strtotime($p->tanggal_penjualan)); ?></td>
+                                <td><?php echo $p->nama_pelanggan; ?></td>
+                                <td><?php echo number_format($p->total_harga, 2, ',', '.'); ?></td>
+                                <td>
+                                    <?php if ($p->status == 'proses'): ?>
+                                        <span class="badge badge-secondary">Proses</span>
+                                    <?php elseif ($p->status == 'packing'): ?>
+                                        <span class="badge badge-primary">Packing</span>
+                                    <?php elseif ($p->status == 'dikirim'): ?>
+                                        <span class="badge badge-info">Dikirim</span>
+                                    <?php elseif ($p->status == 'selesai'): ?>
+                                        <span class="badge badge-success">Selesai</span>
+                                    <?php elseif ($p->status == 'batal'): ?>
+                                        <span class="badge badge-danger">Batal</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo $p->created_by; ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Grafik Penjualan
+    var ctx = document.getElementById('grafikPenjualan').getContext('2d');
+    var grafikPenjualan = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+            datasets: [{
+                label: 'Jumlah Penjualan',
+                data: [
+                    <?php foreach ($grafik_penjualan as $g): ?>
+                    <?php echo $g['total']; ?>,
+                    <?php endforeach; ?>
+                ],
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+});
+</script>

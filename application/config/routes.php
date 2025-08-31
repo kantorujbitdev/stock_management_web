@@ -81,18 +81,24 @@ $route['penyesuaian/delete/(:num)'] = 'stok/Penyesuaian/delete/$1';
 
 $route['riwayat'] = 'stok/Riwayat';
 
-// Routes untuk Penjualan (di subfolder penjualan/)
+// Routes untuk Penjualan
 $route['penjualan'] = 'penjualan/Penjualan';
 $route['penjualan/add'] = 'penjualan/Penjualan/add';
-$route['penjualan/edit/(:num)'] = 'penjualan/Penjualan/edit/$1';
-$route['penjualan/delete/(:num)'] = 'penjualan/Penjualan/delete/$1';
 $route['penjualan/detail/(:num)'] = 'penjualan/Penjualan/detail/$1';
+$route['penjualan/proses/(:num)'] = 'penjualan/Penjualan/proses/$1';
+$route['penjualan/kirim/(:num)'] = 'penjualan/Penjualan/kirim/$1';
+$route['penjualan/selesai/(:num)'] = 'penjualan/Penjualan/selesai/$1';
+$route['penjualan/batal/(:num)'] = 'penjualan/Penjualan/batal/$1';
+$route['penjualan/add_barang'] = 'penjualan/Penjualan/add_barang';
+$route['penjualan/delete_barang/(:num)'] = 'penjualan/Penjualan/delete_barang/$1';
 
 $route['retur'] = 'penjualan/Retur';
 $route['retur/add'] = 'penjualan/Retur/add';
-$route['retur/edit/(:num)'] = 'penjualan/Retur/edit/$1';
-$route['retur/delete/(:num)'] = 'penjualan/Retur/delete/$1';
 $route['retur/detail/(:num)'] = 'penjualan/Retur/detail/$1';
+$route['retur/proses/(:num)'] = 'penjualan/Retur/proses/$1';
+$route['retur/tolak/(:num)'] = 'penjualan/Retur/tolak/$1';
+$route['retur/add_barang'] = 'penjualan/Retur/add_barang';
+$route['retur/delete_barang/(:num)'] = 'penjualan/Retur/delete_barang/$1';
 
 // Routes untuk Laporan (di subfolder laporan/)
 $route['laporan_stok'] = 'laporan/LaporanStok';
