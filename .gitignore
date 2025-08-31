@@ -1,1 +1,64 @@
-application/logs/*
+# =========================
+# OS / System files
+# =========================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+
+# =========================
+# Composer / Vendor
+# =========================
+/vendor/
+/composer.lock
+
+# =========================
+# Node (kalau ada front-end build)
+/node_modules/
+/npm-debug.log
+/yarn.lock
+/package-lock.json
+
+# =========================
+# Logs / Cache / Temp
+# =========================
+/application/logs/*
+!/application/logs/index.html
+
+/application/cache/*
+!/application/cache/index.html
+
+# =========================
+# Backups / Uploads
+# =========================
+/application/backups/
+/backups/
+/uploads/*
+!/uploads/index.html
+
+# =========================
+# IDE / Editor config
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# Env / Config sensitive
+# =========================
+.env
+*.env
+/.env.*
+/application/config/config.php
+/application/config/database.php
+
+# =========================
+# Misc
+# =========================
+/.sass-cache
+*.bak
+*.tmp
+*.log
+*.sql
