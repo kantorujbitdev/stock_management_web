@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Data Kategori</h3>
+        <h3 class="card-title">Master Data Kategori Barang</h3>
         <div class="card-tools">
             <a href="<?php echo site_url('kategori/add'); ?>" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> Tambah Kategori

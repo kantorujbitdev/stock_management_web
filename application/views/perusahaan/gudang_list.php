@@ -39,7 +39,8 @@
                         <tr>
                             <td><?php echo $no++ ?></td>
                             <td><?php echo $row->nama_gudang ?></td>
-                            <td><?php echo $row->nama_perusahaan ?></td>
+                            <!-- <td><?php echo $row->nama_perusahaan ?></td> -->
+                            <td><?php echo isset($row->nama_perusahaan) ? $gudang->nama_perusahaan : 'N/A'; ?></td>
                             <td><?php echo $row->alamat ?></td>
                             <td><?php echo $row->telepon ?></td>
                             <td>

@@ -13,6 +13,7 @@ class Kategori_model extends CI_Model {
         $this->db->select('kategori.*, perusahaan.nama_perusahaan');
         $this->db->from('kategori');
         $this->db->join('perusahaan', 'perusahaan.id_perusahaan = kategori.id_perusahaan');
+        $this->db->where('kategori.status_aktif', 1);
         return $this->db->get()->result();
     }
 
@@ -22,6 +23,7 @@ class Kategori_model extends CI_Model {
         $this->db->from('kategori');
         $this->db->join('perusahaan', 'perusahaan.id_perusahaan = kategori.id_perusahaan');
         $this->db->where('kategori.id_perusahaan', $id_perusahaan);
+        $this->db->where('kategori.status_aktif', 1);
         return $this->db->get()->result();
     }
 
@@ -32,6 +34,19 @@ class Kategori_model extends CI_Model {
         $this->db->join('perusahaan', 'perusahaan.id_perusahaan = kategori.id_perusahaan');
         $this->db->where('kategori.id_kategori', $id);
         return $this->db->get()->row();
+    }
+
+    // Check if kategori name exists for specific company
+    public function check_kategori_exists($nama_kategori, $id_perusahaan, $id_kategori = null) {
+        $this->db->where('nama_kategori', $nama_kategori);
+        $this->db->where('id_perusahaan', $id_perusahaan);
+        
+        if ($id_kategori) {
+            $this->db->where('id_kategori !=', $id_kategori);
+        }
+        
+        $query = $this->db->get('kategori');
+        return $query->num_rows() > 0;
     }
 
     // Insert kategori
@@ -45,16 +60,28 @@ class Kategori_model extends CI_Model {
         return $this->db->update('kategori', $data);
     }
 
-    // Delete kategori
+    // Soft delete kategori (ubah status aktif)
     public function delete_kategori($id) {
-        // Cek apakah ada barang yang terkait dengan kategori ini
         $this->db->where('id_kategori', $id);
-        $check = $this->db->get('barang')->num_rows();
-        
-        if ($check > 0) {
-            return false; // Tidak bisa dihapus karena ada barang terkait
-        }
-        
-        return $this->db->delete('kategori', array('id_kategori' => $id));
+        return $this->db->update('kategori', ['status_aktif' => 0]);
+    }
+
+    // Restore kategori (ubah status aktif)
+    public function restore_kategori($id) {
+        $this->db->where('id_kategori', $id);
+        return $this->db->update('kategori', ['status_aktif' => 1]);
+    }
+
+    // Get all kategori including inactive (for Super Admin)
+    public function get_all_kategori_with_inactive() {
+        $this->db->select('kategori.*, perusahaan.nama_perusahaan');
+        $this->db->from('kategori');
+        $this->db->join('perusahaan', 'perusahaan.id_perusahaan = kategori.id_perusahaan');
+        return $this->db->get()->result();
+    }
+
+    // Get perusahaan list for dropdown
+    public function get_perusahaan_list() {
+        return $this->db->get('perusahaan')->result();
     }
 }
