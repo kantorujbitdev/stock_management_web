@@ -51,7 +51,16 @@ class Auth extends CI_Controller {
                     
                     $this->User_model->update_last_login($user->id_user);
                     
-                    redirect('dashboard');
+                    if ($this->session->userdata('id_role') == 2) {
+                        redirect('penjualan/add');
+                    }else if ($this->session->userdata('id_role') == 3) {
+                        redirect('penjualan');
+                    }else if ($this->session->userdata('id_role') == 4) {
+                        redirect('return');
+                    }else{
+                        redirect('dashboard');
+                    }
+                    
                 } else {
                     $this->session->set_flashdata('error', 'Akun Anda tidak aktif');
                     $this->index();

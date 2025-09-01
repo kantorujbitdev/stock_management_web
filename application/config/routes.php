@@ -64,6 +64,8 @@ $route['supplier/delete/(:num)'] = 'master/Supplier/delete/$1';
 
 $route['pelanggan'] = 'master/Pelanggan';
 $route['pelanggan/add'] = 'master/Pelanggan/add';
+$route['pelanggan/add_process'] = 'master/Pelanggan/add_process';
+$route['pelanggan/edit_process'] = 'master/Pelanggan/edit_process';
 $route['pelanggan/edit/(:num)'] = 'master/Pelanggan/edit/$1';
 $route['pelanggan/delete/(:num)'] = 'master/Pelanggan/delete/$1';
 
