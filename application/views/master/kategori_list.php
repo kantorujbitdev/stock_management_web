@@ -21,35 +21,36 @@
                 <i class="icon fas fa-ban"></i> <?php echo $this->session->flashdata('error'); ?>
             </div>
         <?php endif; ?>
-        
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Kategori</th>
-                    <th>Perusahaan</th>
-                    <th>Deskripsi</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $no = 1; foreach ($kategori as $k): ?>
-                <tr>
-                    <td><?php echo $no++; ?></td>
-                    <td><?php echo $k->nama_kategori; ?></td>
-                    <td><?php echo $k->nama_perusahaan; ?></td>
-                    <td><?php echo $k->deskripsi; ?></td>
-                    <td>
-                        <a href="<?php echo site_url('kategori/edit/' . $k->id_kategori); ?>" class="btn btn-warning btn-sm">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="<?php echo site_url('kategori/delete/' . $k->id_kategori); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Kategori</th>
+                        <th>Perusahaan</th>
+                        <th>Deskripsi</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $no = 1; foreach ($kategori as $k): ?>
+                    <tr>
+                        <td><?php echo $no++; ?></td>
+                        <td><?php echo $k->nama_kategori; ?></td>
+                        <td><?php echo $k->nama_perusahaan; ?></td>
+                        <td><?php echo $k->deskripsi; ?></td>
+                        <td>
+                            <a href="<?php echo site_url('kategori/edit/' . $k->id_kategori); ?>" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="<?php echo site_url('kategori/delete/' . $k->id_kategori); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

@@ -81,4 +81,10 @@ class Barang_model extends CI_Model {
         
         return $this->db->delete('barang', array('id_barang' => $id));
     }
+
+    public function get_kategori_by_perusahaan($id_perusahaan)
+    {
+        return $this->db->get_where('kategori', ['id_perusahaan' => $id_perusahaan])->result();
+    }
+
 }

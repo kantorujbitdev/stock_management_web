@@ -24,7 +24,11 @@ class Kategori_model extends CI_Model {
         $this->db->join('perusahaan', 'perusahaan.id_perusahaan = kategori.id_perusahaan');
         $this->db->where('kategori.id_perusahaan', $id_perusahaan);
         $this->db->where('kategori.status_aktif', 1);
-        return $this->db->get()->result();
+        // return $this->db->get()->result();
+        $query = $this->db->get();
+        log_message('debug', $this->db->last_query());
+        return $query->result();
+
     }
 
     // Get kategori by id
@@ -84,4 +88,6 @@ class Kategori_model extends CI_Model {
     public function get_perusahaan_list() {
         return $this->db->get('perusahaan')->result();
     }
+
+
 }

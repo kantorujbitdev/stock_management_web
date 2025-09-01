@@ -19,10 +19,8 @@
         $(document).ready(function() {
             $('#dataTable').DataTable({
                 "language": {
-                    "url": "<?php echo base_url('assets/datatables/Indonesian.json') ?>"
+                    "url": "<?php echo base_url('/assets/datatables/Indonesian.json') ?>"
                 }
             });
         });
     </script>
-</body>
-</html>

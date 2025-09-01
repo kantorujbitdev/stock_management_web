@@ -242,13 +242,36 @@ class Barang extends CI_Controller {
         redirect('barang');
     }
     
-    public function get_kategori_by_perusahaan() {
+    
+    public function get_kategori_by_perusahaan()
+    {
         $id_perusahaan = $this->input->post('id_perusahaan');
-        $kategori = $this->Kategori_model->get_kategori_by_perusahaan($id_perusahaan);
-        
-        echo '<option value="">-- Pilih Kategori --</option>';
-        foreach ($kategori as $row) {
-            echo '<option value="'.$row->id_kategori.'">'.$row->nama_kategori.'</option>';
+        if (empty($id_perusahaan)) {
+            $id_perusahaan = $this->input->get('id_perusahaan'); // fallback GET
         }
+
+        // Kalau bukan Super Admin, defaultnya ambil dari session
+        if ($this->session->userdata('id_role') != 5) {
+            if (!empty($this->session->userdata('id_perusahaan'))) {
+                $id_perusahaan = $this->session->userdata('id_perusahaan');
+            }
+            // kalau session kosong, biarin pake POST/GET biar ga null
+        }
+
+        log_message('error', 'POST id_perusahaan: ' . $this->input->post('id_perusahaan'));
+        log_message('error', 'GET id_perusahaan: ' . $this->input->get('id_perusahaan'));
+        log_message('error', 'SESSION id_perusahaan: ' . $this->session->userdata('id_perusahaan'));
+
+
+        $kategori = $this->Kategori_model->get_kategori_by_perusahaan($id_perusahaan);
+
+        $options = "<option value=''>-- Pilih Kategori --</option>";
+        foreach ($kategori as $k) {
+            $options .= "<option value='{$k->id_kategori}'>{$k->nama_kategori}</option>";
+        }
+
+        echo $options;
     }
+
+
 }
