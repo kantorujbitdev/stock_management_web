@@ -23,8 +23,8 @@ $route['user/add'] = 'auth/User/add';
 $route['user/edit/(:num)'] = 'auth/User/edit/$1';
 $route['user/delete/(:num)'] = 'auth/User/delete/$1';
 $route['user/hak_akses'] = 'auth/User/hak_akses';
-$route['user/simpan_hak_akses'] = 'auth/User/simpan_hak_akses';  // DITAMBAHKAN
-$route['user/get_hak_akses'] = 'auth/User/get_hak_akses';  // DITAMBAHKAN
+$route['user/simpan_hak_akses'] = 'auth/User/simpan_hak_akses';
+$route['user/get_hak_akses'] = 'auth/User/get_hak_akses';
 
 // Routes untuk Perusahaan (di subfolder perusahaan/)
 $route['perusahaan'] = 'perusahaan/Perusahaan';
@@ -43,7 +43,7 @@ $route['gudang/edit/(:num)'] = 'perusahaan/Gudang/edit/$1';
 $route['gudang/delete/(:num)'] = 'perusahaan/Gudang/delete/$1';
 $route['gudang/aktif/(:num)'] = 'perusahaan/Gudang/aktif/$1';
 $route['gudang/nonaktif/(:num)'] = 'perusahaan/Gudang/nonaktif/$1';
-$route['gudang/get_gudang_by_perusahaan'] = 'perusahaan/Gudang/get_gudang_by_perusahaan';  // DITAMBAHKAN
+$route['gudang/get_gudang_by_perusahaan'] = 'perusahaan/Gudang/get_gudang_by_perusahaan';
 $route['gudang/add_process'] = 'perusahaan/Gudang/add_process';
 $route['gudang/edit_process'] = 'perusahaan/Gudang/edit_process';
 
@@ -61,7 +61,7 @@ $route['barang'] = 'master/Barang';
 $route['barang/add'] = 'master/Barang/add';
 $route['barang/edit/(:num)'] = 'master/Barang/edit/$1';
 $route['barang/delete/(:num)'] = 'master/Barang/delete/$1';
-$route['barang/get_kategori_by_perusahaan'] = 'master/Barang/get_kategori_by_perusahaan';  // DITAMBAHKAN
+$route['barang/get_kategori_by_perusahaan'] = 'master/Barang/get_kategori_by_perusahaan';
 
 $route['supplier'] = 'master/Supplier';
 $route['supplier/add'] = 'master/Supplier/add';
@@ -86,35 +86,35 @@ $route['stok_awal'] = 'stok/StokAwal';
 $route['stok_awal/add'] = 'stok/StokAwal/add';
 $route['stok_awal/edit/(:num)'] = 'stok/StokAwal/edit/$1';
 $route['stok_awal/delete/(:num)'] = 'stok/StokAwal/delete/$1';
-$route['stok_awal/get_gudang_by_perusahaan'] = 'stok/StokAwal/get_gudang_by_perusahaan';  // DITAMBAHKAN
-$route['stok_awal/get_barang_by_perusahaan'] = 'stok/StokAwal/get_barang_by_perusahaan';  // DITAMBAHKAN
+$route['stok_awal/get_gudang_by_perusahaan'] = 'stok/StokAwal/get_gudang_by_perusahaan';
+$route['stok_awal/get_barang_by_perusahaan'] = 'stok/StokAwal/get_barang_by_perusahaan';
 
 $route['penerimaan'] = 'stok/Penerimaan';
 $route['penerimaan/add'] = 'stok/Penerimaan/add';
-$route['penerimaan/detail/(:num)'] = 'stok/Penerimaan/detail/$1';  // DITAMBAHKAN
-$route['penerimaan/proses/(:num)'] = 'stok/Penerimaan/proses/$1';  // DITAMBAHKAN
-$route['penerimaan/batal/(:num)'] = 'stok/Penerimaan/batal/$1';  // DITAMBAHKAN
-$route['penerimaan/add_barang'] = 'stok/Penerimaan/add_barang';  // DITAMBAHKAN
-$route['penerimaan/delete_barang/(:num)'] = 'stok/Penerimaan/delete_barang/$1';  // DITAMBAHKAN
-$route['penerimaan/get_gudang_by_perusahaan'] = 'stok/Penerimaan/get_gudang_by_perusahaan';  // DITAMBAHKAN
+$route['penerimaan/detail/(:num)'] = 'stok/Penerimaan/detail/$1';
+$route['penerimaan/proses/(:num)'] = 'stok/Penerimaan/proses/$1';
+$route['penerimaan/batal/(:num)'] = 'stok/Penerimaan/batal/$1';
+$route['penerimaan/add_barang'] = 'stok/Penerimaan/add_barang';
+$route['penerimaan/delete_barang/(:num)'] = 'stok/Penerimaan/delete_barang/$1';
+$route['penerimaan/get_gudang_by_perusahaan'] = 'stok/Penerimaan/get_gudang_by_perusahaan';
 
 $route['transfer'] = 'stok/Transfer';
 $route['transfer/add'] = 'stok/Transfer/add';
-$route['transfer/approve/(:num)'] = 'stok/Transfer/approve/$1';  // DITAMBAHKAN
-$route['transfer/reject/(:num)'] = 'stok/Transfer/reject/$1';  // DITAMBAHKAN
-$route['transfer/get_gudang_by_perusahaan'] = 'stok/Transfer/get_gudang_by_perusahaan';  // DITAMBAHKAN
-$route['transfer/get_barang_by_gudang'] = 'stok/Transfer/get_barang_by_gudang';  // DITAMBAHKAN
-$route['transfer/get_stok_barang'] = 'stok/Transfer/get_stok_barang';  // DITAMBAHKAN
+$route['transfer/approve/(:num)'] = 'stok/Transfer/approve/$1';
+$route['transfer/reject/(:num)'] = 'stok/Transfer/reject/$1';
+$route['transfer/get_gudang_by_perusahaan'] = 'stok/Transfer/get_gudang_by_perusahaan';
+$route['transfer/get_barang_by_gudang'] = 'stok/Transfer/get_barang_by_gudang';
+$route['transfer/get_stok_barang'] = 'stok/Transfer/get_stok_barang';
 
 $route['penyesuaian'] = 'stok/Penyesuaian';
 $route['penyesuaian/add'] = 'stok/Penyesuaian/add';
-$route['penyesuaian/get_gudang_by_perusahaan'] = 'stok/Penyesuaian/get_gudang_by_perusahaan';  // DITAMBAHKAN
-$route['penyesuaian/get_barang_by_gudang'] = 'stok/Penyesuaian/get_barang_by_gudang';  // DITAMBAHKAN
-$route['penyesuaian/get_stok_barang'] = 'stok/Penyesuaian/get_stok_barang';  // DITAMBAHKAN
+$route['penyesuaian/get_gudang_by_perusahaan'] = 'stok/Penyesuaian/get_gudang_by_perusahaan';
+$route['penyesuaian/get_barang_by_gudang'] = 'stok/Penyesuaian/get_barang_by_gudang';
+$route['penyesuaian/get_stok_barang'] = 'stok/Penyesuaian/get_stok_barang';
 
 $route['riwayat'] = 'stok/Riwayat';
-$route['riwayat/get_gudang_by_perusahaan'] = 'stok/Riwayat/get_gudang_by_perusahaan';  // DITAMBAHKAN
-$route['riwayat/get_barang_by_gudang'] = 'stok/Riwayat/get_barang_by_gudang';  // DITAMBAHKAN
+$route['riwayat/get_gudang_by_perusahaan'] = 'stok/Riwayat/get_gudang_by_perusahaan';
+$route['riwayat/get_barang_by_gudang'] = 'stok/Riwayat/get_barang_by_gudang';
 
 // Routes untuk Penjualan
 $route['penjualan'] = 'penjualan/Penjualan';
@@ -126,9 +126,9 @@ $route['penjualan/selesai/(:num)'] = 'penjualan/Penjualan/selesai/$1';
 $route['penjualan/batal/(:num)'] = 'penjualan/Penjualan/batal/$1';
 $route['penjualan/add_barang'] = 'penjualan/Penjualan/add_barang';
 $route['penjualan/delete_barang/(:num)'] = 'penjualan/Penjualan/delete_barang/$1';
-$route['penjualan/get_gudang_by_perusahaan'] = 'penjualan/Penjualan/get_gudang_by_perusahaan';  // DITAMBAHKAN
-$route['penjualan/get_barang_by_gudang'] = 'penjualan/Penjualan/get_barang_by_gudang';  // DITAMBAHKAN
-$route['penjualan/get_stok_barang'] = 'penjualan/Penjualan/get_stok_barang';  // DITAMBAHKAN
+$route['penjualan/get_gudang_by_perusahaan'] = 'penjualan/Penjualan/get_gudang_by_perusahaan';
+$route['penjualan/get_barang_by_gudang'] = 'penjualan/Penjualan/get_barang_by_gudang';
+$route['penjualan/get_stok_barang'] = 'penjualan/Penjualan/get_stok_barang';
 
 $route['retur'] = 'penjualan/Retur';
 $route['retur/add'] = 'penjualan/Retur/add';
@@ -137,33 +137,33 @@ $route['retur/proses/(:num)'] = 'penjualan/Retur/proses/$1';
 $route['retur/tolak/(:num)'] = 'penjualan/Retur/tolak/$1';
 $route['retur/add_barang'] = 'penjualan/Retur/add_barang';
 $route['retur/delete_barang/(:num)'] = 'penjualan/Retur/delete_barang/$1';
-$route['retur/get_penjualan_by_perusahaan'] = 'penjualan/Retur/get_penjualan_by_perusahaan';  // DITAMBAHKAN
-$route['retur/get_barang_by_penjualan'] = 'penjualan/Retur/get_barang_by_penjualan';  // DITAMBAHKAN
+$route['retur/get_penjualan_by_perusahaan'] = 'penjualan/Retur/get_penjualan_by_perusahaan';
+$route['retur/get_barang_by_penjualan'] = 'penjualan/Retur/get_barang_by_penjualan';
 
 // Routes untuk Laporan (di subfolder laporan/)
 $route['laporan_stok'] = 'laporan/LaporanStok';
-$route['laporan_stok/export_pdf'] = 'laporan/LaporanStok/export_pdf';  // DITAMBAHKAN
-$route['laporan_stok/export_excel'] = 'laporan/LaporanStok/export_excel';  // DITAMBAHKAN
-$route['laporan_stok/get_gudang_by_perusahaan'] = 'laporan/LaporanStok/get_gudang_by_perusahaan';  // DITAMBAHKAN
-$route['laporan_stok/get_kategori_by_perusahaan'] = 'laporan/LaporanStok/get_kategori_by_perusahaan';  // DITAMBAHKAN
+$route['laporan_stok/export_pdf'] = 'laporan/LaporanStok/export_pdf';
+$route['laporan_stok/export_excel'] = 'laporan/LaporanStok/export_excel';
+$route['laporan_stok/get_gudang_by_perusahaan'] = 'laporan/LaporanStok/get_gudang_by_perusahaan';
+$route['laporan_stok/get_kategori_by_perusahaan'] = 'laporan/LaporanStok/get_kategori_by_perusahaan';
 
 $route['laporan_penjualan'] = 'laporan/LaporanPenjualan';
-$route['laporan_penjualan/export_pdf'] = 'laporan/LaporanPenjualan/export_pdf';  // DITAMBAHKAN
-$route['laporan_penjualan/export_excel'] = 'laporan/LaporanPenjualan/export_excel';  // DITAMBAHKAN
+$route['laporan_penjualan/export_pdf'] = 'laporan/LaporanPenjualan/export_pdf';
+$route['laporan_penjualan/export_excel'] = 'laporan/LaporanPenjualan/export_excel';
 
 $route['laporan_retur'] = 'laporan/LaporanRetur';
-$route['laporan_retur/export_pdf'] = 'laporan/LaporanRetur/export_pdf';  // DITAMBAHKAN
-$route['laporan_retur/export_excel'] = 'laporan/LaporanRetur/export_excel';  // DITAMBAHKAN
+$route['laporan_retur/export_pdf'] = 'laporan/LaporanRetur/export_pdf';
+$route['laporan_retur/export_excel'] = 'laporan/LaporanRetur/export_excel';
 
 $route['laporan_transfer'] = 'laporan/LaporanTransfer';
-$route['laporan_transfer/export_pdf'] = 'laporan/LaporanTransfer/export_pdf';  // DITAMBAHKAN
-$route['laporan_transfer/export_excel'] = 'laporan/LaporanTransfer/export_excel';  // DITAMBAHKAN
+$route['laporan_transfer/export_pdf'] = 'laporan/LaporanTransfer/export_pdf';
+$route['laporan_transfer/export_excel'] = 'laporan/LaporanTransfer/export_excel';
 
 // Routes untuk Pengaturan (di subfolder pengaturan/)
 $route['pengaturan'] = 'pengaturan/Sistem';
-$route['pengaturan/update'] = 'pengaturan/Sistem/update';  // DITAMBAHKAN
+$route['pengaturan/update'] = 'pengaturan/Sistem/update';
 
 $route['backup'] = 'pengaturan/Backup';
-$route['backup/create'] = 'pengaturan/Backup/create';  // DITAMBAHKAN
-$route['backup/download/(:any)'] = 'pengaturan/Backup/download/$1';  // DITAMBAHKAN
-$route['backup/delete/(:any)'] = 'pengaturan/Backup/delete/$1';  // DITAMBAHKAN
+$route['backup/create'] = 'pengaturan/Backup/create';
+$route['backup/download/(:any)'] = 'pengaturan/Backup/download/$1';
+$route['backup/delete/(:any)'] = 'pengaturan/Backup/delete/$1';
