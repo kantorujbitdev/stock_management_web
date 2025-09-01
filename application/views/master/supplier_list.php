@@ -31,7 +31,7 @@
                         <th>Alamat</th>
                         <th>Telepon</th>
                         <th>Status</th>
-                        <th width="15%">Aksi</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,12 +58,10 @@
                                 <a href="<?php echo site_url('supplier/nonaktif/'.$s->id_supplier); ?>" class="btn btn-sm btn-danger"
                                     onclick="return confirm('Apakah Anda yakin ingin menonaktifkan supplier ini?')">
                                 <i class="fas fa-minus-square"></i> Nonaktifkan</a>
-                                </a>
                             <?php else: ?>
                                 <a href="<?php echo site_url('supplier/aktif/'.$s->id_supplier); ?>" class="btn btn-sm btn-success" 
                                     onclick="return confirm('Apakah Anda yakin ingin mengaktifkan supplier ini?')">
                                 <i class="fas fa-check-square"></i> Aktifkan</a>
-                                </a>
                             <?php endif; ?>
                         </td>
                     </tr>

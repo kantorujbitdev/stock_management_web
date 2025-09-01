@@ -2,7 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Pelanggan_model extends CI_Model {
-
     public function __construct() {
         parent::__construct();
         $this->load->database();
@@ -10,17 +9,33 @@ class Pelanggan_model extends CI_Model {
 
     // Get all pelanggan
     public function get_all_pelanggan() {
-        return $this->db->get('pelanggan')->result();
+        $this->db->select('p.*, per.nama_perusahaan');
+        $this->db->from('pelanggan p');
+        $this->db->join('perusahaan per', 'p.id_perusahaan = per.id_perusahaan', 'left');
+        $this->db->order_by('p.id_pelanggan', 'DESC');
+        return $this->db->get()->result();
     }
 
     // Get pelanggan by id
     public function get_pelanggan_by_id($id) {
-        return $this->db->get_where('pelanggan', ['id_pelanggan' => $id])->row();
+        $this->db->select('p.*, per.nama_perusahaan');
+        $this->db->from('pelanggan p');
+        $this->db->join('perusahaan per', 'p.id_perusahaan = per.id_perusahaan', 'left');
+        $this->db->where('p.id_pelanggan', $id);
+        return $this->db->get()->row();
+    }
+
+    // Get pelanggan by perusahaan
+    public function get_pelanggan_by_perusahaan($id_perusahaan) {
+        $this->db->where('id_perusahaan', $id_perusahaan);
+        $this->db->order_by('nama_pelanggan', 'ASC');
+        return $this->db->get('pelanggan')->result();
     }
 
     // Insert pelanggan
     public function insert_pelanggan($data) {
-        return $this->db->insert('pelanggan', $data);
+        $this->db->insert('pelanggan', $data);
+        return $this->db->insert_id();
     }
 
     // Update pelanggan
@@ -29,16 +44,17 @@ class Pelanggan_model extends CI_Model {
         return $this->db->update('pelanggan', $data);
     }
 
-    // Delete pelanggan
+
+  // Soft delete pelanggan (ubah status aktif)
     public function delete_pelanggan($id) {
-        // Cek apakah ada penjualan yang terkait dengan pelanggan ini
         $this->db->where('id_pelanggan', $id);
-        $check = $this->db->get('penjualan')->num_rows();
-        
-        if ($check > 0) {
-            return false; // Tidak bisa dihapus karena ada penjualan terkait
-        }
-        
-        return $this->db->delete('pelanggan', ['id_pelanggan' => $id]);
+        return $this->db->update('pelanggan', ['status_aktif' => 0]);
     }
+
+    // Restore pelanggan (ubah status aktif)
+    public function restore_pelanggan($id) {
+        $this->db->where('id_pelanggan', $id);
+        return $this->db->update('pelanggan', ['status_aktif' => 1]);
+    }
+
 }

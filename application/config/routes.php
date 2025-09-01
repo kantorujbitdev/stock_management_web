@@ -77,6 +77,8 @@ $route['pelanggan/add'] = 'master/Pelanggan/add';
 $route['pelanggan/add_process'] = 'master/Pelanggan/add_process';
 $route['pelanggan/edit_process'] = 'master/Pelanggan/edit_process';
 $route['pelanggan/edit/(:num)'] = 'master/Pelanggan/edit/$1';
+$route['pelanggan/aktif/(:num)'] = 'master/Pelanggan/aktif/$1';
+$route['pelanggan/nonaktif/(:num)'] = 'master/Pelanggan/nonaktif/$1';
 $route['pelanggan/delete/(:num)'] = 'master/Pelanggan/delete/$1';
 
 // Routes untuk Stok (di subfolder stok/)
