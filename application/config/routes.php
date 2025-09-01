@@ -68,6 +68,8 @@ $route['supplier/add'] = 'master/Supplier/add';
 $route['supplier/add_process'] = 'master/Supplier/add_process';
 $route['supplier/edit_process'] = 'master/Supplier/edit_process';
 $route['supplier/edit/(:num)'] = 'master/Supplier/edit/$1';
+$route['supplier/aktif/(:num)'] = 'master/Supplier/aktif/$1';
+$route['supplier/nonaktif/(:num)'] = 'master/Supplier/nonaktif/$1';
 $route['supplier/delete/(:num)'] = 'master/Supplier/delete/$1';
 
 $route['pelanggan'] = 'master/Pelanggan';
