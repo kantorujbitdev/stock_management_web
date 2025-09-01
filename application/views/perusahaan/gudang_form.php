@@ -11,15 +11,32 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="id_perusahaan">Perusahaan</label>
-                        <select class="form-control" id="id_perusahaan" name="id_perusahaan" required>
-                            <option value="">-- Pilih Perusahaan --</option>
-                            <?php foreach ($perusahaan as $p): ?>
-                                <option value="<?php echo $p->id_perusahaan ?>" <?php echo isset($gudang) && $gudang->id_perusahaan == $p->id_perusahaan ? 'selected' : '' ?>><?php echo $p->nama_perusahaan ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <?php echo form_error('id_perusahaan', '<small class="text-danger">', '</small>'); ?>
+                        <?php if ($this->session->userdata('id_role') == 5): ?>
+                            <!-- Super Admin harus pilih perusahaan -->
+                            <label for="id_perusahaan">Perusahaan</label>
+                            <select name="id_perusahaan" class="form-control" required>
+                                <option value="">-- Pilih Perusahaan --</option>
+                                <?php foreach ($perusahaan as $p): ?>
+                                    <option value="<?php echo $p->id_perusahaan; ?>"
+                                        <?php 
+                                            if (isset($pelanggan) && $pelanggan->id_perusahaan == $p->id_perusahaan) {
+                                                echo 'selected';
+                                            }
+                                        ?>>
+                                        <?php echo $p->nama_perusahaan; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php else: ?>
+                            <!-- Role lain otomatis pakai perusahaan dari session -->
+                            <input type="hidden" name="id_perusahaan" value="<?php echo $this->session->userdata('id_perusahaan'); ?>">
+                            <div class="form-group">
+                                <label>Perusahaan</label>
+                                <input type="text" class="form-control" value="<?php echo $perusahaan[0]->nama_perusahaan; ?>" readonly>
+                            </div>
+                        <?php endif; ?>
                     </div>
+                    
                     
                     <div class="form-group">
                         <label for="nama_gudang">Nama Gudang</label>

@@ -27,7 +27,9 @@
                         <tr>
                             <th>#</th>
                             <th>Nama Gudang</th>
-                            <th>Perusahaan</th>
+                            <?php if ($this->session->userdata('id_role') == 5): ?>
+                                <th>Perusahaan</th>
+                            <?php endif; ?>
                             <th>Alamat</th>
                             <th>Telepon</th>
                             <th>Status</th>
@@ -39,7 +41,9 @@
                         <tr>
                             <td><?php echo $no++ ?></td>
                             <td><?php echo $row->nama_gudang ?></td>
-                            <td><?php echo !empty($row->nama_perusahaan) ? $row->nama_perusahaan : '<span class="text-muted">Tidak ada</span>'; ?></td>
+                            <?php if ($this->session->userdata('id_role') == 5): ?>
+                            <td><?php echo isset($p->nama_perusahaan) ? $p->nama_perusahaan : '-'; ?></td>
+                            <?php endif; ?>
                             <td><?php echo $row->alamat ?></td>
                             <td><?php echo $row->telepon ?></td>
                             <td>

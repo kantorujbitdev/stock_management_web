@@ -28,7 +28,9 @@
                     <tr>
                         <th width="5%">No</th>
                         <th>Nama Pelanggan</th>
+                        <?php if ($this->session->userdata('id_role') == 5): ?>
                         <th>Perusahaan</th>
+                        <?php endif; ?>
                         <th>Alamat</th>
                         <th>Telepon</th>
                         <th>Status</th>
@@ -40,7 +42,9 @@
                     <tr>
                         <td><?php echo $no++; ?></td>
                         <td><?php echo $p->nama_pelanggan; ?></td>
-                        <td><?php echo $p->nama_perusahaan; ?></td>
+                        <?php if ($this->session->userdata('id_role') == 5): ?>
+                        <td><?php echo isset($p->nama_perusahaan) ? $p->nama_perusahaan : '-'; ?></td>
+                        <?php endif; ?>
                         <td><?php echo $p->alamat; ?></td>
                         <td><?php echo $p->telepon; ?></td>
                         <td>

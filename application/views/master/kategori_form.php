@@ -20,7 +20,7 @@
                     <?php foreach ($perusahaan as $p): ?>
                         <option value="<?php echo $p->id_perusahaan; ?>"
                             <?php 
-                                if (isset($kategori) && $kategori->id_perusahaan == $p->id_perusahaan) {
+                                if (isset($pelanggan) && $pelanggan->id_perusahaan == $p->id_perusahaan) {
                                     echo 'selected';
                                 }
                             ?>>
@@ -31,6 +31,10 @@
             <?php else: ?>
                 <!-- Role lain otomatis pakai perusahaan dari session -->
                 <input type="hidden" name="id_perusahaan" value="<?php echo $this->session->userdata('id_perusahaan'); ?>">
+                <div class="form-group">
+                    <label>Perusahaan</label>
+                    <input type="text" class="form-control" value="<?php echo $perusahaan[0]->nama_perusahaan; ?>" readonly>
+                </div>
             <?php endif; ?>
         </div>
         

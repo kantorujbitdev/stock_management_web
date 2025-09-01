@@ -59,7 +59,11 @@ $route['kategori/edit_process'] = 'master/Kategori/edit_process';
 
 $route['barang'] = 'master/Barang';
 $route['barang/add'] = 'master/Barang/add';
+$route['barang/add_process'] = 'master/Barang/add_process';
+$route['barang/edit_process'] = 'master/Barang/edit_process';
 $route['barang/edit/(:num)'] = 'master/Barang/edit/$1';
+$route['barang/aktif/(:num)'] = 'master/Barang/aktif/$1';
+$route['barang/nonaktif/(:num)'] = 'master/Barang/nonaktif/$1';
 $route['barang/delete/(:num)'] = 'master/Barang/delete/$1';
 $route['barang/get_kategori_by_perusahaan'] = 'master/Barang/get_kategori_by_perusahaan';
 

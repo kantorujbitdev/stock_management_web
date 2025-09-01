@@ -2,7 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Barang extends CI_Controller {
-
     public function __construct() {
         parent::__construct();
         $this->load->library('session');
@@ -11,6 +10,7 @@ class Barang extends CI_Controller {
         $this->load->library('form_validation');
         $this->load->library('hak_akses');
         $this->load->model('master/Barang_model');
+        $this->load->model('perusahaan/Perusahaan_model');
         $this->load->model('master/Kategori_model');
         
         // Cek login
@@ -43,25 +43,45 @@ class Barang extends CI_Controller {
         
         // Jika Super Admin, tampilkan semua perusahaan
         if ($this->session->userdata('id_role') == 5) {
-            $this->load->model('perusahaan/Perusahaan_model');
             $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
+            // Ambil semua kategori aktif untuk Super Admin
+            $data['kategori'] = $this->Kategori_model->get_all_kategori();
         } else {
             // Jika Admin Pusat, hanya tampilkan perusahaannya
             $id_perusahaan = $this->session->userdata('id_perusahaan');
-            $this->load->model('perusahaan/Perusahaan_model');
             $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
+            $data['kategori'] = $this->Kategori_model->get_kategori_by_perusahaan($id_perusahaan);
         }
         
         $data['content'] = 'master/barang_form';
         $this->load->view('template/template', $data);
     }
 
+    // public function add() {
+    //     $data['title'] = 'Tambah Barang';
+        
+    //     // Jika Super Admin, tampilkan semua perusahaan
+    //     if ($this->session->userdata('id_role') == 5) {
+    //         $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
+    //         $data['kategori'] = array(); // Kosongkan, akan diisi via AJAX
+    //     } else {
+    //         // Jika Admin Pusat, hanya tampilkan perusahaannya
+    //         $id_perusahaan = $this->session->userdata('id_perusahaan');
+    //         $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
+    //         $data['kategori'] = $this->Kategori_model->get_kategori_by_perusahaan($id_perusahaan);
+    //     }
+        
+    //     $data['content'] = 'master/barang_form';
+    //     $this->load->view('template/template', $data);
+    // }
+
+
     public function add_process() {
         $this->form_validation->set_rules('id_perusahaan', 'Perusahaan', 'required');
         $this->form_validation->set_rules('id_kategori', 'Kategori', 'required');
         $this->form_validation->set_rules('nama_barang', 'Nama Barang', 'required');
-        $this->form_validation->set_rules('sku', 'SKU', 'required');
-
+        $this->form_validation->set_rules('sku', 'SKU', 'required|callback_check_sku');
+        
         if ($this->form_validation->run() == FALSE) {
             $this->add();
         } else {
@@ -76,22 +96,13 @@ class Barang extends CI_Controller {
                 }
             }
             
-            // Cek SKU unik per perusahaan
-            $id_perusahaan = $this->input->post('id_perusahaan');
-            $sku = $this->input->post('sku');
-            
-            if ($this->Barang_model->check_sku($id_perusahaan, $sku)) {
-                $this->session->set_flashdata('error', 'SKU sudah ada untuk perusahaan ini');
-                redirect('barang/add');
-            }
-            
-            // Handle upload gambar
+            // Upload gambar jika ada
             $gambar = '';
             if (!empty($_FILES['gambar']['name'])) {
                 $config['upload_path'] = './uploads/barang/';
                 $config['allowed_types'] = 'gif|jpg|jpeg|png';
                 $config['max_size'] = 2048;
-                $config['file_name'] = time() . '_' . $_FILES['gambar']['name'];
+                $config['encrypt_name'] = TRUE;
                 
                 $this->load->library('upload', $config);
                 
@@ -108,11 +119,12 @@ class Barang extends CI_Controller {
                 'id_perusahaan' => $this->input->post('id_perusahaan'),
                 'id_kategori' => $this->input->post('id_kategori'),
                 'nama_barang' => $this->input->post('nama_barang'),
-                'sku' => $sku,
+                'sku' => $this->input->post('sku'),
                 'deskripsi' => $this->input->post('deskripsi'),
-                'gambar' => $gambar
+                'gambar' => $gambar,
+                'aktif' => 1 // Default aktif
             ];
-
+            
             $this->Barang_model->insert_barang($data);
             $this->session->set_flashdata('success', 'Barang berhasil ditambahkan');
             redirect('barang');
@@ -136,16 +148,14 @@ class Barang extends CI_Controller {
         
         // Jika Super Admin, tampilkan semua perusahaan
         if ($this->session->userdata('id_role') == 5) {
-            $this->load->model('perusahaan/Perusahaan_model');
             $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
+            $data['kategori'] = $this->Kategori_model->get_kategori_by_perusahaan($data['barang']->id_perusahaan);
         } else {
             // Jika Admin Pusat, hanya tampilkan perusahaannya
             $id_perusahaan = $this->session->userdata('id_perusahaan');
-            $this->load->model('perusahaan/Perusahaan_model');
             $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
+            $data['kategori'] = $this->Kategori_model->get_kategori_by_perusahaan($id_perusahaan);
         }
-        
-        $data['kategori'] = $this->Kategori_model->get_kategori_by_perusahaan($data['barang']->id_perusahaan);
         
         $data['content'] = 'master/barang_form';
         $this->load->view('template/template', $data);
@@ -168,42 +178,32 @@ class Barang extends CI_Controller {
         $this->form_validation->set_rules('id_perusahaan', 'Perusahaan', 'required');
         $this->form_validation->set_rules('id_kategori', 'Kategori', 'required');
         $this->form_validation->set_rules('nama_barang', 'Nama Barang', 'required');
-        $this->form_validation->set_rules('sku', 'SKU', 'required');
-
+        $this->form_validation->set_rules('sku', 'SKU', 'required|callback_check_sku_edit['.$id.']');
+        
         if ($this->form_validation->run() == FALSE) {
             $this->edit($id);
         } else {
-            // Cek SKU unik per perusahaan (kecuali untuk barang yang sama)
-            $id_perusahaan = $this->input->post('id_perusahaan');
-            $sku = $this->input->post('sku');
-            $barang = $this->Barang_model->get_barang_by_id($id);
-            
-            if ($barang->sku != $sku && $this->Barang_model->check_sku($id_perusahaan, $sku)) {
-                $this->session->set_flashdata('error', 'SKU sudah ada untuk perusahaan ini');
-                redirect('barang/edit/' . $id);
-            }
-            
-            // Handle upload gambar
-            $gambar = $barang->gambar;
+            // Upload gambar jika ada
+            $gambar = $this->input->post('gambar_lama');
             if (!empty($_FILES['gambar']['name'])) {
                 $config['upload_path'] = './uploads/barang/';
                 $config['allowed_types'] = 'gif|jpg|jpeg|png';
                 $config['max_size'] = 2048;
-                $config['file_name'] = time() . '_' . $_FILES['gambar']['name'];
+                $config['encrypt_name'] = TRUE;
                 
                 $this->load->library('upload', $config);
                 
                 if ($this->upload->do_upload('gambar')) {
-                    // Hapus gambar lama jika ada
-                    if ($barang->gambar && file_exists('./uploads/barang/' . $barang->gambar)) {
-                        unlink('./uploads/barang/' . $barang->gambar);
-                    }
-                    
                     $upload_data = $this->upload->data();
                     $gambar = $upload_data['file_name'];
+                    
+                    // Hapus gambar lama jika ada
+                    if ($this->input->post('gambar_lama') && file_exists('./uploads/barang/'.$this->input->post('gambar_lama'))) {
+                        unlink('./uploads/barang/'.$this->input->post('gambar_lama'));
+                    }
                 } else {
                     $this->session->set_flashdata('error', $this->upload->display_errors());
-                    redirect('barang/edit/' . $id);
+                    redirect('barang/edit/'.$id);
                 }
             }
             
@@ -211,18 +211,18 @@ class Barang extends CI_Controller {
                 'id_perusahaan' => $this->input->post('id_perusahaan'),
                 'id_kategori' => $this->input->post('id_kategori'),
                 'nama_barang' => $this->input->post('nama_barang'),
-                'sku' => $sku,
+                'sku' => $this->input->post('sku'),
                 'deskripsi' => $this->input->post('deskripsi'),
-                'gambar' => $gambar
+                'gambar' => $gambar,
             ];
-
+            
             $this->Barang_model->update_barang($id, $data);
             $this->session->set_flashdata('success', 'Barang berhasil diupdate');
             redirect('barang');
         }
     }
 
-    public function delete($id) {
+    public function nonaktif($id) {
         // Cek apakah user punya akses ke barang ini
         if ($this->session->userdata('id_role') != 5) {
             $id_perusahaan_user = $this->session->userdata('id_perusahaan');
@@ -234,44 +234,88 @@ class Barang extends CI_Controller {
             }
         }
         
-        if ($this->Barang_model->delete_barang($id)) {
-            $this->session->set_flashdata('success', 'Barang berhasil dihapus');
+        if ($this->Barang_model->update_status($id, 0)) {
+            $this->session->set_flashdata('success', 'Barang berhasil dinonaktifkan');
         } else {
-            $this->session->set_flashdata('error', 'Gagal menghapus barang. Mungkin masih ada transaksi yang terkait.');
+            $this->session->set_flashdata('error', 'Gagal menonaktifkan barang');
         }
         redirect('barang');
     }
-    
-    
-    public function get_kategori_by_perusahaan()
-    {
-        $id_perusahaan = $this->input->post('id_perusahaan');
-        if (empty($id_perusahaan)) {
-            $id_perusahaan = $this->input->get('id_perusahaan'); // fallback GET
-        }
 
-        // Kalau bukan Super Admin, defaultnya ambil dari session
+    public function aktif($id) {
+        // Cek apakah user punya akses ke barang ini
         if ($this->session->userdata('id_role') != 5) {
-            if (!empty($this->session->userdata('id_perusahaan'))) {
-                $id_perusahaan = $this->session->userdata('id_perusahaan');
+            $id_perusahaan_user = $this->session->userdata('id_perusahaan');
+            $barang = $this->Barang_model->get_barang_by_id($id);
+            
+            if ($barang->id_perusahaan != $id_perusahaan_user) {
+                $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke barang ini');
+                redirect('barang');
             }
-            // kalau session kosong, biarin pake POST/GET biar ga null
         }
-
-        log_message('error', 'POST id_perusahaan: ' . $this->input->post('id_perusahaan'));
-        log_message('error', 'GET id_perusahaan: ' . $this->input->get('id_perusahaan'));
-        log_message('error', 'SESSION id_perusahaan: ' . $this->session->userdata('id_perusahaan'));
-
-
-        $kategori = $this->Kategori_model->get_kategori_by_perusahaan($id_perusahaan);
-
-        $options = "<option value=''>-- Pilih Kategori --</option>";
-        foreach ($kategori as $k) {
-            $options .= "<option value='{$k->id_kategori}'>{$k->nama_kategori}</option>";
+        
+        if ($this->Barang_model->update_status($id, 1)) {
+            $this->session->set_flashdata('success', 'Barang berhasil diaktifkan kembali');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal mengaktifkan barang');
         }
-
-        echo $options;
+        redirect('barang');
     }
 
+    // Callback validation untuk SKU
+    public function check_sku($sku) {
+        $id_perusahaan = $this->input->post('id_perusahaan');
+        if ($this->Barang_model->check_sku($sku, $id_perusahaan)) {
+            $this->form_validation->set_message('check_sku', 'SKU sudah digunakan di perusahaan ini');
+            return FALSE;
+        }
+        return TRUE;
+    }
 
+    // Callback validation untuk SKU (edit)
+    public function check_sku_edit($sku, $id_barang) {
+        $id_perusahaan = $this->input->post('id_perusahaan');
+        if ($this->Barang_model->check_sku($sku, $id_perusahaan, $id_barang)) {
+            $this->form_validation->set_message('check_sku_edit', 'SKU sudah digunakan di perusahaan ini');
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    public function get_kategori_by_perusahaan() {
+        // Izinkan baik GET maupun POST
+        $id_perusahaan = $this->input->get('id_perusahaan') ?: $this->input->post('id_perusahaan');
+        
+        // Debug log
+        log_message('debug', 'AJAX Request - ID Perusahaan: ' . $id_perusahaan);
+        
+        if (!$id_perusahaan) {
+            echo '<option value="">-- Pilih Kategori --</option>';
+            return;
+        }
+        
+        $kategori = $this->Kategori_model->get_kategori_by_perusahaan($id_perusahaan);
+        
+        // Debug log
+        log_message('debug', 'Jumlah kategori ditemukan: ' . count($kategori));
+        
+        $options = '<option value="">-- Pilih Kategori --</option>';
+        foreach ($kategori as $row) {
+            $options .= '<option value="'.$row->id_kategori.'">'.$row->nama_kategori.'</option>';
+        }
+        
+        echo $options;
+}
+
+
+    // Get barang by perusahaan (untuk AJAX)
+    public function get_barang_by_perusahaan() {
+        $id_perusahaan = $this->input->post('id_perusahaan');
+        $barang = $this->Barang_model->get_barang_by_perusahaan($id_perusahaan);
+        
+        echo '<option value="">-- Pilih Barang --</option>';
+        foreach ($barang as $row) {
+            echo '<option value="'.$row->id_barang.'">'.$row->nama_barang.' ('.$row->sku.')</option>';
+        }
+    }
 }

@@ -27,7 +27,9 @@
                     <tr>
                         <th>No</th>
                         <th>Nama Kategori</th>
-                        <th>Perusahaan</th>
+                            <?php if ($this->session->userdata('id_role') == 5): ?>
+                                <th>Perusahaan</th>
+                            <?php endif; ?>
                         <th>Deskripsi</th>
                         <th>Status</th>
                         <th>Aksi</th>
@@ -38,7 +40,9 @@
                     <tr>
                         <td><?php echo $no++; ?></td>
                         <td><?php echo $k->nama_kategori; ?></td>
-                        <td><?php echo $k->nama_perusahaan; ?></td>
+                            <?php if ($this->session->userdata('id_role') == 5): ?>
+                            <td><?php echo isset($k->nama_perusahaan) ? $k->nama_perusahaan : '-'; ?></td>
+                            <?php endif; ?>
                         <td><?php echo $k->deskripsi; ?></td>
                         <td>
                             <?php if ($k->status_aktif == 1): ?>

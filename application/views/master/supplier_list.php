@@ -27,7 +27,9 @@
                     <tr>
                         <th width="5%">No</th>
                         <th>Nama Supplier</th>
-                        <th>Perusahaan</th>
+                            <?php if ($this->session->userdata('id_role') == 5): ?>
+                                <th>Perusahaan</th>
+                            <?php endif; ?>
                         <th>Alamat</th>
                         <th>Telepon</th>
                         <th>Status</th>
@@ -39,7 +41,9 @@
                     <tr>
                         <td><?php echo $no++; ?></td>
                         <td><?php echo $s->nama_supplier; ?></td>
-                        <td><?php echo $s->nama_perusahaan; ?></td>
+                            <?php if ($this->session->userdata('id_role') == 5): ?>
+                            <td><?php echo isset($s->nama_perusahaan) ? $s->nama_perusahaan : '-'; ?></td>
+                            <?php endif; ?>
                         <td><?php echo $s->alamat; ?></td>
                         <td><?php echo $s->telepon; ?></td>
                         <td>

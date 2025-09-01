@@ -18,16 +18,17 @@ class Kategori_model extends CI_Model {
 
     // Get kategori by perusahaan
     public function get_kategori_by_perusahaan($id_perusahaan) {
-        $this->db->select('kategori.*, perusahaan.nama_perusahaan');
-        $this->db->from('kategori');
-        $this->db->join('perusahaan', 'perusahaan.id_perusahaan = kategori.id_perusahaan');
-        $this->db->where('kategori.id_perusahaan', $id_perusahaan);
-        $this->db->where('kategori.status_aktif', 1);
-        // return $this->db->get()->result();
-        $query = $this->db->get();
-        log_message('debug', $this->db->last_query());
+        $this->db->where('id_perusahaan', $id_perusahaan);
+        $this->db->where('status_aktif', 1);
+        $this->db->order_by('nama_kategori', 'ASC');
+        
+        $query = $this->db->get('kategori');
+        
+        // Debug log
+        log_message('debug', 'Query: ' . $this->db->last_query());
+        log_message('debug', 'Jumlah kategori: ' . $query->num_rows());
+        
         return $query->result();
-
     }
 
     // Get kategori by id
