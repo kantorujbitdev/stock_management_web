@@ -13,7 +13,6 @@ class Kategori_model extends CI_Model {
         $this->db->select('kategori.*, perusahaan.nama_perusahaan');
         $this->db->from('kategori');
         $this->db->join('perusahaan', 'perusahaan.id_perusahaan = kategori.id_perusahaan');
-        $this->db->where('kategori.status_aktif', 1);
         return $this->db->get()->result();
     }
 

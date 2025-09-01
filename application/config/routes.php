@@ -29,7 +29,11 @@ $route['user/get_hak_akses'] = 'auth/User/get_hak_akses';  // DITAMBAHKAN
 // Routes untuk Perusahaan (di subfolder perusahaan/)
 $route['perusahaan'] = 'perusahaan/Perusahaan';
 $route['perusahaan/add'] = 'perusahaan/Perusahaan/add';
+$route['perusahaan/add_process'] = 'perusahaan/Perusahaan/add_process';
+$route['perusahaan/edit_process'] = 'perusahaan/Perusahaan/edit_process';
 $route['perusahaan/edit/(:num)'] = 'perusahaan/Perusahaan/edit/$1';
+$route['perusahaan/aktif/(:num)'] = 'perusahaan/Perusahaan/aktif/$1';
+$route['perusahaan/nonaktif/(:num)'] = 'perusahaan/Perusahaan/nonaktif/$1';
 $route['perusahaan/delete/(:num)'] = 'perusahaan/Perusahaan/delete/$1';
 
 // Routes untuk Gudang (di subfolder perusahaan/)
@@ -37,6 +41,8 @@ $route['gudang'] = 'perusahaan/Gudang';
 $route['gudang/add'] = 'perusahaan/Gudang/add';
 $route['gudang/edit/(:num)'] = 'perusahaan/Gudang/edit/$1';
 $route['gudang/delete/(:num)'] = 'perusahaan/Gudang/delete/$1';
+$route['gudang/aktif/(:num)'] = 'perusahaan/Gudang/aktif/$1';
+$route['gudang/nonaktif/(:num)'] = 'perusahaan/Gudang/nonaktif/$1';
 $route['gudang/get_gudang_by_perusahaan'] = 'perusahaan/Gudang/get_gudang_by_perusahaan';  // DITAMBAHKAN
 $route['gudang/add_process'] = 'perusahaan/Gudang/add_process';
 $route['gudang/edit_process'] = 'perusahaan/Gudang/edit_process';
@@ -46,6 +52,8 @@ $route['kategori'] = 'master/Kategori';
 $route['kategori/add'] = 'master/Kategori/add';
 $route['kategori/edit/(:num)'] = 'master/Kategori/edit/$1';
 $route['kategori/delete/(:num)'] = 'master/Kategori/delete/$1';
+$route['kategori/aktif/(:num)'] = 'master/Kategori/aktif/$1';
+$route['kategori/nonaktif/(:num)'] = 'master/Kategori/nonaktif/$1';
 $route['kategori/add_process'] = 'master/Kategori/add_process';
 $route['kategori/edit_process'] = 'master/Kategori/edit_process';
 

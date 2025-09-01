@@ -50,9 +50,24 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <a href="<?php echo site_url('perusahaan/edit/'.$row->id_perusahaan) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                <?php if ($this->session->userdata('id_role') == 5): ?>
-                                <a href="<?php echo site_url('perusahaan/delete/'.$row->id_perusahaan) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menonaktifkan perusahaan ini?')"><i class="fas fa-ban"></i> Nonaktifkan</a>
+                                <a href="<?php echo site_url('perusahaan/edit/'.$row->id_perusahaan) ?>" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>Edit</a>
+
+                                    
+                                <!-- <?php if ($this->session->userdata('id_role') == 5): ?>
+                                    <a href="<?php echo site_url('perusahaan/delete/'.$row->id_perusahaan) ?>" 
+                                    class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menonaktifkan perusahaan ini?')">
+                                    <i class="fas fa-ban"></i> Nonaktifkan</a>
+                                <?php endif; ?> -->
+
+                                <?php if ($row->status_aktif == '1'): ?>
+                                    <a href="<?php echo site_url('perusahaan/nonaktif/'.$row->id_perusahaan) ?>" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Apakah Anda yakin ingin menonaktifkan perusahaan ini?')">
+                                    <i class="fas fa-minus-square"></i> Nonaktifkan</a>
+                                <?php else: ?>
+                                    <a href="<?php echo site_url('perusahaan/aktif/'.$row->id_perusahaan) ?>" class="btn btn-sm btn-success" 
+                                    onclick="return confirm('Apakah Anda yakin ingin mengaktifkan kembali perusahaan ini?')">
+                                    <i class="fas fa-check-square"></i> Aktifkan</a>
                                 <?php endif; ?>
                             </td>
                         </tr>

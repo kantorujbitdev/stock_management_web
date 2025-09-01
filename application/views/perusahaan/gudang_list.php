@@ -39,8 +39,7 @@
                         <tr>
                             <td><?php echo $no++ ?></td>
                             <td><?php echo $row->nama_gudang ?></td>
-                            <!-- <td><?php echo $row->nama_perusahaan ?></td> -->
-                            <td><?php echo isset($row->nama_perusahaan) ? $gudang->nama_perusahaan : 'N/A'; ?></td>
+                            <td><?php echo !empty($row->nama_perusahaan) ? $row->nama_perusahaan : '<span class="text-muted">Tidak ada</span>'; ?></td>
                             <td><?php echo $row->alamat ?></td>
                             <td><?php echo $row->telepon ?></td>
                             <td>
@@ -49,10 +48,21 @@
                                 <?php else: ?>
                                     <span class="badge badge-danger">Tidak Aktif</span>
                                 <?php endif; ?>
+
                             </td>
                             <td>
-                                <a href="<?php echo site_url('gudang/edit/'.$row->id_gudang) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                <a href="<?php echo site_url('gudang/delete/'.$row->id_gudang) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menonaktifkan gudang ini?')"><i class="fas fa-ban"></i> Nonaktifkan</a>
+                                <a href="<?php echo site_url('gudang/edit/'.$row->id_gudang) ?>" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>Edit</a>
+                                
+                                <?php if ($row->status_aktif == '1'): ?>
+                                    <a href="<?php echo site_url('gudang/nonaktif/'.$row->id_gudang) ?>" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Apakah Anda yakin ingin menonaktifkan gudang ini?')">
+                                    <i class="fas fa-minus-square"></i> Nonaktifkan</a>
+                                <?php else: ?>
+                                    <a href="<?php echo site_url('gudang/aktif/'.$row->id_gudang) ?>" class="btn btn-sm btn-success" 
+                                    onclick="return confirm('Apakah Anda yakin ingin mengaktifkan kembali gudang ini?')">
+                                    <i class="fas fa-check-square"></i> Aktifkan</a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>

@@ -147,7 +147,7 @@ class Kategori extends CI_Controller {
         }
     }
 
-    public function delete($id) {
+    public function nonaktif($id) {
         // Cek apakah user punya akses ke kategori ini
         if ($this->session->userdata('id_role') != 5) {
             $id_perusahaan_user = $this->session->userdata('id_perusahaan');
@@ -162,7 +162,27 @@ class Kategori extends CI_Controller {
         if ($this->Kategori_model->delete_kategori($id)) {
             $this->session->set_flashdata('success', 'Kategori berhasil dihapus');
         } else {
-            $this->session->set_flashdata('error', 'Gagal menghapus kategori. Mungkin masih ada barang yang terkait.');
+            $this->session->set_flashdata('error', 'Gagal menghapus kategori. Mungkin masih ada kategori yang terkait.');
+        }
+        redirect('kategori');
+    }
+
+    public function aktif($id) {
+        // Cek apakah user punya akses ke kategori ini
+        if ($this->session->userdata('id_role') != 5) {
+            $id_perusahaan_user = $this->session->userdata('id_perusahaan');
+            $kategori = $this->Kategori_model->get_kategori_by_id($id);
+            
+            if ($kategori->id_perusahaan != $id_perusahaan_user) {
+                $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke kategori ini');
+                redirect('kategori');
+            }
+        }
+        
+        if ($this->Kategori_model->restore_kategori($id)) {
+            $this->session->set_flashdata('success', 'Kategori berhasil diaktifkan kembali');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal mengaktifkan kategori. Mungkin masih ada kategori yang terkait.');
         }
         redirect('kategori');
     }

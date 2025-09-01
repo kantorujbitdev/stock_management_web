@@ -1,36 +1,38 @@
-<!-- Tambahkan di bagian bawah form -->
-<div class="form-group">
-    <label>Gudang</label>
-    <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>Nama Gudang</th>
-                    <th>Alamat</th>
-                    <th>Telepon</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php 
-                if (isset($perusahaan)) {
-                    $gudang = $this->Perusahaan_model->get_gudang_by_perusahaan($perusahaan->id_perusahaan);
-                    if ($gudang) {
-                        foreach ($gudang as $g) {
-                            echo '<tr>';
-                            echo '<td>'.$g->nama_gudang.'</td>';
-                            echo '<td>'.$g->alamat.'</td>';
-                            echo '<td>'.$g->telepon.'</td>';
-                            echo '<td>'.($g->status_aktif == 1 ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-danger">Tidak Aktif</span>').'</td>';
-                            echo '</tr>';
-                        }
-                    } else {
-                        echo '<tr><td colspan="4" class="text-center">Belum ada gudang</td></tr>';
-                    }
-                }
-                ?>
-            </tbody>
-        </table>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <?php echo isset($perusahaan) ? 'Edit Data Perusahaan' : 'Tambah Data Perusahaan'; ?>
+        </h3>
     </div>
-    <a href="<?php echo site_url('gudang/add') ?>" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Tambah Gudang</a>
+    <div class="card-body">
+        <?php echo form_open(isset($perusahaan) ? 'perusahaan/edit_process' : 'perusahaan/add_process'); ?>
+        
+        <?php if (isset($perusahaan)): ?>
+            <input type="hidden" name="id_perusahaan" value="<?php echo $perusahaan->id_perusahaan; ?>">
+        <?php endif; ?>
+        
+        <div class="form-group">
+            <label for="nama_perusahaan">Nama Perusahaan</label>
+            <input type="text" name="nama_perusahaan" class="form-control" 
+                   value="<?php echo isset($perusahaan) ? $perusahaan->nama_perusahaan : ''; ?>" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="alamat">Alamat</label>
+            <textarea name="alamat" class="form-control" rows="3"><?php echo isset($perusahaan) ? $perusahaan->alamat : ''; ?></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="telepon">Telepon</label>
+            <input type="text" name="telepon" class="form-control" 
+                   value="<?php echo isset($perusahaan) ? $perusahaan->telepon : ''; ?>">
+        </div>
+    
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+            <a href="<?php echo site_url('perusahaan'); ?>" class="btn btn-secondary">Batal</a>
+        </div>
+        
+        <?php echo form_close(); ?>
+    </div>
 </div>

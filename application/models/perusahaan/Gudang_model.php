@@ -14,7 +14,7 @@ class Gudang_model extends CI_Model {
         $this->db->from('gudang g');
         $this->db->join('perusahaan p', 'g.id_perusahaan = p.id_perusahaan', 'left');
         $this->db->join('user u', 'g.created_by = u.id_user', 'left');
-        $this->db->order_by('g.id_gudang', 'DESC');
+        $this->db->order_by('g.created_at', 'DESC');
         return $this->db->get()->result();
     }
 
@@ -23,7 +23,7 @@ class Gudang_model extends CI_Model {
         $this->db->select('g.*, p.nama_perusahaan');
         $this->db->from('gudang g');
         $this->db->join('perusahaan p', 'g.id_perusahaan = p.id_perusahaan', 'left');
-        $this->db->where('g.id_gudang', $id);
+        $this->db->where('g.created_at', $id);
         return $this->db->get()->row();
     }
 
@@ -55,8 +55,9 @@ class Gudang_model extends CI_Model {
     }
 
     // Update status gudang
-    public function update_status($id, $status) {
+    public function update_status($id) {
+        // Soft delete: update status menjadi tidak aktif
         $this->db->where('id_gudang', $id);
-        return $this->db->update('gudang', ['status_aktif' => $status]);
+        return $this->db->update('gudang', ['status_aktif' => 1]);
     }
 }

@@ -29,6 +29,7 @@
                         <th>Nama Kategori</th>
                         <th>Perusahaan</th>
                         <th>Deskripsi</th>
+                        <th>Status</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -40,12 +41,27 @@
                         <td><?php echo $k->nama_perusahaan; ?></td>
                         <td><?php echo $k->deskripsi; ?></td>
                         <td>
+                            <?php if ($k->status_aktif == 1): ?>
+                                <span class="badge badge-success">Aktif</span>
+                            <?php else: ?>
+                                <span class="badge badge-danger">Tidak Aktif</span>
+                            <?php endif; ?>
+                        </td>
+
+                        <td>
                             <a href="<?php echo site_url('kategori/edit/' . $k->id_kategori); ?>" class="btn btn-warning btn-sm">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="<?php echo site_url('kategori/delete/' . $k->id_kategori); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                <i class="fas fa-trash"></i>
-                            </a>
+                                <i class="fas fa-edit"></i>Edit </a>
+
+                                <?php if ($k->status_aktif == '1'): ?>
+                                    <a href="<?php echo site_url('kategori/nonaktif/'.$k->id_kategori) ?>" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Apakah Anda yakin ingin menonaktifkan kategori ini?')">
+                                    <i class="fas fa-minus-square"></i> Nonaktifkan</a>
+                                <?php else: ?>
+                                    <a href="<?php echo site_url('kategori/aktif/'.$k->id_kategori) ?>" class="btn btn-sm btn-success" 
+                                    onclick="return confirm('Apakah Anda yakin ingin mengaktifkan kembali kategori ini?')">
+                                    <i class="fas fa-check-square"></i> Aktifkan</a>
+                                <?php endif; ?>
+
                         </td>
                     </tr>
                     <?php endforeach; ?>

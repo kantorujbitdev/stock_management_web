@@ -152,7 +152,7 @@ class Gudang extends CI_Controller {
         }
     }
 
-    public function delete($id) {
+    public function nonaktif($id) {
         // Cek apakah user punya akses ke gudang ini
         if ($this->session->userdata('id_role') != 5) {
             $id_perusahaan_user = $this->session->userdata('id_perusahaan');
@@ -172,6 +172,26 @@ class Gudang extends CI_Controller {
         redirect('gudang');
     }
 
+    public function aktif($id) {
+        // Cek apakah user punya akses ke gudang ini
+        if ($this->session->userdata('id_role') != 5) {
+            $id_perusahaan_user = $this->session->userdata('id_perusahaan');
+            $gudang = $this->Gudang_model->get_gudang_by_id($id);
+            
+            if ($gudang->id_perusahaan != $id_perusahaan_user) {
+                $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke gudang ini');
+                redirect('gudang');
+            }
+        }
+        
+        if ($this->Gudang_model->update_status($id)) {
+            $this->session->set_flashdata('success', 'Gudang berhasil diaktifkan kembali');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal mengaktifkan gudang');
+        }
+        redirect('gudang');
+    }
+
     public function get_gudang_by_perusahaan() {
         $id_perusahaan = $this->input->post('id_perusahaan');
         $gudang = $this->Gudang_model->get_gudang_by_perusahaan($id_perusahaan);
@@ -181,4 +201,5 @@ class Gudang extends CI_Controller {
             echo '<option value="'.$row->id_gudang.'">'.$row->nama_gudang.'</option>';
         }
     }
+
 }

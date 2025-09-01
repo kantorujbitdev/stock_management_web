@@ -12,7 +12,7 @@ class Perusahaan_model extends CI_Model {
     public function get_all_perusahaan() {
         $this->db->select('*');
         $this->db->from('perusahaan');
-        $this->db->order_by('nama_perusahaan', 'ASC');
+        $this->db->order_by('created_at','DESC');
         return $this->db->get()->result();
     }
 
@@ -25,7 +25,7 @@ class Perusahaan_model extends CI_Model {
     // Get perusahaan aktif
     public function get_perusahaan_aktif() {
         $this->db->where('status_aktif', 1);
-        $this->db->order_by('nama_perusahaan', 'ASC');
+        $this->db->order_by('created_at','DESC');
         return $this->db->get('perusahaan')->result();
     }
 
@@ -47,18 +47,18 @@ class Perusahaan_model extends CI_Model {
         return $this->db->update('perusahaan', ['status_aktif' => 0]);
     }
 
-    
-    // Update status perusahaan
-    public function update_status($id, $status) {
+    public function aktifkan_perusahaan($id) {
+        // Soft delete: update status menjadi tidak aktif
         $this->db->where('id_perusahaan', $id);
-        return $this->db->update('perusahaan', ['status_aktif' => $status]);
+        return $this->db->update('perusahaan', ['status_aktif' => 1]);
     }
 
+    
     // Get gudang by perusahaan
     public function get_gudang_by_perusahaan($id_perusahaan) {
         $this->db->where('id_perusahaan', $id_perusahaan);
         $this->db->where('status_aktif', 1);
-        $this->db->order_by('nama_gudang', 'ASC');
+        $this->db->order_by('created_at','DESC');
         return $this->db->get('gudang')->result();
     }
 
@@ -137,5 +137,15 @@ class Perusahaan_model extends CI_Model {
         $stats['total_stok'] = $result->total_stok ? $result->total_stok : 0;
         
         return $stats;
+    }
+
+    // Update status perusahaan
+    public function update_status($id, $status) {
+        $this->db->where('id_perusahaan', $id);
+        $data = [
+            'status_aktif' => $status,
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+        return $this->db->update('perusahaan', $data);
     }
 }
