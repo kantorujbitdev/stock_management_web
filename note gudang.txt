@@ -1,0 +1,321 @@
+Bro kita sedang bikin aplikasi berbasis web ya bro dengan Codeigniter 3.1.13.
+
+gw akan kirim data yg sudah kita miliki
+
+Role User:
+1. Admin Pusat
+2. Sales Online
+3. Admin Packing
+4. Admin Return
+5. Super Admin
+
+struktur folder yang dimiliki
+application/
+├── controllers/
+│   ├── auth/
+│   │   ├── Auth.php
+│   │   └── User.php
+│   ├── perusahaan/
+│   │   ├── Perusahaan.php
+│   │   └── Gudang.php
+│   ├── master/
+│   │   ├── Kategori.php
+│   │   ├── Barang.php
+│   │   ├── Supplier.php
+│   │   └── Pelanggan.php
+│   ├── stok/
+│   │   ├── StokAwal.php
+│   │   ├── Penerimaan.php
+│   │   ├── Transfer.php
+│   │   ├── Penyesuaian.php
+│   │   └── Riwayat.php
+│   ├── penjualan/
+│   │   ├── Penjualan.php
+│   │   └── Retur.php
+│   ├── laporan/
+│   │   ├── LaporanStok.php
+│   │   ├── LaporanPenjualan.php
+│   │   ├── LaporanRetur.php
+│   │   └── LaporanTransfer.php
+│   ├── pengaturan/
+│   │   ├── Sistem.php
+│   │   └── Backup.php
+│   └── Dashboard.php
+├── models/
+│   ├── auth/
+│   │   ├── User_model.php
+│   │   └── Hak_akses_model.php
+│   ├── perusahaan/
+│   │   ├── Perusahaan_model.php
+│   │   └── Gudang_model.php
+│   ├── master/
+│   │   ├── Kategori_model.php
+│   │   ├── Barang_model.php
+│   │   ├── Supplier_model.php
+│   │   └── Pelanggan_model.php
+│   ├── stok/
+│   │   ├── Stok_awal_model.php
+│   │   ├── Penerimaan_model.php
+│   │   ├── Detail_penerimaan_model.php
+│   │   ├── Transfer_model.php
+│   │   ├── Penyesuaian_model.php
+│   │   ├── Stok_gudang_model.php
+│   │   └── Log_stok_model.php
+│   ├── penjualan/
+│   │   ├── Penjualan_model.php
+│   │   ├── Detail_penjualan_model.php
+│   │   └── Retur_model.php
+│   ├── laporan/
+│   │   ├── Laporan_stok_model.php
+│   │   ├── Laporan_penjualan_model.php
+│   │   ├── Laporan_retur_model.php
+│   │   └── Laporan_transfer_model.php
+│   ├── pengaturan/
+│   │   ├── Pengaturan_model.php
+│   │   └── Backup_model.php
+│   └── Dashboard_model.php
+├── views/
+│   ├── auth/
+│   │   ├── login.php
+│   │   ├── user_list.php
+│   │   ├── user_form.php
+│   │   └── hak_akses.php
+│   ├── perusahaan/
+│   │   ├── perusahaan_list.php
+│   │   ├── perusahaan_form.php
+│   │   ├── gudang_list.php
+│   │   └── gudang_form.php
+│   ├── master/
+│   │   ├── kategori_list.php
+│   │   ├── kategori_form.php
+│   │   ├── barang_list.php
+│   │   ├── barang_form.php
+│   │   ├── supplier_list.php
+│   │   ├── supplier_form.php
+│   │   ├── pelanggan_list.php
+│   │   └── pelanggan_form.php
+│   ├── stok/
+│   │   ├── stok_awal_list.php
+│   │   ├── stok_awal_form.php
+│   │   ├── penerimaan_list.php
+│   │   ├── penerimaan_form.php
+│   │   ├── transfer_list.php
+│   │   ├── transfer_form.php
+│   │   ├── penyesuaian_list.php
+│   │   ├── penyesuaian_form.php
+│   │   └── riwayat_list.php
+│   ├── penjualan/
+│   │   ├── penjualan_list.php
+│   │   ├── penjualan_form.php
+│   │   ├── penjualan_detail.php
+│   │   ├── retur_list.php
+│   │   ├── retur_form.php
+│   │   └── retur_detail.php
+│   ├── laporan/
+│   │   ├── laporan_stok.php
+│   │   ├── laporan_stok_pdf.php
+│   │   ├── laporan_penjualan.php
+│   │   ├── laporan_penjualan_pdf.php
+│   │   ├── laporan_retur.php
+│   │   ├── laporan_retur_pdf.php
+│   │   └── laporan_transfer.php
+│   ├── pengaturan/
+│   │   ├── sistem.php
+│   │   └── backup.php
+│   ├── template/
+│   │   ├── header.php
+│   │   ├── sidebar.php
+│   │   ├── topbar.php
+│   │   ├── footer.php
+│   │   └── js.php
+│   └── dashboard.php
+├── libraries/
+│   ├── Auth.php
+│   └── Hak_akses.php
+└── backups/
+└── helpers/
+    ├── app_helper.php
+    └── stok_helper.php
+
+kita akan memperbaiki menu kategori:
+1. seharusnya ada id_perusahaan dalam tabel kategori sebagai penanda bahwa kategori_1 adalah milik perusahaan_i
+2. fitur hapus kategori langsung menghapus data, seharusnya hanya merubah status aktif dan tidak aktif (soft delete)
+3. fitur input data kategori jika role nya Admin Pusat seharusnya tidak perlu memilih Perusaan sebab Admin Pusat sudah memiliki id_perusahaan
+untuk update code fitur kategori ini file application/models/master/Kategori_model.php ini sudah terupdate
+mari kita lanjut generate code dan update untuk file application/controllers/master/Kategori.php
+
+
+Berikut urutan pembangunan modul dari awal hingga akhir dengan penjelasan tujuan dan fungsinya:
+
+🚀 Tahap 1: Fondasi Sistem (Wajib Dibuat Pertama)
+Modul Autentikasi & Hak Akses
+Tujuan: Mengatur login, logout, dan hak akses per role
+Fungsi:
+Login/logout user
+Cek hak akses fitur per role
+Manajemen user (Super Admin)
+Modul Perusahaan & Gudang
+Tujuan: Mengatur data perusahaan dan gudang
+Fungsi:
+CRUD perusahaan
+CRUD gudang per perusahaan
+Assign user ke gudang/perusahaan
+
+📦 Tahap 2: Master Data (Prasyarat untuk Modul Lain)
+Modul Kategori Barang
+Tujuan: Mengelompokkan barang per kategori
+Fungsi:
+CRUD kategori per perusahaan
+Filter barang berdasarkan kategori
+Modul Barang
+Tujuan: Manajemen data barang
+Fungsi:
+CRUD barang dengan SKU unik
+Upload gambar barang
+Relasi ke kategori
+Modul Supplier & Pelanggan
+Tujuan: Manajemen partner bisnis
+Fungsi:
+CRUD supplier
+CRUD pelanggan
+
+📊 Tahap 3: Inti Sistem (Manajemen Stok)
+Modul Stok Awal
+Tujuan: Input stok awal sistem
+Fungsi:
+Input stok awal per barang/gudang
+Generate log stok otomatis
+Modul Penerimaan Barang
+Tujuan: Pencatatan barang masuk
+Fungsi:
+Input penerimaan dari supplier
+Update stok otomatis
+Generate log stok "masuk"
+Modul Transfer Stok
+Tujuan: Pemindahan stok antar gudang
+Fungsi:
+Request transfer stok
+Approval transfer (Admin Pusat)
+Update stok otomatis
+Modul Penyesuaian Stok
+Tujuan: Koreksi stok manual
+Fungsi:
+Input penyesuaian stok
+Generate log stok "penyesuaian"
+Hanya untuk Admin Pusat
+
+💰 Tahap 4: Transaksi Bisnis
+Modul Penjualan
+Tujuan: Pencatatan penjualan
+Fungsi:
+Input penjualan (Sales Online)
+Proses packing (Admin Packing)
+Update stok otomatis
+Generate log stok "keluar"
+Modul Retur Penjualan
+Tujuan: Pencatatan retur dari pelanggan
+Fungsi:
+Input retur (Admin Return)
+Update stok otomatis
+Generate log stok "retur"
+
+📈 Tahap 5: Monitoring & Laporan
+Modul Dashboard
+Tujuan: Tampilan ringkasan sistem
+Fungsi:
+Ringkasan stok per gudang
+Grafik penjualan
+Notifikasi stok menipis
+Modul Riwayat Stok
+Tujuan: Audit trail pergerakan stok
+Fungsi:
+Tampilkan log stok dengan filter
+Tracking perubahan stok
+Modul Laporan
+Tujuan: Generate laporan sistem
+Fungsi:
+Laporan stok per gudang/kategori
+Laporan penjualan per periode
+Laporan retur penjualan
+Export ke PDF/Excel
+
+⚙️ Tahap 6: Pengaturan Sistem (Terakhir)
+Modul Pengaturan Sistem
+Tujuan: Konfigurasi aplikasi
+Fungsi:
+Pengaturan nama toko, alamat
+Pengaturan minimal stok
+Backup database
+
+untuk link source code lu bisa cek link git gw bro:
+https://github.com/kantorujbitdev/stock_management_web
+
+coba cek code-code yang ada itu bro. coba analisa dan berikan saya penjelasan serta keterangan apabila ada yang perlu di perbaiki
+
+
+
+
+Okay gw akan upload ulang .zip nya bro.
+berarti saat ini lu mendeteksi adanya 10 kekurangan dalam kode gw ini bro, diantaranya:
+1. Base Controller (MY_Controller) untuk konsistensi auth & layout.
+2. Service Layer khusus stok (agar semua jalur ubah stok 100% konsisten & bertransaksi).
+3. Hardening auth (hash modern, rate limit, CSRF).
+4. Server-side DataTables di semua list besar.
+5. Index DB & constraint (foreign key, unique SKU).
+6. Activity Log umum (di luar Log Stok).
+7. Migrasi DB terkelola (walau CI3, tetap bisa).
+8. State machine yang jelas untuk Transfer dan Packing.
+9. Pola retur yang membedakan retur masuk stok vs retur rusak.
+10. Backup DB aman (non-public, role-limited).
+
+Tahap 1: Pondasi & Keamanan (Wajib duluan)
+Base Controller (MY_Controller)
+Bikin application/core/MY_Controller.php
+Semua controller extend MY_Controller → supaya auth check & layout konsisten.
+Auth Hardening
+Ubah password hashing ke password_hash (bcrypt) + password_verify.
+Tambahkan rate limit login (misal: gagal 5x → cooldown 10 menit).
+Aktifkan CSRF di application/config/config.php.
+Backup DB Aman
+Pastikan file backup disimpan di folder non-public (misal application/backups/), bukan di /public/.
+Akses backup hanya bisa oleh Super Admin.
+Tahap 2: Konsistensi Bisnis Proses
+Service Layer untuk Stok
+Bikin class StockService.php di application/libraries/.
+Semua mutasi stok (jual, retur, transfer, penyesuaian) lewat service ini → otomatis wrap dengan transaksi DB.
+State Machine Transfer & Packing
+Tambah field status (draft, approved, delivered, received).
+Buat function yang hanya bisa mengubah status sesuai alur.
+Hindari update langsung → pakai method service tadi.
+Pola Retur Jelas
+Retur baik → stok kembali.
+Retur rusak → masuk tabel khusus stok_rusak, bukan stok utama.
+Tahap 3: Skalabilitas & Maintainability
+Server-side DataTables
+Tambahkan endpoint JSON (ajax_list) untuk semua tabel besar.
+Di sisi view → pakai DataTables mode serverSide: true.
+Index DB & Constraint
+Tambah foreign key (misal: id_gudang di stok harus valid di gudang).
+SKU barang wajib unique.
+Tambah index di kolom pencarian (kode_barang, nama_barang).
+Activity Log Umum
+Buat tabel activity_log (id_user, aksi, keterangan, timestamp).
+Catat semua aktivitas besar (login, tambah barang, ubah stok, hapus data).
+Migrasi DB
+Walau CI3 nggak built-in, kita bisa bikin folder application/migrations/.
+Simpan file SQL numerik (001_create_barang.sql, 002_add_index.sql, dst).
+Buat library kecil MigrationRunner untuk apply patch secara teratur.
+
+📌 Cara Eksekusi
+Step by step → Jangan langsung 10 item sekaligus.
+Gw saranin urutannya gini:
+MY_Controller (pondasi)
+Hardening Auth
+Backup DB Aman
+Service Layer Stok
+State Machine Transfer & Retur
+Activity Log
+Migrasi DB
+Index & Constraint
+Server-side DataTables
+
