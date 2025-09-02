@@ -30,7 +30,7 @@
                      <thead>
                         <tr>
                             <th>Fitur</th>
-                            <th width="100">Akses</th>
+                            <th>Akses</th>
                         </tr>
                     </thead>
                     <tbody>

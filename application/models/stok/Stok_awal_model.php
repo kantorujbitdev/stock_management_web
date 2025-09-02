@@ -65,18 +65,18 @@ class Stok_awal_model extends CI_Model {
         return $this->db->get()->row();
     }
     
-    // Check if stok awal exists for barang and gudang
-    public function check_stok_awal_exists($id_barang, $id_gudang, $id_stok_awal = null) {
-        $this->db->where('id_barang', $id_barang);
-        $this->db->where('id_gudang', $id_gudang);
+    // // Check if stok awal exists for barang and gudang
+    // public function check_stok_awal_exists($id_barang, $id_gudang, $id_stok_awal = null) {
+    //     $this->db->where('id_barang', $id_barang);
+    //     $this->db->where('id_gudang', $id_gudang);
         
-        if ($id_stok_awal) {
-            $this->db->where('id_stok_awal !=', $id_stok_awal);
-        }
+    //     if ($id_stok_awal) {
+    //         $this->db->where('id_stok_awal !=', $id_stok_awal);
+    //     }
         
-        $query = $this->db->get('stok_awal');
-        return $query->num_rows() > 0;
-    }
+    //     $query = $this->db->get('stok_awal');
+    //     return $query->num_rows() > 0;
+    // }
     
     // Insert stok awal with transaction
     public function insert_stok_awal($data) {
@@ -118,4 +118,59 @@ class Stok_awal_model extends CI_Model {
         }
         return true;
     }
+    public function get_barang_with_stock_status($filter = []) {
+    $this->db->select('b.*, k.nama_kategori, p.nama_perusahaan, 
+                    COALESCE(sa.qty_awal, 0) as qty_awal,
+                    COALESCE(sa.id_stok_awal, 0) as has_stok_awal,
+                    COALESCE(sa.keterangan, "") as keterangan,
+                    COALESCE(sa.created_at) as tanggal_update,
+                    g.nama_gudang,
+                    u.nama as created_by_name');
+    $this->db->from('barang b');
+    $this->db->join('kategori k', 'b.id_kategori = k.id_kategori', 'left');
+    $this->db->join('perusahaan p', 'b.id_perusahaan = p.id_perusahaan', 'left');
+    $this->db->join('stok_awal sa', 'b.id_barang = sa.id_barang', 'left');
+    $this->db->join('gudang g', 'sa.id_gudang = g.id_gudang', 'left');
+    $this->db->join('user u', 'sa.created_by = u.id_user', 'left');
+    
+    // Apply filter
+    if (!empty($filter['id_perusahaan'])) {
+        $this->db->where('b.id_perusahaan', $filter['id_perusahaan']);
+    }
+    if (!empty($filter['id_gudang'])) {
+        $this->db->where('sa.id_gudang', $filter['id_gudang']);
+    }
+    if (!empty($filter['id_barang'])) {
+        $this->db->where('b.id_barang', $filter['id_barang']);
+    }
+    
+    // Filter by stock status
+    if (!empty($filter['stock_status'])) {
+        switch ($filter['stock_status']) {
+            case 'empty':
+                $this->db->where('sa.id_stok_awal IS NULL');
+                break;
+            case 'has_stock':
+                $this->db->where('sa.id_stok_awal IS NOT NULL');
+                break;
+        }
+    }
+    
+    $this->db->where('b.aktif', 1);
+    $this->db->order_by('p.nama_perusahaan, b.nama_barang');
+    
+    return $this->db->get()->result();
+}
+    // Cek stok awal exists
+    public function check_stok_awal_exists($id_barang, $id_gudang) {
+        $this->db->where('id_barang', $id_barang);
+        $this->db->where('id_gudang', $id_gudang);
+        $query = $this->db->get('stok_awal');
+        return $query->num_rows() > 0;
+    }
+
+    // // Insert stok awal
+    // public function insert_stok_awal($data) {
+    //     return $this->db->insert('stok_awal', $data);
+    // }
 }

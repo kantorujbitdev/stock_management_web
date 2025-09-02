@@ -20,7 +20,7 @@
             <div class="col-md-6">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <tr>
-                        <th width="150">No Penerimaan</th>
+                        <th>No Penerimaan</th>
                         <td><?php echo $penerimaan->no_penerimaan; ?></td>
                     </tr>
                     <tr>
@@ -40,7 +40,7 @@
             <div class="col-md-6">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <tr>
-                        <th width="150">Gudang</th>
+                        <th>Gudang</th>
                         <td><?php echo $penerimaan->nama_gudang; ?></td>
                     </tr>
                     <tr>

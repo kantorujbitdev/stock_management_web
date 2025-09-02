@@ -20,7 +20,7 @@
             <div class="col-md-6">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <tr>
-                        <th width="150">No Retur</th>
+                        <th>No Retur</th>
                         <td><?php echo $retur->no_retur; ?></td>
                     </tr>
                     <tr>
@@ -40,7 +40,7 @@
             <div class="col-md-6">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <tr>
-                        <th width="150">Status</th>
+                        <th>Status</th>
                         <td>
                             <?php if ($retur->status == 'diterima'): ?>
                                 <span class="badge badge-primary">Diterima</span>

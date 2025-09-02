@@ -1,10 +1,14 @@
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Data Penerimaan Barang</h3>
-        <div class="card-tools">
-            <a href="<?php echo site_url('penerimaan/add'); ?>" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus"></i> Tambah Penerimaan
-            </a>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col">
+                <h6 class="m-0 font-weight-bold text-primary">Daftar Penerimaan Barang</h6>
+            </div>
+            <div class="col text-right">
+                <a href="<?php echo site_url('penerimaan/add') ?>" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Tambah Penerimaan
+                </a>
+            </div>
         </div>
     </div>
     <div class="card-body">

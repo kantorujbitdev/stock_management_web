@@ -95,9 +95,12 @@ $route['stok_awal/edit/(:num)'] = 'stok/StokAwal/edit/$1';
 $route['stok_awal/delete/(:num)'] = 'stok/StokAwal/delete/$1';
 $route['stok_awal/get_gudang_by_perusahaan'] = 'stok/StokAwal/get_gudang_by_perusahaan';
 $route['stok_awal/get_barang_by_perusahaan'] = 'stok/StokAwal/get_barang_by_perusahaan';
+$route['stok_awal/input_stok/(:num)'] = 'stok/StokAwal/input_stok/$1';
+$route['stok_awal/process_input_stok'] = 'stok/StokAwal/process_input_stok';
 
 $route['penerimaan'] = 'stok/Penerimaan';
 $route['penerimaan/add'] = 'stok/Penerimaan/add';
+$route['penerimaan/add_process'] = 'stok/Penerimaan/add_process';
 $route['penerimaan/detail/(:num)'] = 'stok/Penerimaan/detail/$1';
 $route['penerimaan/proses/(:num)'] = 'stok/Penerimaan/proses/$1';
 $route['penerimaan/batal/(:num)'] = 'stok/Penerimaan/batal/$1';
@@ -126,6 +129,7 @@ $route['riwayat/get_barang_by_gudang'] = 'stok/Riwayat/get_barang_by_gudang';
 // Routes untuk Penjualan
 $route['penjualan'] = 'penjualan/Penjualan';
 $route['penjualan/add'] = 'penjualan/Penjualan/add';
+$route['penjualan/add_process'] = 'penjualan/Penjualan/add_process';
 $route['penjualan/detail/(:num)'] = 'penjualan/Penjualan/detail/$1';
 $route['penjualan/proses/(:num)'] = 'penjualan/Penjualan/proses/$1';
 $route['penjualan/kirim/(:num)'] = 'penjualan/Penjualan/kirim/$1';

@@ -92,8 +92,8 @@ $autoload['drivers'] = array();
 */
 // $autoload['helper'] = array('url');
 
-$autoload['helper'] = array('url', 'app');
-
+// $autoload['helper'] = array('url', 'app');
+$autoload['helper'] = array('url', 'app', 'date');
 /*
 | -------------------------------------------------------------------
 |  Auto-load Config files

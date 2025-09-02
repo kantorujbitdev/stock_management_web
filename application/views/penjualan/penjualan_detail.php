@@ -32,7 +32,7 @@
             <div class="col-md-6">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <tr>
-                        <th width="150">No Invoice</th>
+                        <th>No Invoice</th>
                         <td><?php echo $penjualan->no_invoice; ?></td>
                     </tr>
                     <tr>
@@ -48,7 +48,7 @@
             <div class="col-md-6">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <tr>
-                        <th width="150">Status</th>
+                        <th>Status</th>
                         <td>
                             <?php if ($penjualan->status == 'proses'): ?>
                                 <span class="badge badge-secondary">Proses</span>

@@ -16,6 +16,8 @@ class StokAwal extends CI_Controller {
         $this->load->model('stok/Stok_gudang_model');
         $this->load->model('stok/Log_stok_model');
         
+        $this->load->helper('date');
+        
         // Cek login
         if (!$this->session->userdata('logged_in')) {
             redirect('auth');
@@ -28,215 +30,6 @@ class StokAwal extends CI_Controller {
         }
     }
     
-    public function index() {
-        $data['title'] = 'Data Stok Awal';
-        
-        // Filter parameters
-        $filter = [
-            'id_perusahaan' => $this->input->get('id_perusahaan'),
-            'id_gudang' => $this->input->get('id_gudang'),
-            'id_barang' => $this->input->get('id_barang')
-        ];
-        
-        // Get data with filter
-        if ($this->session->userdata('id_role') == 5) {
-            $data['stok_awal'] = $this->Stok_awal_model->get_all_stok_awal($filter);
-            $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
-        } else {
-            $id_perusahaan = $this->session->userdata('id_perusahaan');
-            $filter['id_perusahaan'] = $id_perusahaan;
-            $data['stok_awal'] = $this->Stok_awal_model->get_stok_awal_by_perusahaan($id_perusahaan, $filter);
-            $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
-        }
-        
-        $data['filter'] = $filter;
-        $data['content'] = 'stok/stok_awal_list';
-        $this->load->view('template/template', $data);
-    }
-    
-    public function add() {
-        $data['title'] = 'Tambah Stok Awal';
-        
-        // Jika Super Admin, tampilkan semua perusahaan
-        if ($this->session->userdata('id_role') == 5) {
-            $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
-        } else {
-            // Jika Admin Pusat, hanya tampilkan perusahaannya
-            $id_perusahaan = $this->session->userdata('id_perusahaan');
-            $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
-        }
-        
-        $data['content'] = 'stok/stok_awal_form';
-        $this->load->view('template/template', $data);
-    }
-    
-    public function add_process() {
-        $this->_set_rules();
-        
-        if ($this->form_validation->run() == FALSE) {
-            $this->add();
-        } else {
-            // Cek hak akses perusahaan
-            if ($this->session->userdata('id_role') != 5) {
-                $id_perusahaan_user = $this->session->userdata('id_perusahaan');
-                $id_perusahaan_input = $this->input->post('id_perusahaan');
-                
-                if ($id_perusahaan_user != $id_perusahaan_input) {
-                    $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke perusahaan ini');
-                    redirect('stok_awal');
-                }
-            }
-            
-            // Cek apakah stok awal untuk barang dan gudang ini sudah ada
-            $id_barang = $this->input->post('id_barang');
-            $id_gudang = $this->input->post('id_gudang');
-            
-            if ($this->Stok_awal_model->check_stok_awal_exists($id_barang, $id_gudang)) {
-                $this->session->set_flashdata('error', 'Stok awal untuk barang ini di gudang ini sudah ada');
-                redirect('stok_awal/add');
-            }
-            
-            $data = [
-                'id_barang' => $id_barang,
-                'id_gudang' => $id_gudang,
-                'id_perusahaan' => $this->input->post('id_perusahaan'),
-                'qty_awal' => $this->input->post('qty_awal'),
-                'keterangan' => $this->input->post('keterangan'),
-                'created_by' => $this->session->userdata('id_user')
-            ];
-            
-            $insert = $this->Stok_awal_model->insert_stok_awal($data);
-            
-            if ($insert) {
-                // Update stok gudang
-                if ($this->update_stok_gudang($id_barang, $id_gudang, $this->input->post('qty_awal'), 'stok_awal')) {
-                    $this->session->set_flashdata('success', 'Stok awal berhasil ditambahkan');
-                } else {
-                    $this->session->set_flashdata('warning', 'Stok awal ditambahkan tapi gagal update stok gudang');
-                }
-                redirect('stok_awal');
-            } else {
-                $this->session->set_flashdata('error', 'Gagal menambahkan stok awal: ' . $this->db->error()['message']);
-                redirect('stok_awal/add');
-            }
-        }
-    }
-    
-    public function edit($id) {
-        // Cek apakah user punya akses ke stok awal ini
-        if ($this->session->userdata('id_role') != 5) {
-            $id_perusahaan_user = $this->session->userdata('id_perusahaan');
-            $stok_awal = $this->Stok_awal_model->get_stok_awal_by_id($id);
-            
-            if ($stok_awal->id_perusahaan != $id_perusahaan_user) {
-                $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke stok awal ini');
-                redirect('stok_awal');
-            }
-        }
-        
-        $data['title'] = 'Edit Stok Awal';
-        $data['stok_awal'] = $this->Stok_awal_model->get_stok_awal_by_id($id);
-        
-        // Jika Super Admin, tampilkan semua perusahaan
-        if ($this->session->userdata('id_role') == 5) {
-            $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
-        } else {
-            // Jika Admin Pusat, hanya tampilkan perusahaannya
-            $id_perusahaan = $this->session->userdata('id_perusahaan');
-            $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
-        }
-        
-        $data['gudang'] = $this->Gudang_model->get_gudang_by_perusahaan($data['stok_awal']->id_perusahaan);
-        $data['barang'] = $this->Barang_model->get_barang_by_perusahaan($data['stok_awal']->id_perusahaan);
-        
-        $data['content'] = 'stok/stok_awal_form';
-        $this->load->view('template/template', $data);
-    }
-    
-    public function edit_process() {
-        $id = $this->input->post('id_stok_awal');
-        
-        // Cek hak akses perusahaan
-        if ($this->session->userdata('id_role') != 5) {
-            $id_perusahaan_user = $this->session->userdata('id_perusahaan');
-            $id_perusahaan_input = $this->input->post('id_perusahaan');
-            
-            if ($id_perusahaan_user != $id_perusahaan_input) {
-                $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke perusahaan ini');
-                redirect('stok_awal');
-            }
-        }
-        
-        $this->_set_rules();
-        
-        if ($this->form_validation->run() == FALSE) {
-            $this->edit($id);
-        } else {
-            $id_barang = $this->input->post('id_barang');
-            $id_gudang = $this->input->post('id_gudang');
-            $qty_awal = $this->input->post('qty_awal');
-            
-            // Cek apakah stok awal untuk barang dan gudang ini sudah ada (kecuali untuk record yang sama)
-            $stok_awal = $this->Stok_awal_model->get_stok_awal_by_id($id);
-            
-            if ($stok_awal->id_barang != $id_barang || $stok_awal->id_gudang != $id_gudang) {
-                if ($this->Stok_awal_model->check_stok_awal_exists($id_barang, $id_gudang)) {
-                    $this->session->set_flashdata('error', 'Stok awal untuk barang ini di gudang ini sudah ada');
-                    redirect('stok_awal/edit/' . $id);
-                }
-            }
-            
-            $data = [
-                'id_barang' => $id_barang,
-                'id_gudang' => $id_gudang,
-                'id_perusahaan' => $this->input->post('id_perusahaan'),
-                'qty_awal' => $qty_awal,
-                'keterangan' => $this->input->post('keterangan')
-            ];
-            
-            $update = $this->Stok_awal_model->update_stok_awal($id, $data);
-            
-            if ($update) {
-                // Update stok gudang
-                if ($this->update_stok_gudang($id_barang, $id_gudang, $qty_awal, 'stok_awal', $stok_awal->qty_awal)) {
-                    $this->session->set_flashdata('success', 'Stok awal berhasil diupdate');
-                } else {
-                    $this->session->set_flashdata('warning', 'Stok awal diupdate tapi gagal update stok gudang');
-                }
-                redirect('stok_awal');
-            } else {
-                $this->session->set_flashdata('error', 'Gagal mengupdate stok awal: ' . $this->db->error()['message']);
-                redirect('stok_awal/edit/' . $id);
-            }
-        }
-    }
-    
-    public function delete($id) {
-        // Cek apakah user punya akses ke stok awal ini
-        if ($this->session->userdata('id_role') != 5) {
-            $id_perusahaan_user = $this->session->userdata('id_perusahaan');
-            $stok_awal = $this->Stok_awal_model->get_stok_awal_by_id($id);
-            
-            if ($stok_awal->id_perusahaan != $id_perusahaan_user) {
-                $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke stok awal ini');
-                redirect('stok_awal');
-            }
-        }
-        
-        $stok_awal = $this->Stok_awal_model->get_stok_awal_by_id($id);
-        
-        if ($this->Stok_awal_model->delete_stok_awal($id)) {
-            // Update stok gudang
-            if ($this->update_stok_gudang($stok_awal->id_barang, $stok_awal->id_gudang, 0, 'stok_awal', $stok_awal->qty_awal)) {
-                $this->session->set_flashdata('success', 'Stok awal berhasil dihapus');
-            } else {
-                $this->session->set_flashdata('warning', 'Stok awal dihapus tapi gagal update stok gudang');
-            }
-        } else {
-            $this->session->set_flashdata('error', 'Gagal menghapus stok awal: ' . $this->db->error()['message']);
-        }
-        redirect('stok_awal');
-    }
     
     // Helper function untuk update stok gudang
     private function update_stok_gudang($id_barang, $id_gudang, $qty, $jenis, $qty_lama = 0) {
@@ -403,4 +196,112 @@ class StokAwal extends CI_Controller {
         $this->form_validation->set_rules('qty_awal', 'Qty Awal', 'required|numeric|greater_than_equal_to[0]|max_length[10]');
         $this->form_validation->set_rules('keterangan', 'Keterangan', 'max_length[255]');
     }
+
+    public function index() {
+    $data['title'] = 'Data Barang';
+    
+    // Filter parameters
+    $filter = [
+        'id_perusahaan' => $this->input->get('id_perusahaan'),
+        'id_gudang' => $this->input->get('id_gudang'),
+        'id_barang' => $this->input->get('id_barang'),
+        'stock_status' => $this->input->get('stock_status') // all, empty, has_stock
+    ];
+    
+    // Get data with filter
+    if ($this->session->userdata('id_role') == 5) {
+        $data['barang'] = $this->Stok_awal_model->get_barang_with_stock_status($filter);
+        $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
+    } else {
+        $id_perusahaan = $this->session->userdata('id_perusahaan');
+        $filter['id_perusahaan'] = $id_perusahaan;
+        $data['barang'] = $this->Stok_awal_model->get_barang_with_stock_status($filter);
+        $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
+    }
+    
+    $data['filter'] = $filter;
+    $data['content'] = 'stok/stok_awal_list_v2';
+    $this->load->view('template/template', $data);
+}
+
+    // Form untuk input stok awal per barang
+    public function input_stok($id_barang) {
+        $data['title'] = 'Input Stok Awal';
+        $data['barang'] = $this->Barang_model->get_barang_by_id($id_barang);
+        
+        if (!$data['barang']) {
+            show_404();
+        }
+        
+        // Cek hak akses perusahaan
+        if ($this->session->userdata('id_role') != 5) {
+            if ($data['barang']->id_perusahaan != $this->session->userdata('id_perusahaan')) {
+                $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke barang ini');
+                redirect('stok_awal');
+            }
+        }
+        
+        // Ambil gudang untuk perusahaan ini
+        $data['gudang'] = $this->Gudang_model->get_gudang_by_perusahaan($data['barang']->id_perusahaan);
+        
+        $data['content'] = 'stok/input_stok_form';
+        $this->load->view('template/template', $data);
+    }
+
+    // Proses input stok awal
+    public function process_input_stok() {
+        $id_barang = $this->input->post('id_barang');
+        $id_gudang = $this->input->post('id_gudang');
+        $qty_awal = $this->input->post('qty_awal');
+        
+        // Validasi
+        if (!$id_barang || !$id_gudang || !$qty_awal || $qty_awal <= 0) {
+            $this->session->set_flashdata('error', 'Data tidak valid');
+            redirect('stok_awal');
+        }
+        
+        // Cek hak akses
+        $barang = $this->Barang_model->get_barang_by_id($id_barang);
+        if (!$barang) {
+            show_404();
+        }
+        
+        if ($this->session->userdata('id_role') != 5) {
+            if ($barang->id_perusahaan != $this->session->userdata('id_perusahaan')) {
+                $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke barang ini');
+                redirect('stok_awal');
+            }
+        }
+        
+        // Cek apakah stok awal sudah ada
+        if ($this->Stok_awal_model->check_stok_awal_exists($id_barang, $id_gudang)) {
+            $this->session->set_flashdata('error', 'Stok awal untuk barang ini di gudang ini sudah ada');
+            redirect('stok_awal');
+        }
+        
+        // Simpan stok awal
+        $data_stok_awal = [
+            'id_barang' => $id_barang,
+            'id_gudang' => $id_gudang,
+            'id_perusahaan' => $barang->id_perusahaan,
+            'qty_awal' => $qty_awal,
+            'keterangan' => $this->input->post('keterangan'),
+            'created_by' => $this->session->userdata('id_user')
+        ];
+        
+        $insert = $this->Stok_awal_model->insert_stok_awal($data_stok_awal);
+        
+        if ($insert) {
+            // Update stok gudang
+            $this->update_stok_gudang($id_barang, $id_gudang, $qty_awal, 'stok_awal');
+            
+            $this->session->set_flashdata('success', 'Stok awal berhasil ditambahkan');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menambahkan stok awal');
+        }
+        
+        redirect('stok_awal');
+    }
+
+    
 }

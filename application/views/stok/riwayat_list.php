@@ -1,12 +1,12 @@
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Riwayat Stok</h3>
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
-            </button>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col">
+                <h6 class="m-0 font-weight-bold text-primary">Riwayat Stok</h6>
+            </div>
         </div>
     </div>
+
     <div class="card-body">
         <form method="get" action="<?php echo site_url('riwayat'); ?>">
             <div class="row">

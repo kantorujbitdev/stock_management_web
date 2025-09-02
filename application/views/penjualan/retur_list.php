@@ -1,10 +1,16 @@
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Data Retur Penjualan</h3>
-        <div class="card-tools">
-            <a href="<?php echo site_url('retur/add'); ?>" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus"></i> Tambah Retur
-            </a>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col">
+                <h6 class="m-0 font-weight-bold text-primary">Daftar Retur Penjualan</h6>
+            </div>
+            <?php if ($this->session->userdata('id_role') == 5): ?>
+            <div class="col text-right">
+                <a href="<?php echo site_url('retur/add') ?>" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Tambah Retur Penjualan
+                </a>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
     <div class="card-body">

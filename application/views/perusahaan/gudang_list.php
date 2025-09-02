@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<!-- <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Data Gudang</h1>
     
     <?php if ($this->session->flashdata('success')): ?>
@@ -7,7 +7,7 @@
     
     <?php if ($this->session->flashdata('error')): ?>
         <?php echo alert('danger', $this->session->flashdata('error')) ?>
-    <?php endif; ?>
+    <?php endif; ?> -->
     
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -25,7 +25,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>No</th>
                             <th>Nama Gudang</th>
                             <?php if ($this->session->userdata('id_role') == 5): ?>
                                 <th>Perusahaan</th>
@@ -75,4 +75,4 @@
             </div>
         </div>
     </div>
-</div>
+<!-- </div> -->

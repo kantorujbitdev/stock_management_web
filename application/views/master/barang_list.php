@@ -1,12 +1,17 @@
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Data Barang</h3>
-        <div class="card-tools">
-            <a href="<?php echo site_url('barang/add'); ?>" class="btn btn-sm btn-primary">
-                <i class="fas fa-plus"></i> Tambah Barang
-            </a>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col">
+                <h6 class="m-0 font-weight-bold text-primary">Daftar Barang</h6>
+            </div>
+            <div class="col text-right">
+                <a href="<?php echo site_url('barang/add') ?>" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Tambah Barang
+                </a>
+            </div>
         </div>
     </div>
+
     <div class="card-body">
         <?php if ($this->session->flashdata('success')): ?>
             <div class="alert alert-success alert-dismissible">
@@ -26,7 +31,7 @@
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th width="5%">No</th>
+                        <th>No</th>
                         <th>Gambar</th>
                         <th>Nama Barang</th>
                         <th>SKU</th>
@@ -36,7 +41,7 @@
                         <?php endif; ?>
                         <th>Stok</th>
                         <th>Status</th>
-                        <th width="15%">Aksi</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
