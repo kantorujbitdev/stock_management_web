@@ -25,12 +25,23 @@
             </div>
             
             <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    
-                     <thead>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">Daftar Fitur</h6>
+                    <div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" id="checkAll">
+                            <i class="fas fa-check-square"></i> Check All
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="uncheckAll">
+                            <i class="fas fa-square"></i> Uncheck All
+                        </button>
+                    </div>
+                </div>
+                
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
                         <tr>
-                            <th>Fitur</th>
-                            <th>Akses</th>
+                            <th width="50%">Fitur</th>
+                            <th width="50%" class="text-center">Akses</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,7 +50,10 @@
                             <td><?php echo $value ?></td>
                             <td class="text-center">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="fitur_<?php echo $key ?>" name="fitur[<?php echo $key ?>]" value="1">
+                                    <input type="checkbox" class="custom-control-input fitur-checkbox" 
+                                           id="fitur_<?php echo $key ?>" 
+                                           name="fitur[<?php echo $key ?>]" 
+                                           value="1">
                                     <label class="custom-control-label" for="fitur_<?php echo $key ?>"></label>
                                 </div>
                             </td>
@@ -49,7 +63,14 @@
                 </table>
             </div>
             
-            <button type="submit" class="btn btn-primary">Simpan</button>
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Simpan
+                </button>
+                <a href="<?php echo site_url('auth/user'); ?>" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Batal
+                </a>
+            </div>
             <?php echo form_close(); ?>
         </div>
     </div>
@@ -57,6 +78,16 @@
 
 <script>
 $(document).ready(function() {
+    // Check All functionality
+    $('#checkAll').click(function() {
+        $('.fitur-checkbox').prop('checked', true);
+    });
+    
+    // Uncheck All functionality
+    $('#uncheckAll').click(function() {
+        $('.fitur-checkbox').prop('checked', false);
+    });
+    
     $('#id_role').change(function() {
         var id_role = $(this).val();
         
@@ -67,8 +98,8 @@ $(document).ready(function() {
                 data: {id_role: id_role},
                 dataType: "json",
                 success: function(data) {
-                    // Uncheck all
-                    $('input[type="checkbox"]').prop('checked', false);
+                    // Uncheck all first
+                    $('.fitur-checkbox').prop('checked', false);
                     
                     // Check based on data
                     $.each(data, function(key, value) {
@@ -77,7 +108,7 @@ $(document).ready(function() {
                 }
             });
         } else {
-            $('input[type="checkbox"]').prop('checked', false);
+            $('.fitur-checkbox').prop('checked', false);
         }
     });
 });

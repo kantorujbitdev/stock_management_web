@@ -22,6 +22,9 @@ class User_model extends CI_Model {
         $this->db->join('role_user r', 'u.id_role = r.id_role', 'left');
         $this->db->join('perusahaan p', 'u.id_perusahaan = p.id_perusahaan', 'left');
         $this->db->join('gudang g', 'u.id_gudang = g.id_gudang', 'left');
+        if ($this->session->userdata('id_role') == 1) {        
+            $this->db->where('u.id_perusahaan', $this->session->userdata('id_perusahaan'));
+        }
         $this->db->order_by('u.id_user', 'DESC');
         return $this->db->get()->result();
     }
