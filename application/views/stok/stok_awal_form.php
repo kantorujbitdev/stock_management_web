@@ -120,7 +120,6 @@ $(document).ready(function() {
     
     // Event untuk gudang - PAKAI EVENT DELEGATION
     $(document).on('change', '#id_gudang', function() {
-        alert('Gudang dipilih!'); // Debug
         var id_perusahaan = $('#id_perusahaan').val();
         var id_gudang = $(this).val();
         console.log("Gudang dipilih:", id_gudang);
@@ -130,7 +129,6 @@ $(document).ready(function() {
         console.log("Barang dropdown di-reset dan di-disable");
         
         if (id_gudang != '') {
-            alert('Mengambil data barang...'); // Debug
             // AJAX untuk barang
             $.ajax({
                 url: "<?php echo site_url('stok_awal/get_barang_by_perusahaan'); ?>",
@@ -138,7 +136,6 @@ $(document).ready(function() {
                 data: { id_perusahaan: id_perusahaan },
                 dataType: "html",
                 success: function(response) {
-                    alert('Data barang diterima!'); // Debug
                     console.log("Response barang:", response);
                     
                     // Cek apakah ada data
@@ -151,7 +148,6 @@ $(document).ready(function() {
                     }
                 },
                 error: function(xhr, status, error) {
-                    alert('Error: ' + error); // Debug
                     console.error("Error barang:", error);
                     $('#id_barang').html('<option value="">-- Error --</option>');
                 }
@@ -161,18 +157,21 @@ $(document).ready(function() {
         }
     });
     
+    
     // Jika ini halaman edit, trigger perubahan dropdown
     <?php if (isset($stok_awal)): ?>
-        console.log("Mode edit, trigger dropdown...");
-        // Trigger perubahan perusahaan dulu
-        setTimeout(function() {
-            $('#id_perusahaan').trigger('change');
-            
-            // Tunggu gudang terisi, lalu trigger gudang
-            setTimeout(function() {
-                $('#id_gudang').trigger('change');
-            }, 1000);
-        }, 500);
+        console.log("Mode edit, siapkan dropdown...");
+        
+        // Enable dropdown gudang dan barang karena data sudah ada
+        $('#id_gudang').prop('disabled', false);
+        $('#id_barang').prop('disabled', false);
+        
+        // Set nilai perusahaan, gudang, dan barang sesuai data
+        $('#id_perusahaan').val('<?php echo $stok_awal->id_perusahaan; ?>');
+        $('#id_gudang').val('<?php echo $stok_awal->id_gudang; ?>');
+        $('#id_barang').val('<?php echo $stok_awal->id_barang; ?>');
+        
+        console.log("Dropdown di-set dengan data existing");
     <?php endif; ?>
 });
 </script>

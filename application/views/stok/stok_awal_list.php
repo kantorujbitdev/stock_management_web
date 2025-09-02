@@ -73,7 +73,7 @@
                     <th>Qty Awal</th>
                     <th>Keterangan</th>
                     <th>Dibuat Oleh</th>
-                    <th>Aksi</th>
+                    <!-- <th>Aksi</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -87,14 +87,14 @@
                     <td><?php echo $s->qty_awal; ?></td>
                     <td><?php echo $s->keterangan; ?></td>
                     <td><?php echo $s->created_by_name; ?></td>
-                    <td>
+                    <!-- <td>
                         <a href="<?php echo site_url('stok_awal/edit/' . $s->id_stok_awal); ?>" class="btn btn-warning btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
                         <a href="<?php echo site_url('stok_awal/delete/' . $s->id_stok_awal); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                             <i class="fas fa-trash"></i>
                         </a>
-                    </td>
+                    </td> -->
                 </tr>
                 <?php endforeach; ?>
             </tbody>
