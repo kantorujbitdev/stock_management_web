@@ -1,13 +1,13 @@
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Pengaturan Hak Akses</h1>
-    
+
     <?php if ($this->session->flashdata('success')): ?>
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <?php echo $this->session->flashdata('success'); ?>
         </div>
     <?php endif; ?>
-    
+
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Hak Akses per Role</h6>
@@ -23,7 +23,7 @@
                     <?php endforeach; ?>
                 </select>
             </div>
-            
+
             <div class="table-responsive">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h6 class="mb-0">Daftar Fitur</h6>
@@ -36,7 +36,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -46,23 +46,21 @@
                     </thead>
                     <tbody>
                         <?php foreach ($fitur as $key => $value): ?>
-                        <tr>
-                            <td><?php echo $value ?></td>
-                            <td class="text-center">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input fitur-checkbox" 
-                                           id="fitur_<?php echo $key ?>" 
-                                           name="fitur[<?php echo $key ?>]" 
-                                           value="1">
-                                    <label class="custom-control-label" for="fitur_<?php echo $key ?>"></label>
-                                </div>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td><?php echo $value ?></td>
+                                <td class="text-center">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input fitur-checkbox"
+                                            id="fitur_<?php echo $key ?>" name="fitur[<?php echo $key ?>]" value="1">
+                                        <label class="custom-control-label" for="fitur_<?php echo $key ?>"></label>
+                                    </div>
+                                </td>
+                            </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
-            
+
             <div class="form-group mt-3">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Simpan
@@ -77,39 +75,39 @@
 </div>
 
 <script>
-$(document).ready(function() {
-    // Check All functionality
-    $('#checkAll').click(function() {
-        $('.fitur-checkbox').prop('checked', true);
-    });
-    
-    // Uncheck All functionality
-    $('#uncheckAll').click(function() {
-        $('.fitur-checkbox').prop('checked', false);
-    });
-    
-    $('#id_role').change(function() {
-        var id_role = $(this).val();
-        
-        if (id_role != '') {
-            $.ajax({
-                url: "<?php echo site_url('auth/user/get_hak_akses') ?>",
-                method: "POST",
-                data: {id_role: id_role},
-                dataType: "json",
-                success: function(data) {
-                    // Uncheck all first
-                    $('.fitur-checkbox').prop('checked', false);
-                    
-                    // Check based on data
-                    $.each(data, function(key, value) {
-                        $('#fitur_' + value.nama_fitur).prop('checked', true);
-                    });
-                }
-            });
-        } else {
+    $(document).ready(function () {
+        // Check All functionality
+        $('#checkAll').click(function () {
+            $('.fitur-checkbox').prop('checked', true);
+        });
+
+        // Uncheck All functionality
+        $('#uncheckAll').click(function () {
             $('.fitur-checkbox').prop('checked', false);
-        }
+        });
+
+        $('#id_role').change(function () {
+            var id_role = $(this).val();
+
+            if (id_role != '') {
+                $.ajax({
+                    url: "<?php echo site_url('auth/user/get_hak_akses') ?>",
+                    method: "POST",
+                    data: { id_role: id_role },
+                    dataType: "json",
+                    success: function (data) {
+                        // Uncheck all first
+                        $('.fitur-checkbox').prop('checked', false);
+
+                        // Check based on data
+                        $.each(data, function (key, value) {
+                            $('#fitur_' + value.nama_fitur).prop('checked', true);
+                        });
+                    }
+                });
+            } else {
+                $('.fitur-checkbox').prop('checked', false);
+            }
+        });
     });
-});
 </script>

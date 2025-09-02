@@ -1,33 +1,36 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class LaporanTransfer extends CI_Controller {
+class LaporanTransfer extends CI_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->library('session');
         $this->load->helper('url');
         $this->load->library('hak_akses');
         $this->load->model('laporan/Laporan_transfer_model');
-        
+
         // Cek login
         if (!$this->session->userdata('logged_in')) {
             redirect('auth');
         }
-        
+
         // Cek hak akses
         $this->hak_akses->cek_akses('laporan_transfer');
     }
 
-    public function index() {
+    public function index()
+    {
         $data['title'] = 'Laporan Transfer Stok';
-        
+
         // Get filter values
         $id_perusahaan = $this->input->get('id_perusahaan');
         $tanggal_awal = $this->input->get('tanggal_awal');
         $tanggal_akhir = $this->input->get('tanggal_akhir');
         $status = $this->input->get('status');
-        
+
         // Set default tanggal
         if (!$tanggal_awal) {
             $tanggal_awal = date('Y-m-01');
@@ -35,7 +38,7 @@ class LaporanTransfer extends CI_Controller {
         if (!$tanggal_akhir) {
             $tanggal_akhir = date('Y-m-t');
         }
-        
+
         // Get data berdasarkan role
         if ($this->session->userdata('id_role') == 5) {
             // Super Admin - lihat semua data
@@ -45,12 +48,12 @@ class LaporanTransfer extends CI_Controller {
             // User lain - lihat data perusahaannya saja
             $id_perusahaan_user = $this->session->userdata('id_perusahaan');
             $data['transfer'] = $this->Laporan_transfer_model->get_filtered_transfer($id_perusahaan_user, $tanggal_awal, $tanggal_akhir, $status);
-            
+
             // Get perusahaan data for filter
             $this->load->model('perusahaan/Perusahaan_model');
             $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan_user));
         }
-        
+
         // Set filter values for view
         $data['filter'] = [
             'id_perusahaan' => $id_perusahaan,
@@ -58,18 +61,19 @@ class LaporanTransfer extends CI_Controller {
             'tanggal_akhir' => $tanggal_akhir,
             'status' => $status
         ];
-        
+
         $data['content'] = 'laporan/laporan_transfer';
         $this->load->view('template/template', $data);
     }
 
-    public function export_pdf() {
+    public function export_pdf()
+    {
         // Get filter values
         $id_perusahaan = $this->input->get('id_perusahaan');
         $tanggal_awal = $this->input->get('tanggal_awal');
         $tanggal_akhir = $this->input->get('tanggal_akhir');
         $status = $this->input->get('status');
-        
+
         // Get data berdasarkan role
         if ($this->session->userdata('id_role') == 5) {
             // Super Admin - lihat semua data
@@ -79,23 +83,24 @@ class LaporanTransfer extends CI_Controller {
             $id_perusahaan_user = $this->session->userdata('id_perusahaan');
             $data['transfer'] = $this->Laporan_transfer_model->get_filtered_transfer($id_perusahaan_user, $tanggal_awal, $tanggal_akhir, $status);
         }
-        
+
         // Load library PDF
         $this->load->library('pdf');
-        
+
         // Generate PDF
         $this->pdf->setPaper('A4', 'landscape');
         $this->pdf->filename = "laporan_transfer_" . date('YmdHis') . ".pdf";
         $this->pdf->load_view('laporan/laporan_transfer_pdf', $data);
     }
 
-    public function export_excel() {
+    public function export_excel()
+    {
         // Get filter values
         $id_perusahaan = $this->input->get('id_perusahaan');
         $tanggal_awal = $this->input->get('tanggal_awal');
         $tanggal_akhir = $this->input->get('tanggal_akhir');
         $status = $this->input->get('status');
-        
+
         // Get data berdasarkan role
         if ($this->session->userdata('id_role') == 5) {
             // Super Admin - lihat semua data
@@ -105,22 +110,22 @@ class LaporanTransfer extends CI_Controller {
             $id_perusahaan_user = $this->session->userdata('id_perusahaan');
             $data['transfer'] = $this->Laporan_transfer_model->get_filtered_transfer($id_perusahaan_user, $tanggal_awal, $tanggal_akhir, $status);
         }
-        
+
         // Load library Excel
         $this->load->library('excel');
-        
+
         // Create new PHPExcel object
         $objPHPExcel = new PHPExcel();
-        
+
         // Set properties
         $objPHPExcel->getProperties()->setTitle("Laporan Transfer Stok");
         $objPHPExcel->getProperties()->setSubject("Laporan Transfer Stok");
-        
+
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->setCellValue('A1', 'LAPORAN TRANSFER STOK');
         $objPHPExcel->getActiveSheet()->setCellValue('A2', 'Periode: ' . date('d-m-Y', strtotime($tanggal_awal)) . ' s/d ' . date('d-m-Y', strtotime($tanggal_akhir)));
-        
+
         // Header
         $objPHPExcel->getActiveSheet()->setCellValue('A4', 'No');
         $objPHPExcel->getActiveSheet()->setCellValue('B4', 'No Transfer');
@@ -131,7 +136,7 @@ class LaporanTransfer extends CI_Controller {
         $objPHPExcel->getActiveSheet()->setCellValue('G4', 'Jumlah');
         $objPHPExcel->getActiveSheet()->setCellValue('H4', 'Status');
         $objPHPExcel->getActiveSheet()->setCellValue('I4', 'User');
-        
+
         // Data
         $row = 5;
         $no = 1;
@@ -147,18 +152,18 @@ class LaporanTransfer extends CI_Controller {
             $objPHPExcel->getActiveSheet()->setCellValue('I' . $row, $t->created_by);
             $row++;
         }
-        
+
         // Rename sheet
         $objPHPExcel->getActiveSheet()->setTitle('Laporan Transfer Stok');
-        
+
         // Set active sheet index to the first sheet
         $objPHPExcel->setActiveSheetIndex(0);
-        
+
         // Redirect output to a client's web browser (Excel5)
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="laporan_transfer_' . date('YmdHis') . '.xls"');
         header('Cache-Control: max-age=0');
-        
+
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
         exit;

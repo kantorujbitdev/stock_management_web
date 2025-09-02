@@ -10,25 +10,25 @@
                 </a>
             </div>
         </div>
-         <div class="card-tools">
+        <div class="card-tools">
             <div class="btn-group">
-                <a href="<?php echo site_url('stok_awal?stock_status=all'); ?>" 
-                   class="btn btn-sm <?php echo ($filter['stock_status'] == 'all' || empty($filter['stock_status'])) ? 'btn-primary' : 'btn-default'; ?>">
+                <a href="<?php echo site_url('stok_awal?stock_status=all'); ?>"
+                    class="btn btn-sm <?php echo ($filter['stock_status'] == 'all' || empty($filter['stock_status'])) ? 'btn-primary' : 'btn-default'; ?>">
                     <i class="fas fa-list"></i> Semua
                 </a>
-                <a href="<?php echo site_url('stok_awal?stock_status=empty'); ?>" 
-                   class="btn btn-sm <?php echo ($filter['stock_status'] == 'empty') ? 'btn-danger' : 'btn-default'; ?>">
+                <a href="<?php echo site_url('stok_awal?stock_status=empty'); ?>"
+                    class="btn btn-sm <?php echo ($filter['stock_status'] == 'empty') ? 'btn-danger' : 'btn-default'; ?>">
                     <i class="fas fa-box-open"></i> Belum Ada Stok
                 </a>
-                <a href="<?php echo site_url('stok_awal?stock_status=has_stock'); ?>" 
-                   class="btn btn-sm <?php echo ($filter['stock_status'] == 'has_stock') ? 'btn-success' : 'btn-default'; ?>">
+                <a href="<?php echo site_url('stok_awal?stock_status=has_stock'); ?>"
+                    class="btn btn-sm <?php echo ($filter['stock_status'] == 'has_stock') ? 'btn-success' : 'btn-default'; ?>">
                     <i class="fas fa-box"></i> Sudah Ada Stok
                 </a>
             </div>
-            
+
         </div>
     </div>
-    
+
     <div class="card-body">
         <?php if ($this->session->flashdata('success')): ?>
             <div class="alert alert-success alert-dismissible">
@@ -36,14 +36,14 @@
                 <i class="icon fas fa-check"></i> <?php echo $this->session->flashdata('success'); ?>
             </div>
         <?php endif; ?>
-        
+
         <?php if ($this->session->flashdata('error')): ?>
             <div class="alert alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <i class="icon fas fa-ban"></i> <?php echo $this->session->flashdata('error'); ?>
             </div>
         <?php endif; ?>
-        
+
         <!-- Filter Form -->
         <form method="get" action="<?php echo site_url('stok_awal'); ?>">
             <div class="row">
@@ -91,42 +91,43 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $no = 1; foreach ($barang as $item): ?>
-                    <tr>
-                        <td><?php echo $no++; ?></td>
-                        <td><strong><?php echo $item->sku; ?></strong></td>
-                        <td><?php echo $item->nama_barang; ?></td>
-                        <td><?php echo $item->nama_kategori; ?></td>
-                        <td><?php echo $item->nama_perusahaan; ?></td>
-                        <td>
-                            <?php if ($item->has_stok_awal > 0): ?>
-                                <span class="badge badge-success">Sudah Ada Stok</span>
-                            <?php else: ?>
-                                <span class="badge badge-danger">Belum Ada Stok</span>
-                            <?php endif; ?>
-                        </td>
-                        <td><?php echo $item->nama_gudang ?: '-'; ?></td>
-                        <td>
-                            <?php if ($item->qty_awal > 0): ?>
-                                <span class="font-weight-bold"><?php echo $item->qty_awal; ?></span>
-                            <?php else: ?>
-                                <span class="text-muted">-</span>
-                            <?php endif; ?>
-                        </td>
-                        
-                        <td><?php echo $item->keterangan ?: '-'; ?></td>
-                        <td><?php echo $item->created_by_name ?: '-'; ?></td>
-                        <td>
-                            <?php if ($item->has_stok_awal == 0): ?>
-                                <a href="<?php echo site_url('stok_awal/input_stok/' . $item->id_barang); ?>" 
-                                class="btn btn-primary btn-sm" title="Input Stok Awal">
-                                    <i class="fas fa-plus"></i>
-                                </a>
-                            <?php else: ?>
-                                <span class="text-muted">-</span>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
+                    <?php $no = 1;
+                    foreach ($barang as $item): ?>
+                        <tr>
+                            <td><?php echo $no++; ?></td>
+                            <td><strong><?php echo $item->sku; ?></strong></td>
+                            <td><?php echo $item->nama_barang; ?></td>
+                            <td><?php echo $item->nama_kategori; ?></td>
+                            <td><?php echo $item->nama_perusahaan; ?></td>
+                            <td>
+                                <?php if ($item->has_stok_awal > 0): ?>
+                                    <span class="badge badge-success">Sudah Ada Stok</span>
+                                <?php else: ?>
+                                    <span class="badge badge-danger">Belum Ada Stok</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo $item->nama_gudang ?: '-'; ?></td>
+                            <td>
+                                <?php if ($item->qty_awal > 0): ?>
+                                    <span class="font-weight-bold"><?php echo $item->qty_awal; ?></span>
+                                <?php else: ?>
+                                    <span class="text-muted">-</span>
+                                <?php endif; ?>
+                            </td>
+
+                            <td><?php echo $item->keterangan ?: '-'; ?></td>
+                            <td><?php echo $item->created_by_name ?: '-'; ?></td>
+                            <td>
+                                <?php if ($item->has_stok_awal == 0): ?>
+                                    <a href="<?php echo site_url('stok_awal/input_stok/' . $item->id_barang); ?>"
+                                        class="btn btn-primary btn-sm" title="Input Stok Awal">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+                                <?php else: ?>
+                                    <span class="text-muted">-</span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -136,36 +137,35 @@
 
 <!-- JavaScript untuk filter -->
 <script>
-$(document).ready(function() {
-    // Filter functionality
-    $('#filter_perusahaan').change(function() {
-        var id_perusahaan = $(this).val();
-        
-        if (id_perusahaan != '') {
-            // Get gudang by perusahaan
-            $.ajax({
-                url: "<?php echo site_url('stok_awal/get_gudang_by_perusahaan') ?>",
-                method: "GET",
-                data: {id_perusahaan: id_perusahaan},
-                success: function(data) {
-                    $('#filter_gudang').html('<option value="">-- Semua Gudang --</option>' + data);
-                }
-            });
-            
-            // Get barang by perusahaan
-            $.ajax({
-                url: "<?php echo site_url('stok_awal/get_barang_by_perusahaan') ?>",
-                method: "GET",
-                data: {id_perusahaan: id_perusahaan},
-                success: function(data) {
-                    $('#filter_barang').html('<option value="">-- Semua Barang --</option>' + data);
-                }
-            });
-        } else {
-            $('#filter_gudang').html('<option value="">-- Semua Gudang --</option>');
-            $('#filter_barang').html('<option value="">-- Semua Barang --</option>');
-        }
-    });
-    
-</script>
+    $(document).ready(function () {
+        // Filter functionality
+        $('#filter_perusahaan').change(function () {
+            var id_perusahaan = $(this).val();
 
+            if (id_perusahaan != '') {
+                // Get gudang by perusahaan
+                $.ajax({
+                    url: "<?php echo site_url('stok_awal/get_gudang_by_perusahaan') ?>",
+                    method: "GET",
+                    data: { id_perusahaan: id_perusahaan },
+                    success: function (data) {
+                        $('#filter_gudang').html('<option value="">-- Semua Gudang --</option>' + data);
+                    }
+                });
+
+                // Get barang by perusahaan
+                $.ajax({
+                    url: "<?php echo site_url('stok_awal/get_barang_by_perusahaan') ?>",
+                    method: "GET",
+                    data: { id_perusahaan: id_perusahaan },
+                    success: function (data) {
+                        $('#filter_barang').html('<option value="">-- Semua Barang --</option>' + data);
+                    }
+                });
+            } else {
+                $('#filter_gudang').html('<option value="">-- Semua Gudang --</option>');
+                $('#filter_barang').html('<option value="">-- Semua Barang --</option>');
+            }
+        });
+
+</script>

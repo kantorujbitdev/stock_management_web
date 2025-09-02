@@ -1,15 +1,18 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Penjualan_model extends CI_Model {
+class Penjualan_model extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->database();
     }
 
     // Get all penjualan
-    public function get_all_penjualan() {
+    public function get_all_penjualan()
+    {
         $this->db->select('penjualan.*, pelanggan.nama_pelanggan, user.nama as created_by');
         $this->db->from('penjualan');
         $this->db->join('pelanggan', 'pelanggan.id_pelanggan = penjualan.id_pelanggan');
@@ -19,7 +22,8 @@ class Penjualan_model extends CI_Model {
     }
 
     // Get penjualan by perusahaan
-    public function get_penjualan_by_perusahaan($id_perusahaan) {
+    public function get_penjualan_by_perusahaan($id_perusahaan)
+    {
         $this->db->select('penjualan.*, pelanggan.nama_pelanggan, user.nama as created_by');
         $this->db->from('penjualan');
         $this->db->join('pelanggan', 'pelanggan.id_pelanggan = penjualan.id_pelanggan');
@@ -31,7 +35,8 @@ class Penjualan_model extends CI_Model {
     }
 
     // Get penjualan by id
-    public function get_penjualan_by_id($id) {
+    public function get_penjualan_by_id($id)
+    {
         $this->db->select('penjualan.*, pelanggan.nama_pelanggan, user.nama as created_by');
         $this->db->from('penjualan');
         $this->db->join('pelanggan', 'pelanggan.id_pelanggan = penjualan.id_pelanggan');
@@ -41,7 +46,8 @@ class Penjualan_model extends CI_Model {
     }
 
     // Get next number for penjualan
-    public function get_next_number($id_perusahaan) {
+    public function get_next_number($id_perusahaan)
+    {
         $this->db->select('COUNT(*) as total');
         $this->db->from('penjualan');
         $this->db->join('user', 'user.id_user = penjualan.id_user');
@@ -50,23 +56,26 @@ class Penjualan_model extends CI_Model {
         $this->db->where('DATE(penjualan.created_at)', date('Y-m-d'));
         $query = $this->db->get();
         $result = $query->row();
-        
+
         return str_pad($result->total + 1, 3, '0', STR_PAD_LEFT);
     }
 
     // Insert penjualan
-    public function insert_penjualan($data) {
+    public function insert_penjualan($data)
+    {
         return $this->db->insert('penjualan', $data);
     }
 
     // Update penjualan
-    public function update_penjualan($id, $data) {
+    public function update_penjualan($id, $data)
+    {
         $this->db->where('id_penjualan', $id);
         return $this->db->update('penjualan', $data);
     }
 
     // Delete penjualan
-    public function delete_penjualan($id) {
+    public function delete_penjualan($id)
+    {
         return $this->db->delete('penjualan', array('id_penjualan' => $id));
     }
 }

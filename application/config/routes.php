@@ -39,13 +39,14 @@ $route['perusahaan/delete/(:num)'] = 'perusahaan/Perusahaan/delete/$1';
 // Routes untuk Gudang (di subfolder perusahaan/)
 $route['gudang'] = 'perusahaan/Gudang';
 $route['gudang/add'] = 'perusahaan/Gudang/add';
+$route['gudang/add_process'] = 'perusahaan/Gudang/add_process';
+$route['gudang/edit_process'] = 'perusahaan/Gudang/edit_process';
 $route['gudang/edit/(:num)'] = 'perusahaan/Gudang/edit/$1';
 $route['gudang/delete/(:num)'] = 'perusahaan/Gudang/delete/$1';
 $route['gudang/aktif/(:num)'] = 'perusahaan/Gudang/aktif/$1';
 $route['gudang/nonaktif/(:num)'] = 'perusahaan/Gudang/nonaktif/$1';
 $route['gudang/get_gudang_by_perusahaan'] = 'perusahaan/Gudang/get_gudang_by_perusahaan';
-$route['gudang/add_process'] = 'perusahaan/Gudang/add_process';
-$route['gudang/edit_process'] = 'perusahaan/Gudang/edit_process';
+
 
 // Routes untuk Master Data (di subfolder master/)
 $route['kategori'] = 'master/Kategori';

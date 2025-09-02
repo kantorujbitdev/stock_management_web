@@ -1,15 +1,18 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Penyesuaian_model extends CI_Model {
+class Penyesuaian_model extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->database();
     }
 
     // Get all penyesuaian
-    public function get_all_penyesuaian() {
+    public function get_all_penyesuaian()
+    {
         $this->db->select('penyesuaian_stok.*, barang.nama_barang, barang.sku, 
                           gudang.nama_gudang, perusahaan.nama_perusahaan,
                           user.nama as created_by');
@@ -23,7 +26,8 @@ class Penyesuaian_model extends CI_Model {
     }
 
     // Get penyesuaian by id
-    public function get_penyesuaian_by_id($id) {
+    public function get_penyesuaian_by_id($id)
+    {
         $this->db->select('penyesuaian_stok.*, barang.nama_barang, barang.sku, 
                           gudang.nama_gudang, perusahaan.nama_perusahaan,
                           user.nama as created_by');
@@ -37,18 +41,21 @@ class Penyesuaian_model extends CI_Model {
     }
 
     // Insert penyesuaian
-    public function insert_penyesuaian($data) {
+    public function insert_penyesuaian($data)
+    {
         return $this->db->insert('penyesuaian_stok', $data);
     }
 
     // Update penyesuaian
-    public function update_penyesuaian($id, $data) {
+    public function update_penyesuaian($id, $data)
+    {
         $this->db->where('id_penyesuaian', $id);
         return $this->db->update('penyesuaian_stok', $data);
     }
 
     // Delete penyesuaian
-    public function delete_penyesuaian($id) {
+    public function delete_penyesuaian($id)
+    {
         return $this->db->delete('penyesuaian_stok', array('id_penyesuaian' => $id));
     }
 }

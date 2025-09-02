@@ -6,11 +6,11 @@
     </div>
     <div class="card-body">
         <?php echo form_open(isset($kategori) ? 'kategori/edit_process' : 'kategori/add_process'); ?>
-        
+
         <?php if (isset($kategori)): ?>
             <input type="hidden" name="id_kategori" value="<?php echo $kategori->id_kategori; ?>">
         <?php endif; ?>
-        
+
         <div class="form-group">
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 <!-- Super Admin harus pilih perusahaan -->
@@ -18,12 +18,11 @@
                 <select name="id_perusahaan" class="form-control" required>
                     <option value="">-- Pilih Perusahaan --</option>
                     <?php foreach ($perusahaan as $p): ?>
-                        <option value="<?php echo $p->id_perusahaan; ?>"
-                            <?php 
-                                if (isset($pelanggan) && $pelanggan->id_perusahaan == $p->id_perusahaan) {
-                                    echo 'selected';
-                                }
-                            ?>>
+                        <option value="<?php echo $p->id_perusahaan; ?>" <?php
+                           if (isset($pelanggan) && $pelanggan->id_perusahaan == $p->id_perusahaan) {
+                               echo 'selected';
+                           }
+                           ?>>
                             <?php echo $p->nama_perusahaan; ?>
                         </option>
                     <?php endforeach; ?>
@@ -37,23 +36,24 @@
                 </div>
             <?php endif; ?>
         </div>
-        
+
         <div class="form-group">
             <label for="nama_kategori">Nama Kategori</label>
-            <input type="text" name="nama_kategori" class="form-control" 
-                   value="<?php echo isset($kategori) ? $kategori->nama_kategori : ''; ?>" required>
+            <input type="text" name="nama_kategori" class="form-control"
+                value="<?php echo isset($kategori) ? $kategori->nama_kategori : ''; ?>" required>
         </div>
-        
+
         <div class="form-group">
             <label for="deskripsi">Deskripsi</label>
-            <textarea name="deskripsi" class="form-control" rows="3"><?php echo isset($kategori) ? $kategori->deskripsi : ''; ?></textarea>
+            <textarea name="deskripsi" class="form-control"
+                rows="3"><?php echo isset($kategori) ? $kategori->deskripsi : ''; ?></textarea>
         </div>
-        
+
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Simpan</button>
             <a href="<?php echo site_url('kategori'); ?>" class="btn btn-secondary">Batal</a>
         </div>
-        
+
         <?php echo form_close(); ?>
     </div>
 </div>

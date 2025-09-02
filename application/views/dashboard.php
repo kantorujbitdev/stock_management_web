@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800">Dashboard</h1>
-    
+
     <!-- Content Row -->
     <div class="row">
         <!-- Earnings (Monthly) Card Example -->
@@ -122,81 +122,87 @@
 
 
 <?php if ($this->session->userdata('id_role') == 1 && isset($perusahaan)): ?>
-<!-- Widget Manajemen Perusahaan untuk Admin Pusat -->
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Manajemen Perusahaan Saya</h6>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-6">
-                <h5>Informasi Perusahaan</h5>
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <tr>
-                        <th>Nama Perusahaan</th>
-                        <td><?php echo $perusahaan->nama_perusahaan ?></td>
-                    </tr>
-                    <tr>
-                        <th>Alamat</th>
-                        <td><?php echo $perusahaan->alamat ?></td>
-                    </tr>
-                    <tr>
-                        <th>Telepon</th>
-                        <td><?php echo $perusahaan->telepon ?></td>
-                    </tr>
-                    <tr>
-                        <th>Status</th>
-                        <td>
-                            <?php if ($perusahaan->status_aktif == 1): ?>
-                                <span class="badge badge-success">Aktif</span>
-                            <?php else: ?>
-                                <span class="badge badge-danger">Tidak Aktif</span>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                </table>
-                <a href="<?php echo site_url('perusahaan/edit/'.$perusahaan->id_perusahaan) ?>" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> Edit Perusahaan</a>
-            </div>
-            <div class="col-md-6">
-                <h5>Daftar Gudang</h5>
-                <?php if ($gudang): ?>
-                    <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>Nama Gudang</th>
-                                    <th>Alamat</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($gudang as $g): ?>
-                                <tr>
-                                    <td><?php echo $g->nama_gudang ?></td>
-                                    <td><?php echo $g->alamat ?></td>
-                                    <td>
-                                        <?php if ($g->status_aktif == 1): ?>
-                                            <span class="badge badge-success">Aktif</span>
-                                        <?php else: ?>
-                                            <span class="badge badge-danger">Tidak Aktif</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <a href="<?php echo site_url('gudang/edit/'.$g->id_gudang) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                        <a href="<?php echo site_url('gudang/delete/'.$g->id_gudang) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menonaktifkan gudang ini?')"><i class="fas fa-ban"></i></a>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php else: ?>
-                    <p>Belum ada gudang</p>
-                <?php endif; ?>
-                <a href="<?php echo site_url('gudang/add') ?>" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Tambah Gudang</a>
+    <!-- Widget Manajemen Perusahaan untuk Admin Pusat -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Manajemen Perusahaan Saya</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Informasi Perusahaan</h5>
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <tr>
+                            <th>Nama Perusahaan</th>
+                            <td><?php echo $perusahaan->nama_perusahaan ?></td>
+                        </tr>
+                        <tr>
+                            <th>Alamat</th>
+                            <td><?php echo $perusahaan->alamat ?></td>
+                        </tr>
+                        <tr>
+                            <th>Telepon</th>
+                            <td><?php echo $perusahaan->telepon ?></td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>
+                                <?php if ($perusahaan->status_aktif == 1): ?>
+                                    <span class="badge badge-success">Aktif</span>
+                                <?php else: ?>
+                                    <span class="badge badge-danger">Tidak Aktif</span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    </table>
+                    <a href="<?php echo site_url('perusahaan/edit/' . $perusahaan->id_perusahaan) ?>"
+                        class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> Edit Perusahaan</a>
+                </div>
+                <div class="col-md-6">
+                    <h5>Daftar Gudang</h5>
+                    <?php if ($gudang): ?>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Gudang</th>
+                                        <th>Alamat</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($gudang as $g): ?>
+                                        <tr>
+                                            <td><?php echo $g->nama_gudang ?></td>
+                                            <td><?php echo $g->alamat ?></td>
+                                            <td>
+                                                <?php if ($g->status_aktif == 1): ?>
+                                                    <span class="badge badge-success">Aktif</span>
+                                                <?php else: ?>
+                                                    <span class="badge badge-danger">Tidak Aktif</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <a href="<?php echo site_url('gudang/edit/' . $g->id_gudang) ?>"
+                                                    class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                                <a href="<?php echo site_url('gudang/delete/' . $g->id_gudang) ?>"
+                                                    class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('Apakah Anda yakin ingin menonaktifkan gudang ini?')"><i
+                                                        class="fas fa-ban"></i></a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <p>Belum ada gudang</p>
+                    <?php endif; ?>
+                    <a href="<?php echo site_url('gudang/add') ?>" class="btn btn-success btn-sm"><i
+                            class="fas fa-plus"></i> Tambah Gudang</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 <?php endif; ?>

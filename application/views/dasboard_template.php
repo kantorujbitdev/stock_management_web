@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,52 +7,57 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="Mantis is made using Bootstrap 5 design framework. Download the free admin template & use it for your project.">
-  <meta name="keywords" content="Mantis, Dashboard UI Kit, Bootstrap 5, Admin Template, Admin Dashboard, CRM, CMS, Bootstrap Admin Template">
+  <meta name="description"
+    content="Mantis is made using Bootstrap 5 design framework. Download the free admin template & use it for your project.">
+  <meta name="keywords"
+    content="Mantis, Dashboard UI Kit, Bootstrap 5, Admin Template, Admin Dashboard, CRM, CMS, Bootstrap Admin Template">
   <meta name="author" content="CodedThemes">
 
 
 
   <!-- [Favicon] icon -->
-  <link rel="icon" href="<?= base_url('assets/img/arashmil.jpg')?>" type="image/x-icon">
+  <link rel="icon" href="<?= base_url('assets/img/arashmil.jpg') ?>" type="image/x-icon">
   <!-- [Page specific CSS] start -->
   <link href="<?= base_url('assets/css/plugins/animate.min.css') ?>" rel="stylesheet" type="text/css">
   <!-- [Page specific CSS] end -->
   <!-- [Google Font] Family -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" id="main-font-link">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
+    id="main-font-link">
   <!-- [Tabler Icons] https://tablericons.com -->
-  <link rel="stylesheet" href="<?= base_url('assets/fonts/tabler-icons.min.css') ?>" >
+  <link rel="stylesheet" href="<?= base_url('assets/fonts/tabler-icons.min.css') ?>">
   <!-- [Feather Icons] https://feathericons.com -->
-  <link rel="stylesheet" href="<?= base_url('assets/fonts/feather.css') ?>" >
+  <link rel="stylesheet" href="<?= base_url('assets/fonts/feather.css') ?>">
   <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
-  <link rel="stylesheet" href="<?= base_url('assets/fonts/fontawesome.css') ?>" >
+  <link rel="stylesheet" href="<?= base_url('assets/fonts/fontawesome.css') ?>">
   <!-- [Material Icons] https://fonts.google.com/icons -->
-  <link rel="stylesheet" href="<?= base_url('assets/fonts/material.css')?>" >
+  <link rel="stylesheet" href="<?= base_url('assets/fonts/material.css') ?>">
   <!-- [Template CSS Files] -->
-  <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>" id="main-style-link" >
-  <link rel="stylesheet" href="<?= base_url('assets/css/style-preset.css') ?>" >
+  <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>" id="main-style-link">
+  <link rel="stylesheet" href="<?= base_url('assets/css/style-preset.css') ?>">
 
   <link rel="stylesheet" href="<?= base_url('assets/css/landing.css') ?>">
 </head>
 
-<body class="landing-page"><script id="__bs_script__">//<![CDATA[
-  (function() {
-    try {
-      var script = document.createElement('script');
-      if ('async') {
-        script.async = true;
+<body class="landing-page">
+  <script id="__bs_script__">//<![CDATA[
+    (function () {
+      try {
+        var script = document.createElement('script');
+        if ('async') {
+          script.async = true;
+        }
+        script.src = '/browser-sync/browser-sync-client.js?v=2.29.3'.replace("HOST", location.hostname);
+        if (document.body) {
+          document.body.appendChild(script);
+        } else if (document.head) {
+          document.head.appendChild(script);
+        }
+      } catch (e) {
+        console.error("Browsersync: could not append script tag", e);
       }
-      script.src = '/browser-sync/browser-sync-client.js?v=2.29.3'.replace("HOST", location.hostname);
-      if (document.body) {
-        document.body.appendChild(script);
-      } else if (document.head) {
-        document.head.appendChild(script);
-      }
-    } catch (e) {
-      console.error("Browsersync: could not append script tag", e);
-    }
-  })()
-//]]></script>
+    })()
+    //]]></script>
 
   <!-- [ Main Content ] start -->
   <!-- [ Pre-loader ] start -->
@@ -70,7 +74,7 @@
     <nav class="navbar navbar-expand-md navbar-dark top-nav-collapse default">
       <div class="container">
         <a class="navbar-brand" href="#">
-          <img src="<?= base_url('assets/img/arashmil.jpg')?>" alt="logo">
+          <img src="<?= base_url('assets/img/arashmil.jpg') ?>" alt="logo">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01"
           aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +86,8 @@
               <a class="nav-link" href="dashboard/index.html">Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="btn btn-primary" target="_blank" href="https://codedthemes.com/item/mantis-bootstrap-admin-dashboard/">Purchase Now</a>
+              <a class="btn btn-primary" target="_blank"
+                href="https://codedthemes.com/item/mantis-bootstrap-admin-dashboard/">Purchase Now</a>
             </li>
           </ul>
         </div>
@@ -99,8 +104,8 @@
             dashboard template built using the MUI React library.</h5>
           <div class="my-5 wow fadeInUp" data-wow-delay="0.6s">
             <a href="elements/bc_alert.html" class="btn btn-outline-primary me-2" target="_blank">Explore Components</a>
-            <a href="dashboard/index.html" class="btn btn-primary" target="_blank"> <i
-                class="ti ti-eye me-1"></i> Live Preview</a>
+            <a href="dashboard/index.html" class="btn btn-primary" target="_blank"> <i class="ti ti-eye me-1"></i> Live
+              Preview</a>
           </div>
         </div>
       </div>
@@ -109,10 +114,10 @@
   <!-- [ Header ] End -->
   <!-- [ Main Content ] end -->
   <!-- Required Js -->
-  <script src="<?= base_url('assets/js/plugins/popper.min.js')?>"></script>
-  <script src="<?= base_url('assets/js/plugins/simplebar.min.js')?>"></script>
-  <script src="<?= base_url('assets/js/plugins/bootstrap.min.js')?>"></script>
-  <script src="<?= base_url('assets/js/fonts/custom-font.js')?>"></script>
+  <script src="<?= base_url('assets/js/plugins/popper.min.js') ?>"></script>
+  <script src="<?= base_url('assets/js/plugins/simplebar.min.js') ?>"></script>
+  <script src="<?= base_url('assets/js/plugins/bootstrap.min.js') ?>"></script>
+  <script src="<?= base_url('assets/js/fonts/custom-font.js') ?>"></script>
   <script src="assets/js/pcoded.js"></script>
   <script src="assets/js/plugins/feather.min.js"></script>
   <script>layout_change('light');</script>

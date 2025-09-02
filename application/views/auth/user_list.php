@@ -6,15 +6,15 @@
             </div>
             <div class="col text-right">
                 <a href="<?php echo site_url('auth/user/add') ?>" class="btn btn-primary btn-sm">
-                    <i class="fas fa-plus"></i> 
+                    <i class="fas fa-plus"></i>
                     Tambah User
                 </a>
-                
-                
+
+
                 <?php if ($this->session->userdata('id_role') == 5): ?>
                     <a href="<?php echo site_url('auth/user/hak_akses') ?>" class="btn btn-info btn-sm">
-                    <i class="fas fa-key"></i>
-                    Hak Akses
+                        <i class="fas fa-key"></i>
+                        Hak Akses
                     </a>
                 <?php endif; ?>
             </div>
@@ -36,26 +36,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $no = 1; foreach ($users as $user): ?>
-                    <tr>
-                        <td><?php echo $no++ ?></td>
-                        <td><?php echo $user->nama ?></td>
-                        <td><?php echo $user->username ?></td>
-                        <td><?php echo $user->nama_role ?></td>
-                        <td><?php echo $user->nama_perusahaan ? $user->nama_perusahaan : '-' ?></td>
-                        <td><?php echo $user->nama_gudang ? $user->nama_gudang : '-' ?></td>
-                        <td>
-                            <?php if ($user->aktif == 1): ?>
-                                <span class="badge badge-success">Aktif</span>
-                            <?php else: ?>
-                                <span class="badge badge-danger">Tidak Aktif</span>
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <a href="<?php echo site_url('auth/user/edit/'.$user->id_user) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                            <a href="<?php echo site_url('auth/user/delete/'.$user->id_user) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus user ini?')"><i class="fas fa-trash"></i></a>
-                        </td>
-                    </tr>
+                    <?php $no = 1;
+                    foreach ($users as $user): ?>
+                        <tr>
+                            <td><?php echo $no++ ?></td>
+                            <td><?php echo $user->nama ?></td>
+                            <td><?php echo $user->username ?></td>
+                            <td><?php echo $user->nama_role ?></td>
+                            <td><?php echo $user->nama_perusahaan ? $user->nama_perusahaan : '-' ?></td>
+                            <td><?php echo $user->nama_gudang ? $user->nama_gudang : '-' ?></td>
+                            <td>
+                                <?php if ($user->aktif == 1): ?>
+                                    <span class="badge badge-success">Aktif</span>
+                                <?php else: ?>
+                                    <span class="badge badge-danger">Tidak Aktif</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <a href="<?php echo site_url('auth/user/edit/' . $user->id_user) ?>"
+                                    class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                <a href="<?php echo site_url('auth/user/delete/' . $user->id_user) ?>"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Apakah Anda yakin ingin menghapus user ini?')"><i
+                                        class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>

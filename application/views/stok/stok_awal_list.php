@@ -17,22 +17,22 @@
                 <i class="icon fas fa-check"></i> <?php echo $this->session->flashdata('success'); ?>
             </div>
         <?php endif; ?>
-        
+
         <?php if ($this->session->flashdata('error')): ?>
             <div class="alert alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <i class="icon fas fa-ban"></i> <?php echo $this->session->flashdata('error'); ?>
             </div>
         <?php endif; ?>
-        
+
         <?php if ($this->session->flashdata('warning')): ?>
             <div class="alert alert-warning alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <i class="icon fas fa-exclamation-triangle"></i> <?php echo $this->session->flashdata('warning'); ?>
             </div>
         <?php endif; ?>
-        
-       <!-- Filter Form -->
+
+        <!-- Filter Form -->
         <form method="get" action="<?php echo site_url('stok_awal'); ?>">
             <div class="row">
                 <div class="col-md-3">
@@ -61,7 +61,7 @@
             </div>
         </form>
         <hr>
-                
+
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
@@ -77,17 +77,18 @@
                 </tr>
             </thead>
             <tbody>
-                <?php $no = 1; foreach ($stok_awal as $s): ?>
-                <tr>
-                    <td><?php echo $no++; ?></td>
-                    <td><?php echo $s->nama_barang; ?></td>
-                    <td><?php echo $s->sku; ?></td>
-                    <td><?php echo $s->nama_gudang; ?></td>
-                    <td><?php echo $s->nama_perusahaan; ?></td>
-                    <td><?php echo $s->qty_awal; ?></td>
-                    <td><?php echo $s->keterangan; ?></td>
-                    <td><?php echo $s->created_by_name; ?></td>
-                    <!-- <td>
+                <?php $no = 1;
+                foreach ($stok_awal as $s): ?>
+                    <tr>
+                        <td><?php echo $no++; ?></td>
+                        <td><?php echo $s->nama_barang; ?></td>
+                        <td><?php echo $s->sku; ?></td>
+                        <td><?php echo $s->nama_gudang; ?></td>
+                        <td><?php echo $s->nama_perusahaan; ?></td>
+                        <td><?php echo $s->qty_awal; ?></td>
+                        <td><?php echo $s->keterangan; ?></td>
+                        <td><?php echo $s->created_by_name; ?></td>
+                        <!-- <td>
                         <a href="<?php echo site_url('stok_awal/edit/' . $s->id_stok_awal); ?>" class="btn btn-warning btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
@@ -95,10 +96,9 @@
                             <i class="fas fa-trash"></i>
                         </a>
                     </td> -->
-                </tr>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 </div>
-
