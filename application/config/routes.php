@@ -57,6 +57,7 @@ $route['kategori/nonaktif/(:num)'] = 'master/Kategori/nonaktif/$1';
 $route['kategori/add_process'] = 'master/Kategori/add_process';
 $route['kategori/edit_process'] = 'master/Kategori/edit_process';
 
+// route untuk barang master
 $route['barang'] = 'master/Barang';
 $route['barang/add'] = 'master/Barang/add';
 $route['barang/add_process'] = 'master/Barang/add_process';
@@ -88,6 +89,8 @@ $route['pelanggan/delete/(:num)'] = 'master/Pelanggan/delete/$1';
 // Routes untuk Stok (di subfolder stok/)
 $route['stok_awal'] = 'stok/StokAwal';
 $route['stok_awal/add'] = 'stok/StokAwal/add';
+$route['stok_awal/add_process'] = 'stok/StokAwal/add_process';
+$route['stok_awal/edit_process'] = 'stok/StokAwal/edit_process';
 $route['stok_awal/edit/(:num)'] = 'stok/StokAwal/edit/$1';
 $route['stok_awal/delete/(:num)'] = 'stok/StokAwal/delete/$1';
 $route['stok_awal/get_gudang_by_perusahaan'] = 'stok/StokAwal/get_gudang_by_perusahaan';

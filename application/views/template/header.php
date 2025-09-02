@@ -16,4 +16,8 @@
     
     <!-- SB Admin 2 CSS -->
     <link href="https://startbootstrap.github.io/startbootstrap-sb-admin-2/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Pastikan jQuery sudah di-load -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>

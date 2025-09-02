@@ -5,6 +5,9 @@
             <a href="<?php echo site_url('stok_awal/add'); ?>" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> Tambah Stok Awal
             </a>
+            <a href="<?php echo site_url('stok_awal/export_excel'); ?>" class="btn btn-success btn-sm">
+                <i class="fas fa-file-excel"></i> Export Excel
+            </a>
         </div>
     </div>
     <div class="card-body">
@@ -22,7 +25,44 @@
             </div>
         <?php endif; ?>
         
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <?php if ($this->session->flashdata('warning')): ?>
+            <div class="alert alert-warning alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <i class="icon fas fa-exclamation-triangle"></i> <?php echo $this->session->flashdata('warning'); ?>
+            </div>
+        <?php endif; ?>
+        
+       <!-- Filter Form -->
+        <form method="get" action="<?php echo site_url('stok_awal'); ?>">
+            <div class="row">
+                <div class="col-md-3">
+                    <select name="id_perusahaan" class="form-control" id="filter_perusahaan">
+                        <option value="">-- Semua Perusahaan --</option>
+                        <?php foreach ($perusahaan as $p): ?>
+                            <option value="<?php echo $p->id_perusahaan; ?>" <?php echo ($filter['id_perusahaan'] == $p->id_perusahaan) ? 'selected' : ''; ?>>
+                                <?php echo $p->nama_perusahaan; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="id_gudang" class="form-control" id="filter_gudang">
+                        <option value="">-- Semua Gudang --</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="id_barang" class="form-control" id="filter_barang">
+                        <option value="">-- Semua Barang --</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-info btn-block">Filter</button>
+                </div>
+            </div>
+        </form>
+        <hr>
+                
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th>No</th>
@@ -61,3 +101,4 @@
         </table>
     </div>
 </div>
+

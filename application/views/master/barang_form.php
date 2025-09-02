@@ -105,62 +105,82 @@
     </div>
 </div>
 
-<!-- Pastikan jQuery sudah di-load -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-// Debug: Pastikan jQuery sudah terload
-console.log("jQuery version: " + $.fn.jquery);
-
 $(document).ready(function() {
-    console.log("Document ready, initializing scripts...");
+    console.log("Document ready - Stok Awal Form");
     
-    // Debug: Pastikan elemen ada
-    console.log("Perusahaan dropdown found: " + $('#id_perusahaan').length);
-    console.log("Kategori dropdown found: " + $('#id_kategori').length);
-    
-    // Untuk Super Admin: ketika perusahaan dipilih, aktifkan dropdown kategori dan load kategori
+    // Event untuk perusahaan
     $('#id_perusahaan').on('change', function() {
-        console.log("Perusahaan changed");
         var id_perusahaan = $(this).val();
-        console.log("Selected Perusahaan ID: " + id_perusahaan);
+        console.log("Perusahaan dipilih:", id_perusahaan);
         
-        if (id_perusahaan) {
-            console.log("Enabling category dropdown");
-            // Aktifkan dropdown kategori
-            $('#id_kategori').prop('disabled', false);
-            
-            // Load kategori via AJAX
+        // Reset dropdown gudang dan barang
+        $('#id_gudang').html('<option value="">-- Loading... --</option>').prop('disabled', true);
+        $('#id_barang').html('<option value="">-- Pilih Gudang Dulu --</option>').prop('disabled', true);
+        
+        if (id_perusahaan != '') {
+            // AJAX untuk gudang
             $.ajax({
-                url: '<?php echo site_url('barang/get_kategori_by_perusahaan'); ?>',
-                type: 'GET',
-                data: {id_perusahaan: id_perusahaan},
-                dataType: 'html',
-                beforeSend: function() {
-                    console.log("Sending AJAX request...");
-                },
+                url: "<?php echo site_url('stok_awal/get_gudang_by_perusahaan'); ?>",
+                type: "GET",
+                data: { id_perusahaan: id_perusahaan },
+                dataType: "html",
                 success: function(response) {
-                    console.log("AJAX response: " + response);
-                    $('#id_kategori').html(response);
+                    console.log("Response gudang:", response);
+                    $('#id_gudang').html(response).prop('disabled', false);
                 },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    console.log('AJAX Error: ' + xhr.status + ' ' + thrownError);
-                    alert('Gagal memuat kategori. Status: ' + xhr.status);
+                error: function(xhr, status, error) {
+                    console.error("Error gudang:", error);
+                    $('#id_gudang').html('<option value="">-- Error --</option>');
                 }
             });
         } else {
-            console.log("No perusahaan selected, disabling category dropdown");
-            // Nonaktifkan dropdown kategori jika perusahaan tidak dipilih
-            $('#id_kategori').prop('disabled', true);
-            $('#id_kategori').html('<option value="">-- Pilih Kategori --</option>');
+            $('#id_gudang').html('<option value="">-- Pilih Perusahaan Dulu --</option>');
+            $('#id_barang').html('<option value="">-- Pilih Gudang Dulu --</option>');
         }
     });
     
-    // Tampilkan nama file yang dipilih untuk gambar
-    $('.custom-file-input').on('change', function() {
-        var fileName = $(this).val().split('\\').pop();
-        $(this).next('.custom-file-label').html(fileName);
-        console.log("File selected: " + fileName);
+    // Event untuk gudang - PAKAI EVENT DELEGATION
+    $(document).on('change', '#id_gudang', function() {
+        var id_perusahaan = $('#id_perusahaan').val();
+        var id_gudang = $(this).val();
+        console.log("Gudang dipilih:", id_gudang);
+        
+        // Reset dropdown barang
+        $('#id_barang').html('<option value="">-- Loading... --</option>').prop('disabled', true);
+        
+        if (id_gudang != '') {
+            // AJAX untuk barang
+            $.ajax({
+                url: "<?php echo site_url('stok_awal/get_barang_by_perusahaan'); ?>",
+                type: "GET",
+                data: { id_perusahaan: id_perusahaan },
+                dataType: "html",
+                success: function(response) {
+                    console.log("Response barang:", response);
+                    $('#id_barang').html(response).prop('disabled', false);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error barang:", error);
+                    $('#id_barang').html('<option value="">-- Error --</option>');
+                }
+            });
+        } else {
+            $('#id_barang').html('<option value="">-- Pilih Gudang Dulu --</option>');
+        }
     });
+    
+    // Jika ini halaman edit, trigger perubahan dropdown
+    <?php if (isset($stok_awal)): ?>
+        console.log("Mode edit, trigger dropdown...");
+        // Trigger perubahan perusahaan dulu
+        $('#id_perusahaan').trigger('change');
+        
+        // Tunggu sebelum trigger gudang
+        setTimeout(function() {
+            $('#id_gudang').trigger('change');
+        }, 500);
+    <?php endif; ?>
 });
 </script>
