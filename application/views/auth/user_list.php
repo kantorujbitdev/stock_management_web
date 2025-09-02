@@ -5,8 +5,18 @@
                 <h6 class="m-0 font-weight-bold text-primary">Daftar User</h6>
             </div>
             <div class="col text-right">
-                <a href="<?php echo site_url('auth/user/add') ?>" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Tambah User</a>
-                <a href="<?php echo site_url('auth/user/hak_akses') ?>" class="btn btn-info btn-sm"><i class="fas fa-key"></i> Hak Akses</a>
+                <a href="<?php echo site_url('auth/user/add') ?>" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> 
+                    Tambah User
+                </a>
+                
+                
+                <?php if ($this->session->userdata('id_role') == 5): ?>
+                    <a href="<?php echo site_url('auth/user/hak_akses') ?>" class="btn btn-info btn-sm">
+                    <i class="fas fa-key"></i>
+                    Hak Akses
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </div>

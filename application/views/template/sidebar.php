@@ -162,30 +162,6 @@
     </li>
     <?php endif; ?>
 
-    <!-- Nav Item - Pengaturan (hanya tampil jika user punya akses ke salah satu submenu) -->
-    <?php if ($this->hak_akses->cek_akses('pengaturan_sistem') || $this->hak_akses->cek_akses('backup')): ?>
-    <!-- Pengaturan Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePengaturan" aria-expanded="true" aria-controls="collapsePengaturan">
-            <i class="fas fa-cogs"></i>
-            <span>Pengaturan</span>
-        </a>
-        <div id="collapsePengaturan" class="collapse" aria-labelledby="headingPengaturan" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <!-- Menu Pengaturan Sistem -->
-                <?php if ($this->hak_akses->cek_akses('pengaturan_sistem')): ?>
-                <a class="collapse-item" href="<?php echo site_url('pengaturan') ?>">Pengaturan Sistem</a>
-                <?php endif; ?>
-                
-                <!-- Menu Backup Database -->
-                <?php if ($this->hak_akses->cek_akses('backup')): ?>
-                <a class="collapse-item" href="<?php echo site_url('backup') ?>">Backup Database</a>
-                <?php endif; ?>
-            </div>
-        </div>
-    </li>
-    <?php endif; ?>
-
     <!-- Nav Item - Manajemen User (hanya tampil jika user punya akses ke salah satu submenu) -->
     <?php if ($this->hak_akses->cek_akses('user') || $this->hak_akses->cek_akses('hak_akses')): ?>
     <li class="nav-item <?php echo is_active('auth') ?>">
