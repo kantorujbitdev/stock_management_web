@@ -73,13 +73,12 @@ class Penjualan extends CI_Controller
                 redirect('penjualan/add');
             }
 
-            // Insert penjualan header (tanpa total harga karena tidak ada harga)
+            // Insert penjualan header
             $data_penjualan = [
                 'no_invoice' => $no_invoice,
                 'id_user' => $this->session->userdata('id_user'),
                 'id_pelanggan' => $this->input->post('id_pelanggan'),
                 'tanggal_penjualan' => date('Y-m-d H:i:s'),
-                'total_harga' => 0, // Set ke 0 karena tidak ada harga
                 'keterangan' => $this->input->post('keterangan'),
                 'status' => 'proses'
             ];
@@ -115,7 +114,6 @@ class Penjualan extends CI_Controller
                             'id_penjualan' => $id_penjualan,
                             'id_barang' => $item['id_barang'],
                             'jumlah' => $item['jumlah'],
-                            'harga_satuan' => 0 // Set ke 0 karena tidak ada harga
                         ];
 
                         // Debug: Log detail data

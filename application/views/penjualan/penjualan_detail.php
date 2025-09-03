@@ -99,8 +99,6 @@
                         <th>SKU</th>
                         <th>Gudang</th>
                         <th>Jumlah</th>
-                        <th>Harga</th>
-                        <th>Subtotal</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -112,8 +110,6 @@
                             <td><?php echo $d->sku; ?></td>
                             <td><?php echo $d->nama_gudang; ?></td>
                             <td><?php echo $d->jumlah; ?></td>
-                            <td>Rp <?php echo number_format($d->harga_satuan, 0, ',', '.'); ?></td>
-                            <td>Rp <?php echo number_format($d->subtotal, 0, ',', '.'); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -130,10 +126,7 @@
                         <td colspan="6" class="text-right"><strong>Pajak</strong></td>
                         <td><strong>Rp <?php echo number_format($penjualan->pajak, 0, ',', '.'); ?></strong></td>
                     </tr>
-                    <tr>
-                        <td colspan="6" class="text-right"><strong>Total Bayar</strong></td>
-                        <td><strong>Rp <?php echo number_format($penjualan->total_harga, 0, ',', '.'); ?></strong></td>
-                    </tr>
+
                 </tfoot>
             </table>
         </div>

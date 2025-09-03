@@ -131,7 +131,6 @@ class LaporanPenjualan extends CI_Controller
         $objPHPExcel->getActiveSheet()->setCellValue('B4', 'No Invoice');
         $objPHPExcel->getActiveSheet()->setCellValue('C4', 'Tanggal');
         $objPHPExcel->getActiveSheet()->setCellValue('D4', 'Pelanggan');
-        $objPHPExcel->getActiveSheet()->setCellValue('E4', 'Total');
         $objPHPExcel->getActiveSheet()->setCellValue('F4', 'Status');
         $objPHPExcel->getActiveSheet()->setCellValue('G4', 'User');
 
@@ -143,7 +142,6 @@ class LaporanPenjualan extends CI_Controller
             $objPHPExcel->getActiveSheet()->setCellValue('B' . $row, $p->no_invoice);
             $objPHPExcel->getActiveSheet()->setCellValue('C' . $row, date('d-m-Y', strtotime($p->tanggal_penjualan)));
             $objPHPExcel->getActiveSheet()->setCellValue('D' . $row, $p->nama_pelanggan);
-            $objPHPExcel->getActiveSheet()->setCellValue('E' . $row, $p->total_harga);
             $objPHPExcel->getActiveSheet()->setCellValue('F' . $row, $p->status);
             $objPHPExcel->getActiveSheet()->setCellValue('G' . $row, $p->created_by);
             $row++;

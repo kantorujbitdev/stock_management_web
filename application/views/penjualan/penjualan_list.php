@@ -86,7 +86,6 @@
                     <th>Invoice</th>
                     <th>Tanggal</th>
                     <th>Pelanggan</th>
-                    <th>Total</th>
                     <th>Status</th>
                     <th>Dibuat Oleh</th>
                     <th>Aksi</th>
@@ -100,7 +99,6 @@
                         <td><strong><?php echo $p->no_invoice; ?></strong></td>
                         <td><?php echo date('d-m-Y H:i', strtotime($p->tanggal_penjualan)); ?></td>
                         <td><?php echo $p->nama_pelanggan ?: '-'; ?></td>
-                        <td>Rp <?php echo number_format($p->total_harga, 0, ',', '.'); ?></td>
                         <td>
                             <?php
                             $status_class = '';
