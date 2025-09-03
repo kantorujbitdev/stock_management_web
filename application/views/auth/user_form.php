@@ -51,7 +51,8 @@
                             <option value="">-- Pilih Perusahaan --</option>
                             <?php foreach ($perusahaan as $p): ?>
                                 <option value="<?php echo $p->id_perusahaan ?>" <?php echo isset($user) && $user->id_perusahaan == $p->id_perusahaan ? 'selected' : '' ?>>
-                                    <?php echo $p->nama_perusahaan ?></option>
+                                    <?php echo $p->nama_perusahaan ?>
+                                </option>
                             <?php endforeach; ?>
                         </select>
                     </div>

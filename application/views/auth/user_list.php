@@ -10,7 +10,6 @@
                     Tambah User
                 </a>
 
-
                 <?php if ($this->session->userdata('id_role') == 5): ?>
                     <a href="<?php echo site_url('auth/user/hak_akses') ?>" class="btn btn-info btn-sm">
                         <i class="fas fa-key"></i>

@@ -2,10 +2,12 @@
     <div class="card-header">
         <h3 class="card-title">Laporan Transfer Stok</h3>
         <div class="card-tools">
-            <a href="<?php echo site_url('laporan_transfer/export_pdf?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-danger btn-sm">
+            <a href="<?php echo site_url('laporan_transfer/export_pdf?' . $_SERVER['QUERY_STRING']); ?>"
+                class="btn btn-danger btn-sm">
                 <i class="fas fa-file-pdf"></i> Export PDF
             </a>
-            <a href="<?php echo site_url('laporan_transfer/export_excel?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-success btn-sm">
+            <a href="<?php echo site_url('laporan_transfer/export_excel?' . $_SERVER['QUERY_STRING']); ?>"
+                class="btn btn-success btn-sm">
                 <i class="fas fa-file-excel"></i> Export Excel
             </a>
         </div>
@@ -29,13 +31,15 @@
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="tanggal_awal">Tanggal Awal</label>
-                        <input type="date" name="tanggal_awal" class="form-control" value="<?php echo $filter['tanggal_awal']; ?>">
+                        <input type="date" name="tanggal_awal" class="form-control"
+                            value="<?php echo $filter['tanggal_awal']; ?>">
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="tanggal_akhir">Tanggal Akhir</label>
-                        <input type="date" name="tanggal_akhir" class="form-control" value="<?php echo $filter['tanggal_akhir']; ?>">
+                        <input type="date" name="tanggal_akhir" class="form-control"
+                            value="<?php echo $filter['tanggal_akhir']; ?>">
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -43,9 +47,12 @@
                         <label for="status">Status</label>
                         <select name="status" class="form-control">
                             <option value="">-- Semua --</option>
-                            <option value="pending" <?php echo ($filter['status'] == 'pending') ? 'selected' : ''; ?>>Pending</option>
-                            <option value="selesai" <?php echo ($filter['status'] == 'selesai') ? 'selected' : ''; ?>>Selesai</option>
-                            <option value="batal" <?php echo ($filter['status'] == 'batal') ? 'selected' : ''; ?>>Batal</option>
+                            <option value="pending" <?php echo ($filter['status'] == 'pending') ? 'selected' : ''; ?>>
+                                Pending</option>
+                            <option value="selesai" <?php echo ($filter['status'] == 'selesai') ? 'selected' : ''; ?>>
+                                Selesai</option>
+                            <option value="batal" <?php echo ($filter['status'] == 'batal') ? 'selected' : ''; ?>>Batal
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -65,7 +72,7 @@
         <h3 class="card-title">Data Transfer Stok</h3>
     </div>
     <div class="card-body">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th>No</th>
@@ -80,26 +87,27 @@
                 </tr>
             </thead>
             <tbody>
-                <?php $no = 1; foreach ($transfer as $t): ?>
-                <tr>
-                    <td><?php echo $no++; ?></td>
-                    <td><?php echo $t->no_transfer; ?></td>
-                    <td><?php echo date('d-m-Y H:i', strtotime($t->tanggal)); ?></td>
-                    <td><?php echo $t->nama_barang; ?></td>
-                    <td><?php echo $t->gudang_asal; ?></td>
-                    <td><?php echo $t->gudang_tujuan; ?></td>
-                    <td><?php echo $t->jumlah; ?></td>
-                    <td>
-                        <?php if ($t->status == 'pending'): ?>
-                            <span class="badge badge-warning">Pending</span>
-                        <?php elseif ($t->status == 'selesai'): ?>
-                            <span class="badge badge-success">Selesai</span>
-                        <?php elseif ($t->status == 'batal'): ?>
-                            <span class="badge badge-danger">Batal</span>
-                        <?php endif; ?>
-                    </td>
-                    <td><?php echo $t->created_by; ?></td>
-                </tr>
+                <?php $no = 1;
+                foreach ($transfer as $t): ?>
+                    <tr>
+                        <td><?php echo $no++; ?></td>
+                        <td><?php echo $t->no_transfer; ?></td>
+                        <td><?php echo date('d-m-Y H:i', strtotime($t->tanggal)); ?></td>
+                        <td><?php echo $t->nama_barang; ?></td>
+                        <td><?php echo $t->gudang_asal; ?></td>
+                        <td><?php echo $t->gudang_tujuan; ?></td>
+                        <td><?php echo $t->jumlah; ?></td>
+                        <td>
+                            <?php if ($t->status == 'pending'): ?>
+                                <span class="badge badge-warning">Pending</span>
+                            <?php elseif ($t->status == 'selesai'): ?>
+                                <span class="badge badge-success">Selesai</span>
+                            <?php elseif ($t->status == 'batal'): ?>
+                                <span class="badge badge-danger">Batal</span>
+                            <?php endif; ?>
+                        </td>
+                        <td><?php echo $t->created_by; ?></td>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>

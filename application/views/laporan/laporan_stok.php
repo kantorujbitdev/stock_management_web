@@ -2,10 +2,12 @@
     <div class="card-header">
         <h3 class="card-title">Laporan Stok</h3>
         <div class="card-tools">
-            <a href="<?php echo site_url('laporan_stok/export_pdf?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-danger btn-sm">
+            <a href="<?php echo site_url('laporan_stok/export_pdf?' . $_SERVER['QUERY_STRING']); ?>"
+                class="btn btn-danger btn-sm">
                 <i class="fas fa-file-pdf"></i> Export PDF
             </a>
-            <a href="<?php echo site_url('laporan_stok/export_excel?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-success btn-sm">
+            <a href="<?php echo site_url('laporan_stok/export_excel?' . $_SERVER['QUERY_STRING']); ?>"
+                class="btn btn-success btn-sm">
                 <i class="fas fa-file-excel"></i> Export Excel
             </a>
         </div>
@@ -68,7 +70,7 @@
         <h3 class="card-title">Data Stok</h3>
     </div>
     <div class="card-body">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th>No</th>
@@ -81,16 +83,17 @@
                 </tr>
             </thead>
             <tbody>
-                <?php $no = 1; foreach ($stok as $s): ?>
-                <tr>
-                    <td><?php echo $no++; ?></td>
-                    <td><?php echo $s->sku; ?></td>
-                    <td><?php echo $s->nama_barang; ?></td>
-                    <td><?php echo $s->nama_kategori; ?></td>
-                    <td><?php echo $s->nama_perusahaan; ?></td>
-                    <td><?php echo $s->nama_gudang; ?></td>
-                    <td><?php echo $s->jumlah; ?></td>
-                </tr>
+                <?php $no = 1;
+                foreach ($stok as $s): ?>
+                    <tr>
+                        <td><?php echo $no++; ?></td>
+                        <td><?php echo $s->sku; ?></td>
+                        <td><?php echo $s->nama_barang; ?></td>
+                        <td><?php echo $s->nama_kategori; ?></td>
+                        <td><?php echo $s->nama_perusahaan; ?></td>
+                        <td><?php echo $s->nama_gudang; ?></td>
+                        <td><?php echo $s->jumlah; ?></td>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
@@ -98,33 +101,33 @@
 </div>
 
 <script>
-$(document).ready(function() {
-    $('#id_perusahaan').change(function() {
-        var id_perusahaan = $(this).val();
-        
-        if (id_perusahaan != '') {
-            $.ajax({
-                url: "<?php echo site_url('laporan_stok/get_gudang_by_perusahaan') ?>",
-                method: "POST",
-                data: {id_perusahaan: id_perusahaan},
-                success: function(data) {
-                    $('#id_gudang').html('<option value="">-- Semua --</option>' + data);
-                    $('#id_kategori').html('<option value="">-- Semua --</option>');
-                }
-            });
-            
-            $.ajax({
-                url: "<?php echo site_url('laporan_stok/get_kategori_by_perusahaan') ?>",
-                method: "POST",
-                data: {id_perusahaan: id_perusahaan},
-                success: function(data) {
-                    $('#id_kategori').html('<option value="">-- Semua --</option>' + data);
-                }
-            });
-        } else {
-            $('#id_gudang').html('<option value="">-- Semua --</option>');
-            $('#id_kategori').html('<option value="">-- Semua --</option>');
-        }
+    $(document).ready(function () {
+        $('#id_perusahaan').change(function () {
+            var id_perusahaan = $(this).val();
+
+            if (id_perusahaan != '') {
+                $.ajax({
+                    url: "<?php echo site_url('laporan_stok/get_gudang_by_perusahaan') ?>",
+                    method: "POST",
+                    data: { id_perusahaan: id_perusahaan },
+                    success: function (data) {
+                        $('#id_gudang').html('<option value="">-- Semua --</option>' + data);
+                        $('#id_kategori').html('<option value="">-- Semua --</option>');
+                    }
+                });
+
+                $.ajax({
+                    url: "<?php echo site_url('laporan_stok/get_kategori_by_perusahaan') ?>",
+                    method: "POST",
+                    data: { id_perusahaan: id_perusahaan },
+                    success: function (data) {
+                        $('#id_kategori').html('<option value="">-- Semua --</option>' + data);
+                    }
+                });
+            } else {
+                $('#id_gudang').html('<option value="">-- Semua --</option>');
+                $('#id_kategori').html('<option value="">-- Semua --</option>');
+            }
+        });
     });
-});
 </script>

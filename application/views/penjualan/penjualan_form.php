@@ -4,7 +4,7 @@
     </div>
     <div class="card-body">
         <?php echo form_open('penjualan/add_process'); ?>
-        
+
         <div class="form-group">
             <label for="id_pelanggan">Pelanggan</label>
             <select name="id_pelanggan" class="form-control" required>
@@ -14,7 +14,7 @@
                 <?php endforeach; ?>
             </select>
         </div>
-        
+
         <div class="form-group">
             <label for="id_perusahaan">Perusahaan</label>
             <select name="id_perusahaan" class="form-control" id="id_perusahaan" required>
@@ -24,22 +24,23 @@
                 <?php endforeach; ?>
             </select>
         </div>
-        
+
         <div class="form-group">
             <label for="tanggal_penjualan">Tanggal Penjualan</label>
-            <input type="date" name="tanggal_penjualan" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+            <input type="date" name="tanggal_penjualan" class="form-control" value="<?php echo date('Y-m-d'); ?>"
+                required>
         </div>
-        
+
         <div class="form-group">
             <label for="keterangan">Keterangan</label>
             <textarea name="keterangan" class="form-control" rows="3"></textarea>
         </div>
-        
+
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Simpan</button>
             <a href="<?php echo site_url('penjualan'); ?>" class="btn btn-secondary">Batal</a>
         </div>
-        
+
         <?php echo form_close(); ?>
     </div>
 </div>
