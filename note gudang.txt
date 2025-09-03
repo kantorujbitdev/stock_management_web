@@ -1,6 +1,6 @@
 Bro kita sedang bikin aplikasi berbasis web ya bro dengan Codeigniter 3.1.13.
 
-gw akan kirim data yg sudah kita miliki
+gw akan kirim informasi yg sudah kita miliki
 
 Role User:
 1. Admin Pusat
@@ -119,9 +119,6 @@ application/
 │   │   ├── laporan_retur.php
 │   │   ├── laporan_retur_pdf.php
 │   │   └── laporan_transfer.php
-│   ├── pengaturan/
-│   │   ├── sistem.php
-│   │   └── backup.php
 │   ├── template/
 │   │   ├── header.php
 │   │   ├── sidebar.php
@@ -136,6 +133,13 @@ application/
 └── helpers/
     ├── app_helper.php
     └── stok_helper.php
+
+
+kita akan perbaiki menu penjualan bro
+lu mau gw kirim file yg mana bro?
+biar lu cek terus nanti lu bisa kasih perbaikannya?
+
+
 
 kita akan memperbaiki menu kategori:
 1. seharusnya ada id_perusahaan dalam tabel kategori sebagai penanda bahwa kategori_1 adalah milik perusahaan_i

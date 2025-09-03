@@ -63,22 +63,13 @@ class Penjualan_model extends CI_Model
         $this->db->order_by('p.tanggal_penjualan', 'DESC');
         return $this->db->get()->result();
     }
-
-    public function get_penjualan_by_id($id)
-    {
-        $this->db->select('p.*, pl.nama_pelanggan, pl.alamat as alamat_pelanggan, pl.telepon as telepon_pelanggan, 
-                          u.nama as nama_user, per.nama_perusahaan');
-        $this->db->from('penjualan p');
-        $this->db->join('pelanggan pl', 'p.id_pelanggan = pl.id_pelanggan', 'left');
-        $this->db->join('user u', 'p.id_user = u.id_user', 'left');
-        $this->db->join('perusahaan per', 'pl.id_perusahaan = per.id_perusahaan', 'left');
-        $this->db->where('p.id_penjualan', $id);
-        return $this->db->get()->row();
-    }
-
     public function insert_penjualan($data)
     {
         $this->db->insert('penjualan', $data);
+
+        // Debug: Log last query
+        log_message('debug', 'Last query: ' . $this->db->last_query());
+
         return $this->db->insert_id();
     }
 
@@ -100,5 +91,22 @@ class Penjualan_model extends CI_Model
         $this->db->order_by('no_invoice', 'DESC');
         $this->db->limit(1);
         return $this->db->get('penjualan')->row()->no_invoice;
+    }
+    public function get_penjualan_by_id($id)
+    {
+        $this->db->select('p.*, pl.nama_pelanggan, pl.alamat as alamat_pelanggan, pl.telepon as telepon_pelanggan, 
+                      u.nama as nama_user, per.nama_perusahaan');
+        $this->db->from('penjualan p');
+        $this->db->join('pelanggan pl', 'p.id_pelanggan = pl.id_pelanggan', 'left');
+        $this->db->join('user u', 'p.id_user = u.id_user', 'left');
+        $this->db->join('perusahaan per', 'pl.id_perusahaan = per.id_perusahaan', 'left');
+        $this->db->where('p.id_penjualan', $id);
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->row();
+        } else {
+            return null;
+        }
     }
 }

@@ -9,14 +9,46 @@ class Stok_gudang_model extends CI_Model
         parent::__construct();
         $this->load->database();
     }
-
-    // Get stok by barang and gudang
     public function get_stok_by_barang_gudang($id_barang, $id_gudang)
     {
         $this->db->where('id_barang', $id_barang);
         $this->db->where('id_gudang', $id_gudang);
-        return $this->db->get('stok_gudang')->row();
+        $query = $this->db->get('stok_gudang');
+
+        // Debug: Log last query
+        log_message('debug', 'Stock query: ' . $this->db->last_query());
+
+        if ($query->num_rows() > 0) {
+            return $query->row();
+        } else {
+            return null;
+        }
     }
+
+    public function update_stock($id_stok, $data)
+    {
+        $this->db->where('id_stok', $id_stok);
+        $this->db->update('stok_gudang', $data);
+
+        // Debug: Log last query
+        log_message('debug', 'Update stock query: ' . $this->db->last_query());
+
+        return $this->db->affected_rows() > 0;
+    }
+
+    // public function update_stock($id_stok, $data)
+    // {
+    //     $this->db->where('id_stok', $id_stok);
+    //     return $this->db->update('stok_gudang', $data);
+    // }
+
+    // // Get stok by barang and gudang
+    // public function get_stok_by_barang_gudang($id_barang, $id_gudang)
+    // {
+    //     $this->db->where('id_barang', $id_barang);
+    //     $this->db->where('id_gudang', $id_gudang);
+    //     return $this->db->get('stok_gudang')->row();
+    // }
 
     // Get all stok
     public function get_all_stok()

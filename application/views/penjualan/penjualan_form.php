@@ -1,111 +1,148 @@
 <div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Tambah Penjualan</h3>
+    <div class="card-header bg-primary">
+        <h3 class="card-title text-white">Tambah Penjualan</h3>
     </div>
-
     <div class="card-body">
-        <?php echo form_open('penjualan/add_process'); ?>
+        <?php echo form_open('penjualan/add_process', ['id' => 'formPenjualan']); ?>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="id_pelanggan">Pelanggan <span class="text-danger">*</span></label>
-                    <select name="id_pelanggan" class="form-control" id="id_pelanggan" required>
-                        <option value="">-- Pilih Pelanggan --</option>
-                        <?php foreach ($pelanggan as $p): ?>
-                            <option value="<?php echo $p->id_pelanggan; ?>"><?php echo $p->nama_pelanggan; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+        <!-- Informasi Penjualan -->
+        <div class="card mb-3">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Informasi Penjualan</h5>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Tanggal</label>
-                    <input type="text" class="form-control" value="<?php echo date('d-m-Y H:i'); ?>" readonly>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Items <span class="text-danger">*</span></label>
-            <div class="table-responsive">
-                <table class="table table-bordered" id="itemsTable">
-                    <thead>
-                        <tr>
-                            <th>Barang</th>
-                            <th>Gudang</th>
-                            <th>Stok</th>
-                            <th>Jumlah</th>
-                            <th>Harga</th>
-                            <th>Subtotal</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr id="itemRow">
-                            <td>
-                                <select name="items[0][id_barang]" class="form-control item-barang" required>
-                                    <option value="">-- Pilih Barang --</option>
+            <div class="card-body">
+                <?php if ($this->session->userdata('id_role') == 5): ?>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_perusahaan">Perusahaan <span class="text-danger">*</span></label>
+                                <select name="id_perusahaan" class="form-control" id="id_perusahaan" required>
+                                    <option value="">-- Pilih Perusahaan --</option>
+                                    <?php foreach ($perusahaan as $p): ?>
+                                        <option value="<?php echo $p->id_perusahaan; ?>"><?php echo $p->nama_perusahaan; ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
-                            </td>
-                            <td>
-                                <select name="items[0][id_gudang]" class="form-control item-gudang" required>
-                                    <option value="">-- Pilih Gudang --</option>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_pelanggan">Pelanggan <span class="text-danger">*</span></label>
+                                <select name="id_pelanggan" class="form-control" id="id_pelanggan" required>
+                                    <option value="">-- Pilih Pelanggan --</option>
+                                    <?php foreach ($pelanggan as $p): ?>
+                                        <option value="<?php echo $p->id_pelanggan; ?>" data-alamat="<?php echo $p->alamat; ?>"
+                                            data-telepon="<?php echo $p->telepon; ?>">
+                                            <?php echo $p->nama_pelanggan; ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
-                            </td>
-                            <td><span class="item-stock">-</span></td>
-                            <td>
-                                <input type="number" name="items[0][jumlah]" class="form-control item-jumlah" required
-                                    min="1" value="1">
-                            </td>
-                            <td>
-                                <input type="number" name="items[0][harga_satuan]" class="form-control item-harga"
-                                    required min="0" step="100">
-                            </td>
-                            <td><span class="item-subtotal">Rp 0</span></td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm remove-item">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </div>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_pelanggan">Pelanggan <span class="text-danger">*</span></label>
+                                <select name="id_pelanggan" class="form-control" id="id_pelanggan" required>
+                                    <option value="">-- Pilih Pelanggan --</option>
+                                    <?php foreach ($pelanggan as $p): ?>
+                                        <option value="<?php echo $p->id_pelanggan; ?>" data-alamat="<?php echo $p->alamat; ?>"
+                                            data-telepon="<?php echo $p->telepon; ?>">
+                                            <?php echo $p->nama_pelanggan; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>No. Invoice</label>
+                                <input type="text" class="form-control" value="<?php echo 'INV-' . date('Ym') . '0001'; ?>"
+                                    readonly>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <div class="row" id="infoPelanggan" style="display: none;">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Alamat</label>
+                            <p id="alamatPelanggan" class="form-control-plaintext"></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Telepon</label>
+                            <p id="teleponPelanggan" class="form-control-plaintext"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button type="button" class="btn btn-success btn-sm" id="addItem">
-                <i class="fas fa-plus"></i> Tambah Item
-            </button>
         </div>
 
-        <div class="row mt-3">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="diskon">Diskon</label>
-                    <input type="number" name="diskon" class="form-control" min="0" step="100" value="0">
-                </div>
+        <!-- Detail Barang -->
+        <div class="card mb-3">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Detail Barang <span class="text-danger">*</span></h5>
             </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="pajak">Pajak</label>
-                    <input type="number" name="pajak" class="form-control" min="0" step="100" value="0">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" id="itemsTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th width="40%">Barang</th>
+                                <th width="25%">Gudang</th>
+                                <th width="15%">Stok</th>
+                                <th width="15%">Jumlah</th>
+                                <th width="5%">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="item-row">
+                                <td>
+                                    <select name="items[0][id_barang]" class="form-control item-barang" required>
+                                        <option value="">-- Pilih Barang --</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <span class="item-gudang">-</span>
+                                    <input type="hidden" name="items[0][id_gudang]" class="item-gudang-id">
+                                </td>
+                                <td><span class="badge badge-info item-stock">-</span></td>
+                                <td>
+                                    <input type="number" name="items[0][jumlah]" class="form-control item-jumlah"
+                                        required min="1" value="1">
+                                    <div class="invalid-feedback stock-error"></div>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm remove-item">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Total Bayar</label>
-                    <input type="text" class="form-control" id="totalBayar" readonly value="Rp 0">
-                </div>
+                <button type="button" class="btn btn-success btn-sm" id="addItem">
+                    <i class="fas fa-plus"></i> Tambah Item
+                </button>
             </div>
         </div>
 
+        <!-- Keterangan -->
         <div class="form-group">
             <label for="keterangan">Keterangan</label>
-            <textarea name="keterangan" class="form-control" rows="2"></textarea>
+            <textarea name="keterangan" class="form-control" rows="2"
+                placeholder="Catatan tambahan (opsional)"></textarea>
         </div>
 
+        <!-- Tombol Aksi -->
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Simpan
+            <button type="submit" class="btn btn-primary" id="btnSubmit">
+                <i class="fas fa-save"></i> Simpan Penjualan
             </button>
             <a href="<?php echo site_url('penjualan'); ?>" class="btn btn-secondary">
                 <i class="fas fa-times"></i> Batal
@@ -120,9 +157,37 @@
     $(document).ready(function () {
         let itemCount = 0;
 
+        // Tampilkan info pelanggan saat dipilih
+        $('#id_pelanggan').change(function () {
+            let selected = $(this).find('option:selected');
+            let alamat = selected.data('alamat');
+            let telepon = selected.data('telepon');
+
+            if (alamat || telepon) {
+                $('#alamatPelanggan').text(alamat || '-');
+                $('#teleponPelanggan').text(telepon || '-');
+                $('#infoPelanggan').slideDown();
+            } else {
+                $('#infoPelanggan').slideUp();
+            }
+        });
+
         // Get barang by perusahaan
         function getBarangByPerusahaan(select) {
-            let id_perusahaan = <?php echo $this->session->userdata('id_role') == 5 ? '$("#id_perusahaan").val()' : '"' . $this->session->userdata('id_perusahaan') . '"'; ?>;
+            let id_perusahaan;
+
+            // Check if user is superadmin (role 5)
+            <?php if ($this->session->userdata('id_role') == 5): ?>
+                id_perusahaan = $('#id_perusahaan').val();
+                if (!id_perusahaan) {
+                    select.html('<option value="">-- Pilih Perusahaan terlebih dahulu --</option>');
+                    return;
+                }
+            <?php else: ?>
+                id_perusahaan = "<?php echo $this->session->userdata('id_perusahaan'); ?>";
+            <?php endif; ?>
+
+            console.log('Getting barang for company:', id_perusahaan);
 
             $.ajax({
                 url: "<?php echo site_url('penjualan/get_barang_by_perusahaan'); ?>",
@@ -130,122 +195,186 @@
                 data: { id_perusahaan: id_perusahaan },
                 dataType: "json",
                 success: function (data) {
+                    console.log('Barang data:', data);
                     let options = '<option value="">-- Pilih Barang --</option>';
                     data.forEach(function (item) {
                         options += `<option value="${item.id_barang}">${item.nama_barang} - ${item.sku}</option>`;
                     });
                     select.html(options);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error getting barang:', error);
+                    select.html('<option value="">-- Gagal memuat data --</option>');
                 }
             });
         }
 
         // Get stock by barang
         function getStockByBarang(select, id_barang) {
+            console.log('Getting stock for barang:', id_barang);
+
             $.ajax({
                 url: "<?php echo site_url('penjualan/get_stock_by_barang'); ?>",
                 method: "GET",
                 data: { id_barang: id_barang },
                 dataType: "json",
                 success: function (data) {
-                    let options = '<option value="">-- Pilih Gudang --</option>';
-                    data.forEach(function (item) {
-                        options += `<option value="${item.id_gudang}">${item.nama_gudang} (Stok: ${item.jumlah})</option>`;
-                    });
-                    select.html(options);
+                    console.log('Stock data:', data);
 
-                    // Update stock display
+                    // Jika ada stok, ambil gudang dengan stok terbanyak
                     if (data.length > 0) {
-                        select.closest('tr').find('.item-stock').text(data[0].jumlah);
+                        // Urutkan berdasarkan jumlah stok terbanyak
+                        data.sort((a, b) => b.jumlah - a.jumlah);
+
+                        // Ambil gudang dengan stok terbanyak
+                        let gudangTerbanyak = data[0];
+
+                        // Tampilkan nama gudang
+                        select.closest('tr').find('.item-gudang').text(gudangTerbanyak.nama_gudang);
+                        select.closest('tr').find('.item-gudang-id').val(gudangTerbanyak.id_gudang);
+
+                        // Tampilkan stok
+                        select.closest('tr').find('.item-stock').text(gudangTerbanyak.jumlah);
+                    } else {
+                        // Jika tidak ada stok
+                        select.closest('tr').find('.item-gudang').text('Tidak ada stok');
+                        select.closest('tr').find('.item-gudang-id').val('');
+                        select.closest('tr').find('.item-stock').text('0');
                     }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error getting stock:', error);
+                    select.closest('tr').find('.item-gudang').text('Gagal memuat stok');
+                    select.closest('tr').find('.item-gudang-id').val('');
+                    select.closest('tr').find('.item-stock').text('0');
                 }
             });
         }
 
         // Add new item row
         $('#addItem').click(function () {
+            console.log('Add item clicked');
             itemCount++;
             let newRow = `
-            <tr>
-                <td>
-                    <select name="items[${itemCount}][id_barang]" class="form-control item-barang" required>
-                        <option value="">-- Pilih Barang --</option>
-                    </select>
-                </td>
-                <td>
-                    <select name="items[${itemCount}][id_gudang]" class="form-control item-gudang" required>
-                        <option value="">-- Pilih Gudang --</option>
-                    </select>
-                </td>
-                <td><span class="item-stock">-</span></td>
-                <td>
-                    <input type="number" name="items[${itemCount}][jumlah]" class="form-control item-jumlah" required min="1" value="1">
-                </td>
-                <td>
-                    <input type="number" name="items[${itemCount}][harga_satuan]" class="form-control item-harga" required min="0" step="100">
-                </td>
-                <td><span class="item-subtotal">Rp 0</span></td>
-                <td>
-                    <button type="button" class="btn btn-danger btn-sm remove-item">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
+        <tr class="item-row">
+            <td>
+                <select name="items[${itemCount}][id_barang]" class="form-control item-barang" required>
+                    <option value="">-- Pilih Barang --</option>
+                </select>
+            </td>
+            <td>
+                <span class="item-gudang">-</span>
+                <input type="hidden" name="items[${itemCount}][id_gudang]" class="item-gudang-id">
+            </td>
+            <td><span class="badge badge-info item-stock">-</span></td>
+            <td>
+                <input type="number" name="items[${itemCount}][jumlah]" class="form-control item-jumlah" required min="1" value="1">
+                <div class="invalid-feedback stock-error"></div>
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm remove-item">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
         `;
             $('#itemsTable tbody').append(newRow);
+            console.log('New row added');
+
+            // Populate the new dropdown with barang
+            let newDropdown = $('#itemsTable tbody tr:last .item-barang');
+            getBarangByPerusahaan(newDropdown);
         });
 
         // Remove item row
         $(document).on('click', '.remove-item', function () {
             $(this).closest('tr').remove();
-            calculateTotal();
         });
 
         // Barang change event
         $(document).on('change', '.item-barang', function () {
             let row = $(this).closest('tr');
             let id_barang = $(this).val();
-            let gudangSelect = row.find('.item-gudang');
+
+            console.log('Barang changed to:', id_barang);
+
+            // Reset gudang dan stok
+            row.find('.item-gudang').text('-');
+            row.find('.item-gudang-id').val('');
+            row.find('.item-stock').text('-');
 
             if (id_barang) {
-                getStockByBarang(gudangSelect, id_barang);
+                // Get gudang dengan stok terbanyak
+                getStockByBarang($(this), id_barang);
+            }
+        });
+
+        // Validasi stok saat input jumlah
+        $(document).on('input', '.item-jumlah', function () {
+            let row = $(this).closest('tr');
+            let jumlah = parseInt($(this).val()) || 0;
+            let stockText = row.find('.item-stock').text();
+            let stock = parseInt(stockText) || 0;
+
+            if (jumlah > stock) {
+                $(this).addClass('is-invalid');
+                row.find('.stock-error').text('Stok hanya tersedia: ' + stock);
+                row.find('.item-stock').removeClass('badge-info').addClass('badge-danger');
             } else {
-                gudangSelect.html('<option value="">-- Pilih Gudang --</option>');
-                row.find('.item-stock').text('-');
+                $(this).removeClass('is-invalid');
+                row.find('.stock-error').text('');
+                if (stock > 0) {
+                    row.find('.item-stock').removeClass('badge-danger').addClass('badge-info');
+                }
+            }
+        });
+
+        // Form submit validation
+        $('#formPenjualan').on('submit', function (e) {
+            // Cek apakah ada item yang invalid
+            if ($('.item-jumlah.is-invalid').length > 0) {
+                e.preventDefault();
+                alert('Perbaiki dulu kesalahan pada jumlah barang!');
+                return false;
             }
 
-            calculateTotal();
-        });
+            // Cek apakah ada item yang belum dipilih
+            if ($('.item-barang').filter(function () { return !this.value; }).length > 0) {
+                e.preventDefault();
+                alert('Pilih barang untuk semua item!');
+                return false;
+            }
 
-        // Calculate subtotal
-        $(document).on('input', '.item-jumlah, .item-harga', function () {
-            let row = $(this).closest('tr');
-            let jumlah = row.find('.item-jumlah').val() || 0;
-            let harga = row.find('.item-harga').val() || 0;
-            let subtotal = jumlah * harga;
-
-            row.find('.item-subtotal').text('Rp ' + subtotal.toLocaleString('id-ID'));
-            calculateTotal();
-        });
-
-        // Calculate total
-        function calculateTotal() {
-            let subtotal = 0;
-            $('.item-subtotal').each(function () {
-                let value = $(this).text().replace('Rp ', '').replace(/\./g, '');
-                subtotal += parseInt(value) || 0;
+            // Cek apakah ada item yang jumlahnya 0
+            let hasZeroQuantity = false;
+            $('.item-jumlah').each(function () {
+                if ($(this).val() == 0) {
+                    hasZeroQuantity = true;
+                }
             });
 
-            let diskon = parseInt($('input[name="diskon"]').val()) || 0;
-            let pajak = parseInt($('input[name="pajak"]').val()) || 0;
-            let total = subtotal - diskon + pajak;
+            if (hasZeroQuantity) {
+                e.preventDefault();
+                alert('Jumlah barang tidak boleh 0!');
+                return false;
+            }
 
-            $('#totalBayar').val('Rp ' + total.toLocaleString('id-ID'));
-        }
+            // Show loading
+            $('#btnSubmit').html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...').prop('disabled', true);
+        });
 
         // Initialize first row
         getBarangByPerusahaan($('.item-barang').first());
 
-        // Diskon and pajak change
-        $('input[name="diskon"], input[name="pajak"]').on('input', calculateTotal);
+        // For superadmin, update barang dropdown when company changes
+        <?php if ($this->session->userdata('id_role') == 5): ?>
+            $('#id_perusahaan').change(function () {
+                console.log('Company changed to:', $(this).val());
+                // Update all barang dropdowns
+                $('.item-barang').each(function () {
+                    getBarangByPerusahaan($(this));
+                });
+            });
+        <?php endif; ?>
     });
 </script>

@@ -47,7 +47,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">Takin ingin keluar dari sistem?
+                <div class="modal-body">Yakin ingin keluar dari sistem?
                     Tekan "Logout" untuk melanjutkan.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>

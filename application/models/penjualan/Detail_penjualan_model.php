@@ -20,11 +20,6 @@ class Detail_penjualan_model extends CI_Model
         return $this->db->get()->result();
     }
 
-    public function insert_detail_penjualan($data)
-    {
-        return $this->db->insert('detail_penjualan', $data);
-    }
-
     public function update_detail_penjualan($id, $data)
     {
         $this->db->where('id_detail', $id);
@@ -36,7 +31,15 @@ class Detail_penjualan_model extends CI_Model
         $this->db->where('id_detail', $id);
         return $this->db->delete('detail_penjualan');
     }
+    public function insert_detail_penjualan($data)
+    {
+        $this->db->insert('detail_penjualan', $data);
 
+        // Debug: Log last query
+        log_message('debug', 'Detail last query: ' . $this->db->last_query());
+
+        return $this->db->affected_rows() > 0;
+    }
     public function delete_by_penjualan($id_penjualan)
     {
         $this->db->where('id_penjualan', $id_penjualan);

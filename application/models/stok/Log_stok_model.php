@@ -9,7 +9,15 @@ class Log_stok_model extends CI_Model
         parent::__construct();
         $this->load->database();
     }
+    public function insert_log($data)
+    {
+        $this->db->insert('log_stok', $data);
 
+        // Debug: Log last query
+        log_message('debug', 'Log stok query: ' . $this->db->last_query());
+
+        return $this->db->insert_id();
+    }
     // Get filtered riwayat
     public function get_filtered_riwayat(
         $id_perusahaan = null,
@@ -78,9 +86,4 @@ class Log_stok_model extends CI_Model
         return $this->db->get()->result();
     }
 
-    // Insert log
-    public function insert_log($data)
-    {
-        return $this->db->insert('log_stok', $data);
-    }
 }
