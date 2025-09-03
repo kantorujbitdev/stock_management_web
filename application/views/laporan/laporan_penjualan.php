@@ -21,7 +21,8 @@
                         <select name="id_perusahaan" class="form-control">
                             <option value="">-- Semua --</option>
                             <?php foreach ($perusahaan as $p): ?>
-                                <option value="<?php echo $p->id_perusahaan; ?>" <?php echo ($filter['id_perusahaan'] == $p->id_perusahaan) ? 'selected' : ''; ?>>
+                                <option value="<?php echo $p->id_perusahaan; ?>" 
+                                <?php echo ($filter['id_perusahaan'] == $p->id_perusahaan) ? 'selected' : ''; ?>>
                                     <?php echo $p->nama_perusahaan; ?>
                                 </option>
                             <?php endforeach; ?>

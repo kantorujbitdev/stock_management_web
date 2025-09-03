@@ -11,8 +11,14 @@ class Log_stok_model extends CI_Model
     }
 
     // Get filtered riwayat
-    public function get_filtered_riwayat($id_perusahaan = null, $id_gudang = null, $id_barang = null, $jenis = null, $tanggal_awal = null, $tanggal_akhir = null)
-    {
+    public function get_filtered_riwayat(
+        $id_perusahaan = null,
+        $id_gudang = null,
+        $id_barang = null,
+        $jenis = null,
+        $tanggal_awal = null,
+        $tanggal_akhir = null
+    ) {
         $this->db->select('log_stok.*, barang.nama_barang, barang.sku, gudang.nama_gudang, perusahaan.nama_perusahaan, user.nama as created_by');
         $this->db->from('log_stok');
         $this->db->join('barang', 'barang.id_barang = log_stok.id_barang');

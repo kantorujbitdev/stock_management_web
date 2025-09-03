@@ -1,8 +1,10 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Debug extends CI_Controller {
-    public function index() {
+class Debug extends CI_Controller
+{
+    public function index()
+    {
         echo "<h1>Debug Info</h1>";
         echo "<pre>";
         echo "Base URL: " . base_url() . "<br>";

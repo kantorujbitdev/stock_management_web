@@ -1,14 +1,17 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Pelanggan_model extends CI_Model {
-    public function __construct() {
+class Pelanggan_model extends CI_Model
+{
+    public function __construct()
+    {
         parent::__construct();
         $this->load->database();
     }
 
     // Get all pelanggan
-    public function get_all_pelanggan() {
+    public function get_all_pelanggan()
+    {
         $this->db->select('p.*, per.nama_perusahaan');
         $this->db->from('pelanggan p');
         $this->db->join('perusahaan per', 'p.id_perusahaan = per.id_perusahaan', 'left');
@@ -17,7 +20,8 @@ class Pelanggan_model extends CI_Model {
     }
 
     // Get pelanggan by id
-    public function get_pelanggan_by_id($id) {
+    public function get_pelanggan_by_id($id)
+    {
         $this->db->select('p.*, per.nama_perusahaan');
         $this->db->from('pelanggan p');
         $this->db->join('perusahaan per', 'p.id_perusahaan = per.id_perusahaan', 'left');
@@ -26,33 +30,38 @@ class Pelanggan_model extends CI_Model {
     }
 
     // Get pelanggan by perusahaan
-    public function get_pelanggan_by_perusahaan($id_perusahaan) {
+    public function get_pelanggan_by_perusahaan($id_perusahaan)
+    {
         $this->db->where('id_perusahaan', $id_perusahaan);
         $this->db->order_by('nama_pelanggan', 'ASC');
         return $this->db->get('pelanggan')->result();
     }
 
     // Insert pelanggan
-    public function insert_pelanggan($data) {
+    public function insert_pelanggan($data)
+    {
         $this->db->insert('pelanggan', $data);
         return $this->db->insert_id();
     }
 
     // Update pelanggan
-    public function update_pelanggan($id, $data) {
+    public function update_pelanggan($id, $data)
+    {
         $this->db->where('id_pelanggan', $id);
         return $this->db->update('pelanggan', $data);
     }
 
 
-  // Soft delete pelanggan (ubah status aktif)
-    public function delete_pelanggan($id) {
+    // Soft delete pelanggan (ubah status aktif)
+    public function delete_pelanggan($id)
+    {
         $this->db->where('id_pelanggan', $id);
         return $this->db->update('pelanggan', ['status_aktif' => 0]);
     }
 
     // Restore pelanggan (ubah status aktif)
-    public function restore_pelanggan($id) {
+    public function restore_pelanggan($id)
+    {
         $this->db->where('id_pelanggan', $id);
         return $this->db->update('pelanggan', ['status_aktif' => 1]);
     }

@@ -38,7 +38,8 @@
 <body>
     <h2 class="text-center">LAPORAN RETUR PENJUALAN</h2>
     <p class="text-center">Periode: <?php echo date('d-m-Y', strtotime($tanggal_awal)); ?> s/d
-        <?php echo date('d-m-Y', strtotime($tanggal_akhir)); ?></p>
+        <?php echo date('d-m-Y', strtotime($tanggal_akhir)); ?>
+    </p>
 
     <table>
         <thead>
