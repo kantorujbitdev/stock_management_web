@@ -29,13 +29,13 @@ class Pelanggan_model extends CI_Model
         return $this->db->get()->row();
     }
 
-    // Get pelanggan by perusahaan
-    public function get_pelanggan_by_perusahaan($id_perusahaan)
-    {
-        $this->db->where('id_perusahaan', $id_perusahaan);
-        $this->db->order_by('nama_pelanggan', 'ASC');
-        return $this->db->get('pelanggan')->result();
-    }
+    // // Get pelanggan by perusahaan
+    // public function get_pelanggan_by_perusahaan($id_perusahaan)
+    // {
+    //     $this->db->where('id_perusahaan', $id_perusahaan);
+    //     $this->db->order_by('nama_pelanggan', 'ASC');
+    //     return $this->db->get('pelanggan')->result();
+    // }
 
     // Insert pelanggan
     public function insert_pelanggan($data)
@@ -51,7 +51,24 @@ class Pelanggan_model extends CI_Model
         return $this->db->update('pelanggan', $data);
     }
 
+    public function get_pelanggan_aktif()
+    {
+        $this->db->select('*');
+        $this->db->from('pelanggan');
+        $this->db->where('status_aktif', 1);
+        $this->db->order_by('nama_pelanggan', 'ASC');
+        return $this->db->get()->result();
+    }
 
+    public function get_pelanggan_by_perusahaan($id_perusahaan)
+    {
+        $this->db->select('*');
+        $this->db->from('pelanggan');
+        $this->db->where('id_perusahaan', $id_perusahaan);
+        $this->db->where('status_aktif', 1);
+        $this->db->order_by('nama_pelanggan', 'ASC');
+        return $this->db->get()->result();
+    }
     // Soft delete pelanggan (ubah status aktif)
     public function delete_pelanggan($id)
     {

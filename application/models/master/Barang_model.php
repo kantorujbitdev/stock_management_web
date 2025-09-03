@@ -43,6 +43,19 @@ class Barang_model extends CI_Model
         return $this->db->get()->result();
     }
 
+    public function get_barang_with_stock($id_perusahaan)
+    {
+        $this->db->select('b.*, k.nama_kategori, COALESCE(sg.jumlah, 0) as stok_tersedia');
+        $this->db->from('barang b');
+        $this->db->join('kategori k', 'b.id_kategori = k.id_kategori', 'left');
+        $this->db->join('stok_gudang sg', 'b.id_barang = sg.id_barang', 'left');
+        $this->db->where('b.id_perusahaan', $id_perusahaan);
+        $this->db->where('b.aktif', 1);
+        $this->db->where('sg.jumlah >', 0);
+        $this->db->order_by('b.nama_barang', 'ASC');
+        return $this->db->get()->result();
+    }
+
     // Check SKU uniqueness
     public function check_sku($sku, $id_perusahaan, $id_barang = null)
     {

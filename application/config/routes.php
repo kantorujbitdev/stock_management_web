@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 // Default controller harus sesuai struktur folder
 $route['default_controller'] = 'dashboard';  // Diubah dari 'welcome'
@@ -141,6 +141,11 @@ $route['penjualan/delete_barang/(:num)'] = 'penjualan/Penjualan/delete_barang/$1
 $route['penjualan/get_gudang_by_perusahaan'] = 'penjualan/Penjualan/get_gudang_by_perusahaan';
 $route['penjualan/get_barang_by_gudang'] = 'penjualan/Penjualan/get_barang_by_gudang';
 $route['penjualan/get_stok_barang'] = 'penjualan/Penjualan/get_stok_barang';
+$route['penjualan/view/(:num)'] = 'penjualan/Penjualan/view/$1';
+$route['penjualan/edit/(:num)'] = 'penjualan/Penjualan/edit/$1';
+$route['penjualan/delete/(:num)'] = 'penjualan/Penjualan/delete/$1';
+$route['penjualan/get_barang_by_perusahaan'] = 'penjualan/Penjualan/get_barang_by_perusahaan';
+$route['penjualan/get_stock_by_barang'] = 'penjualan/Penjualan/get_stock_by_barang';
 
 $route['retur'] = 'penjualan/Retur';
 $route['retur/add'] = 'penjualan/Retur/add';
