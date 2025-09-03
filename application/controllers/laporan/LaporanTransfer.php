@@ -143,7 +143,7 @@ class LaporanTransfer extends CI_Controller
         foreach ($data['transfer'] as $t) {
             $objPHPExcel->getActiveSheet()->setCellValue('A' . $row, $no++);
             $objPHPExcel->getActiveSheet()->setCellValue('B' . $row, $t->no_transfer);
-            $objPHPExcel->getActiveSheet()->setCellValue('C' . $row, date('d-m-Y H:i', strtotime($t->tanggal)));
+            $objPHPExcel->getActiveSheet()->setCellValue('C' . $row, date('d-m-Y H:i:s', strtotime($t->tanggal)));
             $objPHPExcel->getActiveSheet()->setCellValue('D' . $row, $t->nama_barang);
             $objPHPExcel->getActiveSheet()->setCellValue('E' . $row, $t->gudang_asal);
             $objPHPExcel->getActiveSheet()->setCellValue('F' . $row, $t->gudang_tujuan);

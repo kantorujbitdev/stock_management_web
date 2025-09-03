@@ -1,33 +1,42 @@
 <?php
-if (!defined('BASEPATH')) exit('No direct script access allowed');
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
 
 if (!function_exists('format_tanggal')) {
-    function format_tanggal($tanggal) {
+    function format_tanggal($tanggal)
+    {
         if (empty($tanggal)) {
             return '-';
         }
-        
+
         // Convert string to timestamp
         $timestamp = strtotime($tanggal);
-        
+
         // Format tanggal: dd-mm-yyyy HH:mm
-        return date('d-m-Y H:i', $timestamp);
+        return date('d-m-Y H:i:s', $timestamp);
     }
 }
 
 if (!function_exists('format_tanggal_indo')) {
-    function format_tanggal_indo($tanggal) {
+    function format_tanggal_indo($tanggal)
+    {
         if (empty($tanggal)) {
             return '-';
         }
-        
+
         $timestamp = strtotime($tanggal);
-        
+
         // Array nama hari
         $nama_hari = array(
-            'Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'
+            'Minggu',
+            'Senin',
+            'Selasa',
+            'Rabu',
+            'Kamis',
+            'Jumat',
+            'Sabtu'
         );
-        
+
         // Array nama bulan
         $nama_bulan = array(
             1 => 'Januari',
@@ -43,27 +52,28 @@ if (!function_exists('format_tanggal_indo')) {
             11 => 'November',
             12 => 'Desember'
         );
-        
+
         // Get hari, tanggal, bulan, tahun, jam, menit
         $hari = $nama_hari[date('w', $timestamp)];
         $tanggal = date('j', $timestamp);
         $bulan = $nama_bulan[date('n', $timestamp)];
         $tahun = date('Y', $timestamp);
         $jam = date('H:i', $timestamp);
-        
+
         return $hari . ', ' . $tanggal . ' ' . $bulan . ' ' . $tahun . ' ' . $jam;
     }
 }
 
 if (!function_exists('selisih_waktu')) {
-    function selisih_waktu($tanggal) {
+    function selisih_waktu($tanggal)
+    {
         if (empty($tanggal)) {
             return '-';
         }
-        
+
         $timestamp = strtotime($tanggal);
         $selisih = time() - $timestamp;
-        
+
         if ($selisih < 60) {
             return 'Baru saja';
         } elseif ($selisih < 3600) {

@@ -42,7 +42,7 @@
                 foreach ($penyesuaian as $p): ?>
                     <tr>
                         <td><?php echo $no++; ?></td>
-                        <td><?php echo date('d-m-Y H:i', strtotime($p->created_at)); ?></td>
+                        <td><?php echo date('d-m-Y H:i:s', strtotime($p->created_at)); ?></td>
                         <td><?php echo $p->nama_barang; ?></td>
                         <td><?php echo $p->nama_gudang; ?></td>
                         <td><?php echo $p->nama_perusahaan; ?></td>

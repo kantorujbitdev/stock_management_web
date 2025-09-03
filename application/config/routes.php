@@ -146,6 +146,7 @@ $route['penjualan/edit/(:num)'] = 'penjualan/Penjualan/edit/$1';
 $route['penjualan/delete/(:num)'] = 'penjualan/Penjualan/delete/$1';
 $route['penjualan/get_barang_by_perusahaan'] = 'penjualan/Penjualan/get_barang_by_perusahaan';
 $route['penjualan/get_stock_by_barang'] = 'penjualan/Penjualan/get_stock_by_barang';
+$route['penjualan/update_status/(:num)/(:any)'] = 'penjualan/Penjualan/update_status/$1/$2';
 
 $route['retur'] = 'penjualan/Retur';
 $route['retur/add'] = 'penjualan/Retur/add';

@@ -18,6 +18,7 @@ class Penjualan extends CI_Controller
         $this->load->model('stok/Stok_gudang_model');
         $this->load->model('stok/Log_stok_model');
         $this->load->model('perusahaan/Perusahaan_model');
+        $this->load->model('penjualan/Log_status_penjualan_model');
 
         // Cek login
         if (!$this->session->userdata('logged_in')) {
@@ -29,6 +30,34 @@ class Penjualan extends CI_Controller
             $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke menu Penjualan');
             redirect('dashboard');
         }
+    }
+    public function index()
+    {
+        $data['title'] = 'Data Penjualan';
+        // Filter parameters
+        $filter = [
+            'id_perusahaan' => $this->input->get('id_perusahaan'),
+            'id_pelanggan' => $this->input->get('id_pelanggan'),
+            'status' => $this->input->get('status'),
+            'date_from' => $this->input->get('date_from'),
+            'date_to' => $this->input->get('date_to')
+        ];
+
+        // Get data with filter
+        if ($this->session->userdata('id_role') == 5) {
+            $data['penjualan'] = $this->Penjualan_model->get_all_penjualan_with_detail($filter);
+            $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
+        } else {
+            $id_perusahaan = $this->session->userdata('id_perusahaan');
+            $filter['id_perusahaan'] = $id_perusahaan;
+            $data['penjualan'] = $this->Penjualan_model->get_penjualan_by_perusahaan_with_detail($id_perusahaan, $filter);
+            $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
+        }
+
+        $data['pelanggan'] = $this->Pelanggan_model->get_pelanggan_aktif();
+        $data['filter'] = $filter;
+        $data['content'] = 'penjualan/penjualan_list';
+        $this->load->view('template/template', $data);
     }
 
     public function get_stock_by_barang()
@@ -113,11 +142,9 @@ class Penjualan extends CI_Controller
                         $detail_data = [
                             'id_penjualan' => $id_penjualan,
                             'id_barang' => $item['id_barang'],
+                            'id_gudang' => $item['id_gudang'], // Tambahkan ini
                             'jumlah' => $item['jumlah'],
                         ];
-
-                        // Debug: Log detail data
-                        log_message('debug', 'Detail data: ' . print_r($detail_data, true));
 
                         $insert_detail = $this->Detail_penjualan_model->insert_detail_penjualan($detail_data);
 
@@ -127,13 +154,16 @@ class Penjualan extends CI_Controller
                         if (!$insert_detail) {
                             throw new Exception('Gagal menyimpan detail penjualan');
                         }
-
+                        // Tambahkan log status awal
+                        $log_data = [
+                            'id_penjualan' => $id_penjualan,
+                            'id_user' => $this->session->userdata('id_user'),
+                            'status' => 'proses',
+                            'keterangan' => 'Penjualan dibuat'
+                        ];
+                        $this->Log_status_penjualan_model->insert_log($log_data);
                         // Reduce stock with better error handling
                         $reduce_result = $this->reduce_stock($item['id_barang'], $item['id_gudang'], $item['jumlah'], $id_penjualan);
-
-                        // Debug: Log reduce stock result
-                        log_message('debug', 'Reduce stock result: ' . print_r($reduce_result, true));
-
                         if (!$reduce_result['success']) {
                             throw new Exception($reduce_result['message']);
                         }
@@ -162,36 +192,6 @@ class Penjualan extends CI_Controller
             redirect('penjualan');
         }
     }
-    public function index()
-    {
-        $data['title'] = 'Data Penjualan';
-
-        // Filter parameters
-        $filter = [
-            'id_perusahaan' => $this->input->get('id_perusahaan'),
-            'id_pelanggan' => $this->input->get('id_pelanggan'),
-            'status' => $this->input->get('status'),
-            'date_from' => $this->input->get('date_from'),
-            'date_to' => $this->input->get('date_to')
-        ];
-
-        // Get data with filter
-        if ($this->session->userdata('id_role') == 5) {
-            $data['penjualan'] = $this->Penjualan_model->get_all_penjualan($filter);
-            $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
-        } else {
-            $id_perusahaan = $this->session->userdata('id_perusahaan');
-            $filter['id_perusahaan'] = $id_perusahaan;
-            $data['penjualan'] = $this->Penjualan_model->get_penjualan_by_perusahaan($id_perusahaan, $filter);
-            $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
-        }
-
-        $data['pelanggan'] = $this->Pelanggan_model->get_pelanggan_aktif();
-        $data['filter'] = $filter;
-        $data['content'] = 'penjualan/penjualan_list';
-        $this->load->view('template/template', $data);
-    }
-
     public function add()
     {
         $data['title'] = 'Tambah Penjualan';
@@ -209,6 +209,19 @@ class Penjualan extends CI_Controller
         $data['content'] = 'penjualan/penjualan_form';
         $this->load->view('template/template', $data);
     }
+    // Tambahkan di Controller Penjualan.php
+    private function get_status_icon($status)
+    {
+        $icons = [
+            'proses' => 'clock',
+            'packing' => 'box',
+            'dikirim' => 'truck',
+            'selesai' => 'check-circle',
+            'batal' => 'times-circle'
+        ];
+
+        return $icons[$status] ?? 'question-circle';
+    }
 
     public function view($id)
     {
@@ -221,17 +234,20 @@ class Penjualan extends CI_Controller
         }
 
         // Cek hak akses perusahaan
-        if ($this->session->userdata('id_role') != 5) {
+        if ($this->session->userdata('id_role') == 4) {
             if ($data['penjualan']->id_perusahaan != $this->session->userdata('id_perusahaan')) {
                 $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke penjualan ini');
                 redirect('penjualan');
             }
         }
 
+        // Ambil riwayat status
+        $this->load->model('penjualan/Log_status_penjualan_model');
+        $data['riwayat_status'] = $this->Log_status_penjualan_model->get_log_by_penjualan($id);
+
         $data['content'] = 'penjualan/penjualan_detail';
         $this->load->view('template/template', $data);
     }
-
     public function get_barang_by_perusahaan()
     {
         $id_perusahaan = $this->input->get('id_perusahaan');
@@ -324,6 +340,100 @@ class Penjualan extends CI_Controller
         }
 
         return ['success' => true];
+    }
+    public function update_status($id_penjualan, $status)
+    {
+        // Ambil data penjualan terlebih dahulu
+        $penjualan = $this->Penjualan_model->get_penjualan_by_id($id_penjualan);
+
+        if (!$penjualan) {
+            $this->session->set_flashdata('error', 'Data penjualan tidak ditemukan');
+            redirect('penjualan');
+        }
+
+        // Cek hak akses perusahaan
+        $user_role = $this->session->userdata('id_role');
+        $user_company = $this->session->userdata('id_perusahaan');
+
+        // Jika bukan Super Admin (5) atau Admin Pusat (1), cek akses perusahaan
+        if ($user_role != 5 && $user_role != 1) {
+            // Ambil data penjualan dengan perusahaan
+            $penjualan_with_company = $this->Penjualan_model->get_penjualan_by_id($id_penjualan);
+            if ($penjualan_with_company && $penjualan_with_company->id_perusahaan != $user_company) {
+                $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke penjualan ini');
+                redirect('penjualan');
+            }
+        }
+
+        // Validasi status yang diizinkan berdasarkan role
+        $allowed = false;
+
+        // Super Admin (5) dan Admin Pusat (1) bisa mengubah ke status apa saja
+        if ($user_role == 5 || $user_role == 1) {
+            $allowed = true;
+        }
+        // Admin Packing (3) bisa mengubah ke packing, dikirim, selesai
+        else if ($user_role == 3 && in_array($status, ['packing', 'dikirim', 'selesai'])) {
+            $allowed = true;
+        }
+        // Sales Online (2) hanya bisa mengubah ke batal
+        else if ($user_role == 2 && $status == 'batal') {
+            $allowed = true;
+        }
+
+        if (!$allowed) {
+            $this->session->set_flashdata('error', 'Anda tidak memiliki akses untuk mengubah status menjadi ' . $status);
+            redirect('penjualan');
+        }
+
+        // Cek apakah status transition valid
+        $current_status = $penjualan->status;
+        $valid_transitions = [
+            'proses' => ['packing', 'batal'],
+            'packing' => ['dikirim'],
+            'dikirim' => ['selesai'],
+            'selesai' => [], // tidak bisa diubah lagi
+            'batal' => [] // tidak bisa diubah lagi
+        ];
+
+        if (!in_array($status, $valid_transitions[$current_status])) {
+            $this->session->set_flashdata('error', 'Tidak dapat mengubah status dari ' . $current_status . ' ke ' . $status);
+            redirect('penjualan');
+        }
+
+        // Update status
+        $this->Penjualan_model->update_penjualan($id_penjualan, ['status' => $status]);
+
+        // Catat log perubahan status
+        $keterangan = '';
+        switch ($status) {
+            case 'packing':
+                $keterangan = 'Penjualan sedang dipacking';
+                break;
+            case 'dikirim':
+                $keterangan = 'Penjualan telah dikirim';
+                break;
+            case 'selesai':
+                $keterangan = 'Penjualan telah selesai';
+                break;
+            case 'batal':
+                $keterangan = 'Penjualan dibatalkan';
+                break;
+            default:
+                $keterangan = 'Status diubah menjadi ' . $status;
+        }
+
+        $log_data = [
+            'id_penjualan' => $id_penjualan,
+            'id_user' => $this->session->userdata('id_user'),
+            'status' => $status,
+            'keterangan' => $keterangan
+        ];
+
+        $this->Log_status_penjualan_model->insert_log($log_data);
+
+        $this->session->set_flashdata('success', 'Status penjualan berhasil diubah menjadi ' . $status);
+        redirect('penjualan/view/' . $id_penjualan);
     }
 
 }

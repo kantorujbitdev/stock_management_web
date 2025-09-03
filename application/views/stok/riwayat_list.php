@@ -113,7 +113,7 @@
                 foreach ($riwayat as $r): ?>
                     <tr>
                         <td><?php echo $no++; ?></td>
-                        <td><?php echo date('d-m-Y H:i', strtotime($r->tanggal)); ?></td>
+                        <td><?php echo date('d-m-Y H:i:s', strtotime($r->tanggal)); ?></td>
                         <td><?php echo $r->nama_barang; ?></td>
                         <td><?php echo $r->nama_gudang; ?></td>
                         <td><?php echo $r->nama_perusahaan; ?></td>

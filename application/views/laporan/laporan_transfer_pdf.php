@@ -38,7 +38,8 @@
 <body>
     <h2 class="text-center">LAPORAN TRANSFER STOK</h2>
     <p class="text-center">Periode: <?php echo date('d-m-Y', strtotime($tanggal_awal)); ?> s/d
-        <?php echo date('d-m-Y', strtotime($tanggal_akhir)); ?></p>
+        <?php echo date('d-m-Y', strtotime($tanggal_akhir)); ?>
+    </p>
 
     <table>
         <thead>
@@ -60,7 +61,7 @@
                 <tr>
                     <td><?php echo $no++; ?></td>
                     <td><?php echo $t->no_transfer; ?></td>
-                    <td><?php echo date('d-m-Y H:i', strtotime($t->tanggal)); ?></td>
+                    <td><?php echo date('d-m-Y H:i:s', strtotime($t->tanggal)); ?></td>
                     <td><?php echo $t->nama_barang; ?></td>
                     <td><?php echo $t->gudang_asal; ?></td>
                     <td><?php echo $t->gudang_tujuan; ?></td>

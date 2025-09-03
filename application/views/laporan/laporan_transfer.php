@@ -92,7 +92,7 @@
                     <tr>
                         <td><?php echo $no++; ?></td>
                         <td><?php echo $t->no_transfer; ?></td>
-                        <td><?php echo date('d-m-Y H:i', strtotime($t->tanggal)); ?></td>
+                        <td><?php echo date('d-m-Y H:i:s', strtotime($t->tanggal)); ?></td>
                         <td><?php echo $t->nama_barang; ?></td>
                         <td><?php echo $t->gudang_asal; ?></td>
                         <td><?php echo $t->gudang_tujuan; ?></td>

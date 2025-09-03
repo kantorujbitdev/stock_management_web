@@ -17,9 +17,18 @@ class Detail_penjualan_model extends CI_Model
         $this->db->join('gudang g', 'dp.id_gudang = g.id_gudang', 'left');
         $this->db->where('dp.id_penjualan', $id_penjualan);
         $this->db->order_by('dp.id_detail', 'ASC');
-        return $this->db->get()->result();
-    }
 
+        $query = $this->db->get();
+
+        // Cek apakah query berhasil
+        if ($query === false) {
+            // Log error
+            log_message('error', 'Query error: ' . $this->db->error()['message']);
+            return array();
+        }
+
+        return $query->result();
+    }
     public function update_detail_penjualan($id, $data)
     {
         $this->db->where('id_detail', $id);
@@ -38,8 +47,16 @@ class Detail_penjualan_model extends CI_Model
         // Debug: Log last query
         log_message('debug', 'Detail last query: ' . $this->db->last_query());
 
-        return $this->db->affected_rows() > 0;
+        // Cek apakah insert berhasil
+        if ($this->db->affected_rows() > 0) {
+            return $this->db->insert_id();
+        } else {
+            // Log error
+            log_message('error', 'Insert error: ' . $this->db->error()['message']);
+            return false;
+        }
     }
+
     public function delete_by_penjualan($id_penjualan)
     {
         $this->db->where('id_penjualan', $id_penjualan);
