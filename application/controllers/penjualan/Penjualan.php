@@ -63,15 +63,15 @@ class Penjualan extends CI_Controller
     public function get_stock_by_barang()
     {
         $id_barang = $this->input->get('id_barang');
+
         if (!$id_barang) {
             echo json_encode([]);
             return;
         }
 
-        // Get all warehouses with stock for this item
         $this->db->select('sg.id_gudang, g.nama_gudang, sg.jumlah');
         $this->db->from('stok_gudang sg');
-        $this->db->join('gudang g', 'sg.id_gudang = g.id_gudang');
+        $this->db->join('gudang g', 'sg.id_gudang = g.id_gudang', 'left');
         $this->db->where('sg.id_barang', $id_barang);
         $this->db->where('sg.jumlah >', 0);
         $this->db->order_by('sg.jumlah', 'DESC');
@@ -248,6 +248,7 @@ class Penjualan extends CI_Controller
         $data['content'] = 'penjualan/penjualan_detail';
         $this->load->view('template/template', $data);
     }
+
     public function get_barang_by_perusahaan()
     {
         $id_perusahaan = $this->input->get('id_perusahaan');
@@ -257,19 +258,9 @@ class Penjualan extends CI_Controller
             return;
         }
 
-        // Cek hak akses perusahaan
-        if ($this->session->userdata('id_role') != 5) {
-            $user_company = $this->session->userdata('id_perusahaan');
-            if ($id_perusahaan != $user_company) {
-                echo json_encode([]);
-                return;
-            }
-        }
-
         $barang = $this->Barang_model->get_barang_with_stock($id_perusahaan);
         echo json_encode($barang);
     }
-
     private function generate_invoice()
     {
         $prefix = 'INV-' . date('Ym');
@@ -392,8 +383,8 @@ class Penjualan extends CI_Controller
             'proses' => ['packing', 'batal'],
             'packing' => ['dikirim'],
             'dikirim' => ['selesai'],
-            'selesai' => [], // tidak bisa diubah lagi
-            'batal' => [] // tidak bisa diubah lagi
+            'selesai' => [],
+            'batal' => []
         ];
 
         if (!in_array($status, $valid_transitions[$current_status])) {

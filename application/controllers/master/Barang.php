@@ -62,25 +62,6 @@ class Barang extends CI_Controller
         $this->load->view('template/template', $data);
     }
 
-    // public function add() {
-    //     $data['title'] = 'Tambah Barang';
-
-    //     // Jika Super Admin, tampilkan semua perusahaan
-    //     if ($this->session->userdata('id_role') == 5) {
-    //         $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
-    //         $data['kategori'] = array(); // Kosongkan, akan diisi via AJAX
-    //     } else {
-    //         // Jika Admin Pusat, hanya tampilkan perusahaannya
-    //         $id_perusahaan = $this->session->userdata('id_perusahaan');
-    //         $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
-    //         $data['kategori'] = $this->Kategori_model->get_kategori_by_perusahaan($id_perusahaan);
-    //     }
-
-    //     $data['content'] = 'master/barang_form';
-    //     $this->load->view('template/template', $data);
-    // }
-
-
     public function add_process()
     {
         $this->form_validation->set_rules('id_perusahaan', 'Perusahaan', 'required');
@@ -294,32 +275,6 @@ class Barang extends CI_Controller
         }
         return TRUE;
     }
-
-    // public function get_kategori_by_perusahaan()
-    // {
-    //     // Izinkan baik GET maupun POST
-    //     $id_perusahaan = $this->input->get('id_perusahaan') ?: $this->input->post('id_perusahaan');
-
-    //     // Debug log
-    //     log_message('debug', 'AJAX Request - ID Perusahaan: ' . $id_perusahaan);
-
-    //     if (!$id_perusahaan) {
-    //         echo '<option value="">-- Pilih Kategori --</option>';
-    //         return;
-    //     }
-
-    //     $kategori = $this->Kategori_model->get_kategori_by_perusahaan($id_perusahaan);
-
-    //     // Debug log
-    //     log_message('debug', 'Jumlah kategori ditemukan: ' . count($kategori));
-
-    //     $options = '<option value="">-- Pilih Kategori --</option>';
-    //     foreach ($kategori as $row) {
-    //         $options .= '<option value="' . $row->id_kategori . '">' . $row->nama_kategori . '</option>';
-    //     }
-
-    //     echo $options;
-    // }
 
     public function get_kategori_by_perusahaan()
     {

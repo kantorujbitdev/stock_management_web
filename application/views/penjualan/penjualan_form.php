@@ -197,9 +197,15 @@
                 success: function (data) {
                     console.log('Barang data:', data);
                     let options = '<option value="">-- Pilih Barang --</option>';
-                    data.forEach(function (item) {
-                        options += `<option value="${item.id_barang}">${item.nama_barang} - ${item.sku}</option>`;
-                    });
+
+                    if (data.length > 0) {
+                        data.forEach(function (item) {
+                            options += `<option value="${item.id_barang}">${item.nama_barang} - ${item.sku}</option>`;
+                        });
+                    } else {
+                        options += '<option value="">-- Tidak ada barang dengan stok --</option>';
+                    }
+
                     select.html(options);
                 },
                 error: function (xhr, status, error) {
@@ -295,7 +301,6 @@
         $(document).on('change', '.item-barang', function () {
             let row = $(this).closest('tr');
             let id_barang = $(this).val();
-
             console.log('Barang changed to:', id_barang);
 
             // Reset gudang dan stok
@@ -370,6 +375,7 @@
         <?php if ($this->session->userdata('id_role') == 5): ?>
             $('#id_perusahaan').change(function () {
                 console.log('Company changed to:', $(this).val());
+
                 // Update all barang dropdowns
                 $('.item-barang').each(function () {
                     getBarangByPerusahaan($(this));
