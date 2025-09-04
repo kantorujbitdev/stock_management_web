@@ -49,7 +49,8 @@ class Barang extends CI_Controller
         if ($this->session->userdata('id_role') == 5) {
             $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
             // Ambil semua kategori aktif untuk Super Admin
-            $data['kategori'] = $this->Kategori_model->get_all_kategori();
+            // $data['kategori'] = $this->Kategori_model->get_all_kategori();
+            $data['kategori'] = array();
         } else {
             // Jika Admin Pusat, hanya tampilkan perusahaannya
             $id_perusahaan = $this->session->userdata('id_perusahaan');
@@ -155,7 +156,8 @@ class Barang extends CI_Controller
         // Jika Super Admin, tampilkan semua perusahaan
         if ($this->session->userdata('id_role') == 5) {
             $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
-            $data['kategori'] = $this->Kategori_model->get_kategori_by_perusahaan($data['barang']->id_perusahaan);
+            // $data['kategori'] = $this->Kategori_model->get_kategori_by_perusahaan($data['barang']->id_perusahaan);
+            $data['kategori'] = array();
         } else {
             // Jika Admin Pusat, hanya tampilkan perusahaannya
             $id_perusahaan = $this->session->userdata('id_perusahaan');
@@ -293,32 +295,44 @@ class Barang extends CI_Controller
         return TRUE;
     }
 
+    // public function get_kategori_by_perusahaan()
+    // {
+    //     // Izinkan baik GET maupun POST
+    //     $id_perusahaan = $this->input->get('id_perusahaan') ?: $this->input->post('id_perusahaan');
+
+    //     // Debug log
+    //     log_message('debug', 'AJAX Request - ID Perusahaan: ' . $id_perusahaan);
+
+    //     if (!$id_perusahaan) {
+    //         echo '<option value="">-- Pilih Kategori --</option>';
+    //         return;
+    //     }
+
+    //     $kategori = $this->Kategori_model->get_kategori_by_perusahaan($id_perusahaan);
+
+    //     // Debug log
+    //     log_message('debug', 'Jumlah kategori ditemukan: ' . count($kategori));
+
+    //     $options = '<option value="">-- Pilih Kategori --</option>';
+    //     foreach ($kategori as $row) {
+    //         $options .= '<option value="' . $row->id_kategori . '">' . $row->nama_kategori . '</option>';
+    //     }
+
+    //     echo $options;
+    // }
+
     public function get_kategori_by_perusahaan()
     {
-        // Izinkan baik GET maupun POST
-        $id_perusahaan = $this->input->get('id_perusahaan') ?: $this->input->post('id_perusahaan');
-
-        // Debug log
-        log_message('debug', 'AJAX Request - ID Perusahaan: ' . $id_perusahaan);
+        $id_perusahaan = $this->input->get('id_perusahaan');
 
         if (!$id_perusahaan) {
-            echo '<option value="">-- Pilih Kategori --</option>';
+            echo json_encode([]);
             return;
         }
 
         $kategori = $this->Kategori_model->get_kategori_by_perusahaan($id_perusahaan);
-
-        // Debug log
-        log_message('debug', 'Jumlah kategori ditemukan: ' . count($kategori));
-
-        $options = '<option value="">-- Pilih Kategori --</option>';
-        foreach ($kategori as $row) {
-            $options .= '<option value="' . $row->id_kategori . '">' . $row->nama_kategori . '</option>';
-        }
-
-        echo $options;
+        echo json_encode($kategori);
     }
-
 
     // Get barang by perusahaan (untuk AJAX)
     public function get_barang_by_perusahaan()

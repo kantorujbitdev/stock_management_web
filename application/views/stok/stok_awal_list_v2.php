@@ -96,7 +96,7 @@
                         <tr>
                             <td><?php echo $no++; ?></td>
                             <td><strong><?php echo $item->sku; ?></strong></td>
-                            <td><?php echo $item->nama_barang; ?></td>
+                            <td><strong><?php echo $item->nama_barang; ?></strong></td>
                             <td><?php echo $item->nama_kategori; ?></td>
                             <td><?php echo $item->nama_perusahaan; ?></td>
                             <td>
