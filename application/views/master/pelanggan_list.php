@@ -4,7 +4,7 @@
             <div class="col">
                 <h6 class="m-0 font-weight-bold text-primary">Daftar Pelanggan</h6>
             </div>
-            <?php if ($this->session->userdata('id_role') == 5): ?>
+            <?php if ($this->session->userdata('id_role') == 1 || $this->session->userdata('id_role') == 5): ?>
                 <div class="col text-right">
                     <a href="<?php echo site_url('pelanggan/add') ?>" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus"></i> Tambah Pelanggan

@@ -1,6 +1,5 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-
 class Barang_model extends CI_Model
 {
     public function __construct()
@@ -9,7 +8,7 @@ class Barang_model extends CI_Model
         $this->load->database();
     }
 
-    // Get all barang
+    // Get all barang dengan join untuk efisiensi query
     public function get_all_barang()
     {
         $this->db->select('b.*, k.nama_kategori, p.nama_perusahaan');
@@ -20,7 +19,7 @@ class Barang_model extends CI_Model
         return $this->db->get()->result();
     }
 
-    // Get barang by id
+    // Get barang by id dengan join
     public function get_barang_by_id($id)
     {
         $this->db->select('b.*, k.nama_kategori, p.nama_perusahaan');
@@ -31,7 +30,7 @@ class Barang_model extends CI_Model
         return $this->db->get()->row();
     }
 
-    // Get barang by perusahaan
+    // Get barang by perusahaan dengan join
     public function get_barang_by_perusahaan($id_perusahaan)
     {
         $this->db->select('b.*, k.nama_kategori, p.nama_perusahaan');
@@ -42,33 +41,24 @@ class Barang_model extends CI_Model
         $this->db->order_by('b.nama_barang', 'ASC');
         return $this->db->get()->result();
     }
-    // public function get_barang_with_stock($id_perusahaan)
-    // {
-    //     $this->db->select('b.id_barang, b.nama_barang, b.sku');
-    //     $this->db->from('barang b');
-    //     $this->db->join('stok_gudang sg', 'b.id_barang = sg.id_barang', 'inner');
-    //     $this->db->where('b.id_perusahaan', $id_perusahaan);
-    //     $this->db->where('b.aktif', 1);
-    //     $this->db->where('sg.jumlah >', 0);
-    //     $this->db->group_by('b.id_barang');
-    //     $this->db->order_by('b.nama_barang', 'ASC');
-    //     return $this->db->get()->result();
-    // }
+
+    // Get barang with stock - perbaikan query untuk efisiensi
     public function get_barang_with_stock($id_perusahaan)
     {
-        $this->db->select('b.*, k.nama_kategori, COALESCE(sg.jumlah, 0) as stok_tersedia');
+        $this->db->select('b.*, k.nama_kategori, COALESCE(SUM(sg.jumlah), 0) as stok_tersedia');
         $this->db->from('barang b');
         $this->db->join('kategori k', 'b.id_kategori = k.id_kategori', 'left');
-        $this->db->join('stok_gudang sg', 'b.id_barang = sg.id_barang', 'left');
+        $this->db->join('stok_gudang sg', 'b.id_barang = sg.id_barang AND sg.jumlah > 0', 'left');
         $this->db->where('b.id_perusahaan', $id_perusahaan);
         $this->db->where('b.aktif', 1);
-        $this->db->where('sg.jumlah >', 0);
+        $this->db->group_by('b.id_barang');
+        $this->db->having('stok_tersedia >', 0);
         $this->db->order_by('b.nama_barang', 'ASC');
         return $this->db->get()->result();
     }
 
-    // Check SKU uniqueness
-    public function check_sku($sku, $id_perusahaan, $id_barang = null)
+    // Check SKU unique - tambahkan parameter untuk fleksibilitas
+    public function check_sku_unique($sku, $id_perusahaan, $id_barang = NULL)
     {
         $this->db->where('sku', $sku);
         $this->db->where('id_perusahaan', $id_perusahaan);
@@ -77,37 +67,71 @@ class Barang_model extends CI_Model
             $this->db->where('id_barang !=', $id_barang);
         }
 
-        $query = $this->db->get('barang');
-        return $query->num_rows() > 0;
+        return $this->db->count_all_results('barang') > 0;
     }
 
-    // Insert barang
+    // Insert barang - return boolean untuk konsistensi
     public function insert_barang($data)
     {
         $this->db->insert('barang', $data);
-        return $this->db->insert_id();
+        return ($this->db->affected_rows() > 0);
     }
 
-    // Update barang
+    // Update barang - return boolean untuk konsistensi
     public function update_barang($id, $data)
     {
         $this->db->where('id_barang', $id);
-        return $this->db->update('barang', $data);
+        $this->db->update('barang', $data);
+        return ($this->db->affected_rows() > 0);
     }
 
-    // Update status barang
+    // Update status barang - return boolean untuk konsistensi
     public function update_status($id, $status)
     {
         $this->db->where('id_barang', $id);
-        return $this->db->update('barang', ['aktif' => $status]);
+        $this->db->update('barang', ['aktif' => $status]);
+        return ($this->db->affected_rows() > 0);
     }
 
-    // Get stok barang
+    // Get stok barang - perbaikan untuk handle null
     public function get_stok_barang($id_barang)
     {
-        $this->db->select('SUM(sg.jumlah) as stok');
+        $this->db->select('COALESCE(SUM(sg.jumlah), 0) as stok');
         $this->db->from('stok_gudang sg');
         $this->db->where('sg.id_barang', $id_barang);
-        return $this->db->get()->row()->stok;
+        $result = $this->db->get()->row();
+        return $result ? $result->stok : 0;
+    }
+
+    // Get barang by kategori - tambahkan method baru untuk fleksibilitas
+    public function get_barang_by_kategori($id_kategori)
+    {
+        $this->db->select('b.*, k.nama_kategori, p.nama_perusahaan');
+        $this->db->from('barang b');
+        $this->db->join('kategori k', 'b.id_kategori = k.id_kategori', 'left');
+        $this->db->join('perusahaan p', 'b.id_perusahaan = p.id_perusahaan', 'left');
+        $this->db->where('b.id_kategori', $id_kategori);
+        $this->db->where('b.aktif', 1);
+        $this->db->order_by('b.nama_barang', 'ASC');
+        return $this->db->get()->result();
+    }
+
+    // Search barang - tambahkan method untuk pencarian
+    public function search_barang($keyword, $id_perusahaan = null)
+    {
+        $this->db->select('b.*, k.nama_kategori, p.nama_perusahaan');
+        $this->db->from('barang b');
+        $this->db->join('kategori k', 'b.id_kategori = k.id_kategori', 'left');
+        $this->db->join('perusahaan p', 'b.id_perusahaan = p.id_perusahaan', 'left');
+        $this->db->like('b.nama_barang', $keyword);
+        $this->db->or_like('b.sku', $keyword);
+
+        if ($id_perusahaan) {
+            $this->db->where('b.id_perusahaan', $id_perusahaan);
+        }
+
+        $this->db->where('b.aktif', 1);
+        $this->db->order_by('b.nama_barang', 'ASC');
+        return $this->db->get()->result();
     }
 }
