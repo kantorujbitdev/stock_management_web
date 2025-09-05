@@ -166,6 +166,7 @@ class Penjualan_model extends CI_Model
         return $this->db->delete('penjualan');
     }
 
+
     public function get_last_invoice($prefix)
     {
         $this->db->like('no_invoice', $prefix, 'after');

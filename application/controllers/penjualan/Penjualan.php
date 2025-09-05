@@ -137,12 +137,21 @@ class Penjualan extends CI_Controller
                     // Debug: Log inserted ID
                     log_message('debug', 'Inserted penjualan ID: ' . $id_penjualan);
 
+                    // Tambahkan log status awal (di luar loop)
+                    $log_data = [
+                        'id_penjualan' => $id_penjualan,
+                        'id_user' => $this->session->userdata('id_user'),
+                        'status' => 'proses',
+                        'keterangan' => 'Penjualan dibuat'
+                    ];
+                    $this->Log_status_penjualan_model->insert_log($log_data);
+
                     // Insert detail penjualan and reduce stock
                     foreach ($items as $item) {
                         $detail_data = [
                             'id_penjualan' => $id_penjualan,
                             'id_barang' => $item['id_barang'],
-                            'id_gudang' => $item['id_gudang'], // Tambahkan ini
+                            'id_gudang' => $item['id_gudang'],
                             'jumlah' => $item['jumlah'],
                         ];
 
@@ -154,16 +163,10 @@ class Penjualan extends CI_Controller
                         if (!$insert_detail) {
                             throw new Exception('Gagal menyimpan detail penjualan');
                         }
-                        // Tambahkan log status awal
-                        $log_data = [
-                            'id_penjualan' => $id_penjualan,
-                            'id_user' => $this->session->userdata('id_user'),
-                            'status' => 'proses',
-                            'keterangan' => 'Penjualan dibuat'
-                        ];
-                        $this->Log_status_penjualan_model->insert_log($log_data);
+
                         // Reduce stock with better error handling
                         $reduce_result = $this->reduce_stock($item['id_barang'], $item['id_gudang'], $item['jumlah'], $id_penjualan);
+
                         if (!$reduce_result['success']) {
                             throw new Exception($reduce_result['message']);
                         }
@@ -390,6 +393,13 @@ class Penjualan extends CI_Controller
         if (!in_array($status, $valid_transitions[$current_status])) {
             $this->session->set_flashdata('error', 'Tidak dapat mengubah status dari ' . $current_status . ' ke ' . $status);
             redirect('penjualan');
+        }
+
+        // Cek apakah status sudah ada di log
+        $existing_log = $this->Log_status_penjualan_model->get_last_status($id_penjualan);
+        if ($existing_log && $existing_log->status == $status) {
+            $this->session->set_flashdata('error', 'Status penjualan sudah ' . $status);
+            redirect('penjualan/view/' . $id_penjualan);
         }
 
         // Update status

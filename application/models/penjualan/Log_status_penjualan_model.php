@@ -15,6 +15,13 @@ class Log_status_penjualan_model extends CI_Model
         return $this->db->insert_id();
     }
 
+    public function get_last_status($id_penjualan)
+    {
+        $this->db->where('id_penjualan', $id_penjualan);
+        $this->db->order_by('tanggal', 'DESC');
+        $this->db->limit(1);
+        return $this->db->get('log_status_penjualan')->row();
+    }
     public function get_log_by_penjualan($id_penjualan)
     {
         $this->db->select('lsp.*, u.nama as nama_user');

@@ -78,11 +78,6 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <a href="<?php echo site_url('barang/edit/' . $b->id_barang); ?>"
-                                    class="btn btn-warning btn-sm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-
                                 <?php if ($b->aktif == 1): ?>
                                     <a href="<?php echo site_url('barang/nonaktif/' . $b->id_barang); ?>"
                                         class="btn btn-sm btn-danger"
@@ -96,6 +91,10 @@
                                         <i class="fas fa-check-square"></i> Aktifkan
                                     </a>
                                 <?php endif; ?>
+                                <a href="<?php echo site_url('barang/edit/' . $b->id_barang); ?>"
+                                    class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
