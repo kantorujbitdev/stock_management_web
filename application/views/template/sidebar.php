@@ -1,28 +1,23 @@
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center"
-        href="<?php echo site_url('dashboard') ?>">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo site_url('dashboard') ?>">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-warehouse"></i>
         </div>
         <div class="sidebar-brand-text mx-3">Manajemen Stok</div>
     </a>
-
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
-
     <!-- Dashboard -->
     <?php if ($this->hak_akses->cek_akses('dashboard')): ?>
-        <li class="nav-item <?php echo is_active('dashboard') ?>">
+        <li class="nav-item <?php echo $this->uri->segment(1) == 'dashboard' ? 'active' : '' ?>">
             <a class="nav-link" href="<?php echo site_url('dashboard') ?>">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span></a>
         </li>
     <?php endif; ?>
-
     <hr class="sidebar-divider">
-
     <!-- Master Data -->
     <?php if (
         $this->hak_akses->cek_akses('kategori') ||
@@ -61,7 +56,6 @@
             </div>
         </li>
     <?php endif; ?>
-
     <!-- Manajemen Stok -->
     <?php if (
         $this->hak_akses->cek_akses('stok_awal') ||
@@ -96,7 +90,6 @@
             </div>
         </li>
     <?php endif; ?>
-
     <!-- Penjualan -->
     <?php if ($this->hak_akses->cek_akses('penjualan') || $this->hak_akses->cek_akses('retur')): ?>
         <li class="nav-item">
@@ -116,7 +109,6 @@
             </div>
         </li>
     <?php endif; ?>
-
     <!-- Laporan -->
     <?php if (
         $this->hak_akses->cek_akses('laporan_stok') ||
@@ -125,29 +117,30 @@
         $this->hak_akses->cek_akses('laporan_transfer')
     ): ?>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLaporan">
+            <a class="nav-link collapsed <?php echo ($this->uri->segment(1) == 'laporan_stok' || $this->uri->segment(1) == 'laporan_penjualan' || $this->uri->segment(1) == 'laporan_retur' || $this->uri->segment(1) == 'laporan_transfer') ? '' : 'collapsed' ?>" 
+               href="#" data-toggle="collapse" data-target="#collapseLaporan" 
+               <?php echo ($this->uri->segment(1) == 'laporan_stok' || $this->uri->segment(1) == 'laporan_penjualan' || $this->uri->segment(1) == 'laporan_retur' || $this->uri->segment(1) == 'laporan_transfer') ? 'aria-expanded="true"' : '' ?>>
                 <i class="fas fa-chart-line"></i>
                 <span>Laporan</span>
             </a>
-            <div id="collapseLaporan" class="collapse">
+            <div id="collapseLaporan" class="collapse <?php echo ($this->uri->segment(1) == 'laporan_stok' || $this->uri->segment(1) == 'laporan_penjualan' || $this->uri->segment(1) == 'laporan_retur' || $this->uri->segment(1) == 'laporan_transfer') ? 'show' : '' ?>">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <?php if ($this->hak_akses->cek_akses('laporan_stok')): ?>
-                        <a class="collapse-item" href="<?php echo site_url('laporan_stok') ?>">Laporan Stok</a>
+                        <a class="collapse-item <?php echo $this->uri->segment(1) == 'laporan_stok' ? 'active' : '' ?>" href="<?php echo site_url('laporan_stok') ?>">Laporan Stok</a>
                     <?php endif; ?>
                     <?php if ($this->hak_akses->cek_akses('laporan_penjualan')): ?>
-                        <a class="collapse-item" href="<?php echo site_url('laporan_penjualan') ?>">Laporan Penjualan</a>
+                        <a class="collapse-item <?php echo $this->uri->segment(1) == 'laporan_penjualan' ? 'active' : '' ?>" href="<?php echo site_url('laporan_penjualan') ?>">Laporan Penjualan</a>
                     <?php endif; ?>
                     <?php if ($this->hak_akses->cek_akses('laporan_retur')): ?>
-                        <a class="collapse-item" href="<?php echo site_url('laporan_retur') ?>">Laporan Retur</a>
+                        <a class="collapse-item <?php echo $this->uri->segment(1) == 'laporan_retur' ? 'active' : '' ?>" href="<?php echo site_url('laporan_retur') ?>">Laporan Retur</a>
                     <?php endif; ?>
                     <?php if ($this->hak_akses->cek_akses('laporan_transfer')): ?>
-                        <a class="collapse-item" href="<?php echo site_url('laporan_transfer') ?>">Laporan Transfer</a>
+                        <a class="collapse-item <?php echo $this->uri->segment(1) == 'laporan_transfer' ? 'active' : '' ?>" href="<?php echo site_url('laporan_transfer') ?>">Laporan Transfer</a>
                     <?php endif; ?>
                 </div>
             </div>
         </li>
     <?php endif; ?>
-
     <!-- Manajemen User -->
     <?php if ($this->hak_akses->cek_akses('user') || $this->hak_akses->cek_akses('hak_akses')): ?>
         <li class="nav-item">
@@ -167,10 +160,9 @@
             </div>
         </li>
     <?php endif; ?>
-
     <hr class="sidebar-divider d-none d-md-block">
-
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
 </ul>
+<!-- End of Sidebar -->
