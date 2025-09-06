@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Tambah Penerimaan Barang</h3>
+        <h5 class="card-title">Tambah Penerimaan Barang</h3>
     </div>
     <div class="card-body">
         <?php echo form_open('penerimaan/add_process'); ?>

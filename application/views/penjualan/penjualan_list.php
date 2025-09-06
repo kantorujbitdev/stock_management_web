@@ -1,14 +1,14 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Data Penjualan</h3>
-        <div class="card-tools">
-            <a href="<?php echo site_url('penjualan/add'); ?>" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus"></i> Tambah Penjualan
-            </a>
-            <a href="<?php echo site_url('penjualan/export_excel'); ?>" class="btn btn-success btn-sm">
-                <i class="fas fa-file-excel"></i> Export Excel
-            </a>
-        </div>
+        <h5 class="card-title">Data Penjualan</h3>
+            <div class="card-tools">
+                <a href="<?php echo site_url('penjualan/add'); ?>" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Tambah Penjualan
+                </a>
+                <a href="<?php echo site_url('penjualan/export_excel'); ?>" class="btn btn-success btn-sm">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </a>
+            </div>
     </div>
     <div class="card-body">
         <?php if ($this->session->flashdata('success')): ?>

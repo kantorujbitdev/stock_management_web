@@ -1,12 +1,21 @@
-<div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800"><?php echo isset($user) ? 'Edit User' : 'Tambah User' ?></h1>
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+        <a href="<?php echo site_url('auth/user'); ?>" class="btn btn-light btn-sm">
+            <i class="fas fa-arrow-left"></i> Kembali
+        </a>
+        <h5 class="mb-0 ml-3">
+            <i class="fas fa-tags"></i>
+            <?php echo isset($user) ? 'Edit User' : 'Tambah User' ?>
+        </h5>
+    </div>
 
-    <?php echo form_open(isset($user) ? 'auth/user/edit_process' : 'auth/user/add_process'); ?>
-    <?php if (isset($user)): ?>
-        <input type="hidden" name="id_user" value="<?php echo $user->id_user ?>">
-    <?php endif; ?>
+    <div class="card-body px-4 py-4">
 
-    <div class="card shadow mb-4">
+        <?php echo form_open(isset($user) ? 'auth/user/edit_process' : 'auth/user/add_process'); ?>
+        <?php if (isset($user)): ?>
+            <input type="hidden" name="id_user" value="<?php echo $user->id_user ?>">
+        <?php endif; ?>
+
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
@@ -72,13 +81,17 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Simpan</button>
-            <a href="<?php echo site_url('auth/user') ?>" class="btn btn-secondary">Batal</a>
+        <!-- Tombol -->
+        <div class="form-group text-right mt-4">
+            <button type="submit" class="btn btn-primary px-4">
+                <i class="fas fa-save"></i> Simpan
+            </button>
+            <a href="<?php echo site_url('auth/user'); ?>" class="btn btn-secondary px-4">
+                <i class="fas fa-times"></i> Batal
+            </a>
         </div>
+        <?php echo form_close(); ?>
     </div>
-
-    <?php echo form_close(); ?>
 </div>
 
 <script>

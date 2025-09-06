@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Tambah Transfer Stok</h3>
+        <h5 class="card-title">Tambah Transfer Stok</h3>
     </div>
     <div class="card-body">
         <?php echo form_open('transfer/add_process'); ?>

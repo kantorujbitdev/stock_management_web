@@ -8,7 +8,6 @@
             <?php echo isset($barang) ? 'Edit Data Barang' : 'Tambah Data Barang'; ?>
         </h5>
     </div>
-
     <div class="card-body">
         <!-- Alert error/success -->
         <?php if ($this->session->flashdata('error')): ?>
@@ -17,7 +16,6 @@
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
         <?php endif; ?>
-
         <?php if (!empty($validation_errors)): ?>
             <div class="alert alert-warning alert-dismissible fade show">
                 <strong>Perbaiki kesalahan berikut:</strong>
@@ -29,13 +27,11 @@
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
         <?php endif; ?>
-
         <?php echo form_open_multipart(isset($barang) ? 'barang/edit_process' : 'barang/add_process'); ?>
         <?php if (isset($barang)): ?>
             <input type="hidden" name="id_barang" value="<?php echo $barang->id_barang; ?>">
             <input type="hidden" name="gambar_lama" value="<?php echo $barang->gambar; ?>">
         <?php endif; ?>
-
         <!-- ROW: Perusahaan & Kategori -->
         <div class="form-row">
             <!-- PERUSAHAAN -->
@@ -61,7 +57,6 @@
                     <input type="text" class="form-control" value="<?php echo $perusahaan[0]->nama_perusahaan; ?>" readonly>
                 <?php endif; ?>
             </div>
-
             <!-- KATEGORI -->
             <div class="form-group col-md-6">
                 <label for="id_kategori">Kategori <span class="text-danger">*</span></label>
@@ -80,7 +75,6 @@
                 </select>
             </div>
         </div>
-
         <!-- SKU -->
         <div class="form-group">
             <label for="sku">SKU <span class="text-danger">*</span></label>
@@ -93,7 +87,6 @@
                 <small class="form-text text-muted">SKU tidak dapat diubah setelah dibuat.</small>
             <?php endif; ?>
         </div>
-
         <!-- NAMA BARANG -->
         <div class="form-group">
             <label for="nama_barang">Nama Barang <span class="text-danger">*</span></label>
@@ -103,7 +96,6 @@
                 (isset($barang) ? $barang->nama_barang : '')
             ); ?>" required>
         </div>
-
         <!-- DESKRIPSI -->
         <div class="form-group">
             <label for="deskripsi">Deskripsi</label>
@@ -127,7 +119,6 @@
                         Format: JPG, JPEG, PNG, GIF. Maksimal: 2MB
                     </small>
                 </div>
-
                 <!-- Preview -->
                 <div class="col-md-6 col-12 text-center">
                     <?php if (isset($barang) && $barang->gambar): ?>
@@ -152,6 +143,11 @@
         <?php echo form_close(); ?>
     </div>
 </div>
+
+<!-- Load jQuery terlebih dahulu -->
+<script src="<?php echo base_url('application/views/template/assets/js/jquery.min.js'); ?>"></script>
+<!-- Load Bootstrap JS -->
+<script src="<?php echo base_url('application/views/template/assets/js/bootstrap.bundle.min.js'); ?>"></script>
 
 <script>
     $(function () {

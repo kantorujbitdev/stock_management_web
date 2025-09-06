@@ -1,12 +1,12 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Backup Database</h3>
-        <div class="card-tools">
-            <a href="<?php echo site_url('pengaturan/backup/create'); ?>" class="btn btn-primary btn-sm"
-                onclick="return confirm('Apakah Anda yakin ingin membuat backup database sekarang?')">
-                <i class="fas fa-save"></i> Backup Sekarang
-            </a>
-        </div>
+        <h5 class="card-title">Backup Database</h3>
+            <div class="card-tools">
+                <a href="<?php echo site_url('pengaturan/backup/create'); ?>" class="btn btn-primary btn-sm"
+                    onclick="return confirm('Apakah Anda yakin ingin membuat backup database sekarang?')">
+                    <i class="fas fa-save"></i> Backup Sekarang
+                </a>
+            </div>
     </div>
     <div class="card-body">
         <?php if ($this->session->flashdata('success')): ?>

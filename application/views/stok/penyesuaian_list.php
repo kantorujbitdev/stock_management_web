@@ -1,11 +1,11 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Data Penyesuaian Stok</h3>
-        <div class="card-tools">
-            <a href="<?php echo site_url('penyesuaian/add'); ?>" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus"></i> Tambah Penyesuaian
-            </a>
-        </div>
+        <h5 class="card-title">Data Penyesuaian Stok</h3>
+            <div class="card-tools">
+                <a href="<?php echo site_url('penyesuaian/add'); ?>" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Tambah Penyesuaian
+                </a>
+            </div>
     </div>
     <div class="card-body">
         <?php if ($this->session->flashdata('success')): ?>

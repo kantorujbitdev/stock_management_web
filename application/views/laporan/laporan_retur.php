@@ -1,16 +1,16 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Laporan Retur Penjualan</h3>
-        <div class="card-tools">
-            <a href="<?php echo site_url('laporan_retur/export_pdf?' . $_SERVER['QUERY_STRING']); ?>"
-                class="btn btn-danger btn-sm">
-                <i class="fas fa-file-pdf"></i> Export PDF
-            </a>
-            <a href="<?php echo site_url('laporan_retur/export_excel?' . $_SERVER['QUERY_STRING']); ?>"
-                class="btn btn-success btn-sm">
-                <i class="fas fa-file-excel"></i> Export Excel
-            </a>
-        </div>
+        <h5 class="card-title">Laporan Retur Penjualan</h3>
+            <div class="card-tools">
+                <a href="<?php echo site_url('laporan_retur/export_pdf?' . $_SERVER['QUERY_STRING']); ?>"
+                    class="btn btn-danger btn-sm">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </a>
+                <a href="<?php echo site_url('laporan_retur/export_excel?' . $_SERVER['QUERY_STRING']); ?>"
+                    class="btn btn-success btn-sm">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </a>
+            </div>
     </div>
     <div class="card-body">
         <form method="get" action="<?php echo site_url('laporan_retur'); ?>">
@@ -71,7 +71,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Data Retur Penjualan</h3>
+        <h5 class="card-title">Data Retur Penjualan</h3>
     </div>
     <div class="card-body">
         <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">

@@ -1,21 +1,21 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Detail Retur Penjualan</h3>
-        <div class="card-tools">
-            <?php if ($retur->status == 'diterima'): ?>
-                <a href="<?php echo site_url('retur/proses/' . $retur->id_retur); ?>" class="btn btn-success btn-sm"
-                    onclick="return confirm('Apakah Anda yakin ingin memproses retur ini?')">
-                    <i class="fas fa-check"></i> Proses
+        <h5 class="card-title">Detail Retur Penjualan</h3>
+            <div class="card-tools">
+                <?php if ($retur->status == 'diterima'): ?>
+                    <a href="<?php echo site_url('retur/proses/' . $retur->id_retur); ?>" class="btn btn-success btn-sm"
+                        onclick="return confirm('Apakah Anda yakin ingin memproses retur ini?')">
+                        <i class="fas fa-check"></i> Proses
+                    </a>
+                    <a href="<?php echo site_url('retur/tolak/' . $retur->id_retur); ?>" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Apakah Anda yakin ingin menolak retur ini?')">
+                        <i class="fas fa-times"></i> Tolak
+                    </a>
+                <?php endif; ?>
+                <a href="<?php echo site_url('retur'); ?>" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Kembali
                 </a>
-                <a href="<?php echo site_url('retur/tolak/' . $retur->id_retur); ?>" class="btn btn-danger btn-sm"
-                    onclick="return confirm('Apakah Anda yakin ingin menolak retur ini?')">
-                    <i class="fas fa-times"></i> Tolak
-                </a>
-            <?php endif; ?>
-            <a href="<?php echo site_url('retur'); ?>" class="btn btn-secondary btn-sm">
-                <i class="fas fa-arrow-left"></i> Kembali
-            </a>
-        </div>
+            </div>
     </div>
     <div class="card-body">
         <div class="row">
@@ -74,7 +74,7 @@
         <?php if ($retur->status == 'diterima'): ?>
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Tambah Barang Retur</h3>
+                    <h5 class="card-title">Tambah Barang Retur</h3>
                 </div>
                 <div class="card-body">
                     <?php echo form_open('retur/add_barang'); ?>

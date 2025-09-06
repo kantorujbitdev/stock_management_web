@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Pengaturan Sistem</h3>
+        <h5 class="card-title">Pengaturan Sistem</h3>
     </div>
     <div class="card-body">
         <?php if ($this->session->flashdata('success')): ?>

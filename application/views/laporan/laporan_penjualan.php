@@ -1,7 +1,7 @@
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Laporan Penjualan</h3>
-        <div class="card-tools">
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+        <h5 class="card-title">Laporan Penjualan</h3>
+        <div class="col text-right">
             <a href="<?php echo site_url('laporan_penjualan/export_pdf?' . $_SERVER['QUERY_STRING']); ?>"
                 class="btn btn-danger btn-sm">
                 <i class="fas fa-file-pdf"></i> Export PDF
@@ -73,7 +73,7 @@
 </div>
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Data Penjualan</h3>
+        <h5 class="card-title">Data Penjualan</h3>
     </div>
     <div class="card-body">
         <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">

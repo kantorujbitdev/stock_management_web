@@ -1,11 +1,10 @@
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Detail Penjualan</h3>
-        <div class="card-tools">
-            <a href="<?php echo site_url('laporan_penjualan'); ?>" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Kembali
-            </a>
-        </div>
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+        <a href="<?php echo site_url('laporan_penjualan'); ?>" class="btn btn-light btn-sm">
+            <i class="fas fa-arrow-left"></i> Kembali
+        </a>
+        <h5 class="mb-0 ml-3">
+            Detail Penjualan</h5>
     </div>
     <div class="card-body">
         <div class="row">
@@ -71,7 +70,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Detail Barang</h3>
+        <h5 class="card-title">Detail Barang</h5>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -116,7 +115,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Riwayat Status</h3>
+            <h5 class="card-title">Riwayat Status</h5>
         </div>
         <div class="card-body">
             <table class="table table-bordered">
@@ -159,5 +158,11 @@
                     <?php endif; ?>
                 </tbody>
             </table>
+            <!-- Tombol kembali -->
+            <div class="form-group">
+                <a href="<?php echo site_url('penjualan'); ?>" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
+            </div>
         </div>
     </div>

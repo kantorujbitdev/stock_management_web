@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Detail Penjualan</h3>
+        <h5 class="card-title">Detail Penjualan</h3>
         <div class="card-tools">
             <a href="<?php echo site_url('penjualan'); ?>" class="btn btn-secondary btn-sm">
                 <i class="fas fa-arrow-left"></i> Kembali

@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title"><?php echo isset($stok_awal) ? 'Edit Stok Awal' : 'Tambah Stok Awal'; ?></h3>
+        <h5 class="card-title"><?php echo isset($stok_awal) ? 'Edit Stok Awal' : 'Tambah Stok Awal'; ?></h3>
     </div>
     <div class="card-body">
         <?php echo form_open(isset($stok_awal) ? 'stok_awal/edit_process' : 'stok_awal/add_process'); ?>

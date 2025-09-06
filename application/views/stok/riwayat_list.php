@@ -91,7 +91,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Data Riwayat Stok</h3>
+        <h5 class="card-title">Data Riwayat Stok</h3>
     </div>
     <div class="card-body">
         <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
