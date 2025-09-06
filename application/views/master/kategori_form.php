@@ -1,12 +1,12 @@
-<div class="card shadow-lg border-0 rounded-lg">
+<div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
         <a href="<?php echo site_url('kategori'); ?>" class="btn btn-light btn-sm">
             <i class="fas fa-arrow-left"></i> Kembali
         </a>
-        <h3 class="mb-0 ml-3">
+        <h5 class="mb-0 ml-3">
             <i class="fas fa-tags"></i>
             <?php echo isset($kategori) ? 'Edit Data Master Kategori' : 'Tambah Data Master Kategori'; ?>
-        </h3>
+        </h5>
     </div>
 
     <div class="card-body px-4 py-4">

@@ -22,7 +22,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-6">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                     <tr>
                         <th>No Penerimaan</th>
                         <td><?php echo $penerimaan->no_penerimaan; ?></td>
@@ -42,7 +42,7 @@
                 </table>
             </div>
             <div class="col-md-6">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                     <tr>
                         <th>Gudang</th>
                         <td><?php echo $penerimaan->nama_gudang; ?></td>
@@ -124,7 +124,7 @@
             </div>
         <?php endif; ?>
 
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th>No</th>

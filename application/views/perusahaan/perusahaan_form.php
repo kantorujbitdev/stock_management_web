@@ -1,12 +1,15 @@
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+        <a href="<?php echo site_url('perusahaan'); ?>" class="btn btn-light btn-sm">
+            <i class="fas fa-arrow-left"></i> Kembali
+        </a>
+        <h5 class="mb-0 ml-3">
+            <i class="fas fa-tags"></i>
             <?php echo isset($perusahaan) ? 'Edit Data Perusahaan' : 'Tambah Data Perusahaan'; ?>
-        </h3>
+        </h5>
     </div>
-    <div class="card-body">
-        <?php echo form_open(isset($perusahaan) ? 'perusahaan/edit_process' : 'perusahaan/add_process'); ?>
 
+    <div class="card-body px-4 py-4">
         <?php if (isset($perusahaan)): ?>
             <input type="hidden" name="id_perusahaan" value="<?php echo $perusahaan->id_perusahaan; ?>">
         <?php endif; ?>
@@ -29,9 +32,14 @@
                 value="<?php echo isset($perusahaan) ? $perusahaan->telepon : ''; ?>">
         </div>
 
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Simpan</button>
-            <a href="<?php echo site_url('perusahaan'); ?>" class="btn btn-secondary">Batal</a>
+        <!-- Tombol -->
+        <div class="form-group text-right mt-4">
+            <button type="submit" class="btn btn-primary px-4">
+                <i class="fas fa-save"></i> Simpan
+            </button>
+            <a href="<?php echo site_url('gudang'); ?>" class="btn btn-secondary px-4">
+                <i class="fas fa-times"></i> Batal
+            </a>
         </div>
 
         <?php echo form_close(); ?>

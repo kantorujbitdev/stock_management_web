@@ -83,7 +83,7 @@
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Grafik Penjualan</h6>
+                    <h5 class="m-0 font-weight-bold text-primary">Grafik Penjualan</h6>
                 </div>
                 <div class="card-body">
                     <div class="chart-area">
@@ -97,7 +97,7 @@
         <div class="col-xl-4 col-lg-5">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Penjualan Per Kategori</h6>
+                    <h5 class="m-0 font-weight-bold text-primary">Penjualan Per Kategori</h6>
                 </div>
                 <div class="card-body">
                     <div class="chart-pie pt-4 pb-2">
@@ -125,13 +125,13 @@
     <!-- Widget Manajemen Perusahaan untuk Admin Pusat -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Manajemen Perusahaan Saya</h6>
+            <h5 class="m-0 font-weight-bold text-primary">Manajemen Perusahaan Saya</h6>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
                     <h5>Informasi Perusahaan</h5>
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                         <tr>
                             <th>Nama Perusahaan</th>
                             <td><?php echo $perusahaan->nama_perusahaan ?></td>
@@ -162,7 +162,7 @@
                     <h5>Daftar Gudang</h5>
                     <?php if ($gudang): ?>
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>Nama Gudang</th>

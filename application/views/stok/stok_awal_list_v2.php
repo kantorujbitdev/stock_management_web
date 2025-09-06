@@ -2,7 +2,7 @@
     <div class="card-header py-3">
         <div class="row">
             <div class="col">
-                <h6 class="m-0 font-weight-bold text-primary">Daftar Barang - Stok Awal</h6>
+                <h5 class="m-0 font-weight-bold text-primary">Daftar Barang - Stok Awal</h6>
             </div>
             <div class="col text-right">
                 <a href="<?php echo site_url('stok_awal/export_excel'); ?>" class="btn btn-success btn-sm">

@@ -2,7 +2,7 @@
     <div class="card-header py-3">
         <div class="row">
             <div class="col">
-                <h6 class="m-0 font-weight-bold text-primary">Riwayat Stok</h6>
+                <h5 class="m-0 font-weight-bold text-primary">Riwayat Stok</h6>
             </div>
         </div>
     </div>
@@ -94,7 +94,7 @@
         <h3 class="card-title">Data Riwayat Stok</h3>
     </div>
     <div class="card-body">
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th>No</th>

@@ -2,7 +2,7 @@
     <div class="card-header py-3">
         <div class="row">
             <div class="col">
-                <h6 class="m-0 font-weight-bold text-primary">Daftar Perusahaan</h6>
+                <h5 class="m-0 font-weight-bold text-primary">Daftar Perusahaan</h6>
             </div>
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 <div class="col text-right">
@@ -14,7 +14,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>No</th>

@@ -1,6 +1,12 @@
-<div class="card">
-    <div class="card-header bg-primary">
-        <h3 class="card-title text-white">Tambah Penjualan</h3>
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+        <a href="<?php echo site_url('penjualan'); ?>" class="btn btn-light btn-sm">
+            <i class="fas fa-arrow-left"></i> Kembali
+        </a>
+        <h5 class="mb-0 ml-3">
+            <i class="fas fa-tags"></i>
+            Tambah Penjualan
+        </h5>
     </div>
     <div class="card-body">
         <?php echo form_open('penjualan/add_process', ['id' => 'formPenjualan']); ?>
