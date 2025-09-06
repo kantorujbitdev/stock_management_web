@@ -45,7 +45,7 @@
                     <?php if ($this->hak_akses->cek_akses('barang')): ?>
                         <a class="collapse-item" href="<?php echo site_url('master/barang') ?>">Barang</a>
                     <?php endif; ?>
-                    <?php if ($this->hak_akses->cek_akses('perusahaan')): ?>
+                    <?php if ($this->session->userdata('id_role') == 5 && $this->hak_akses->cek_akses('perusahaan')): ?>
                         <a class="collapse-item" href="<?php echo site_url('perusahaan/perusahaan') ?>">Perusahaan</a>
                     <?php endif; ?>
                     <?php if ($this->hak_akses->cek_akses('gudang')): ?>
