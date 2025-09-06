@@ -63,6 +63,7 @@ application/
 │   │   └── Log_stok_model.php
 │   ├── penjualan/
 │   │   ├── Penjualan_model.php
+│   │   ├── Log_status_penjualan_model.php
 │   │   ├── Detail_penjualan_model.php
 │   │   └── Retur_model.php
 │   ├── laporan/
@@ -119,6 +120,7 @@ application/
 │   │   ├── laporan_retur.php
 │   │   ├── laporan_retur_pdf.php
 │   │   └── laporan_transfer.php
+│   │   └── laporan_penjualan_detail.php
 │   ├── template/
 │   │   ├── header.php
 │   │   ├── sidebar.php

@@ -79,10 +79,6 @@
                         <td>Telepon</td>
                         <td><?php echo $penjualan->telepon_pelanggan ?: '-'; ?></td>
                     </tr>
-                    <tr>
-                        <td>Perusahaan</td>
-                        <td><?php echo $penjualan->nama_perusahaan; ?></td>
-                    </tr>
                 </table>
             </div>
         </div>

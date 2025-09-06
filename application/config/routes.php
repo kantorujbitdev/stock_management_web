@@ -166,6 +166,7 @@ $route['laporan_stok/get_gudang_by_perusahaan'] = 'laporan/LaporanStok/get_gudan
 $route['laporan_stok/get_kategori_by_perusahaan'] = 'laporan/LaporanStok/get_kategori_by_perusahaan';
 
 $route['laporan_penjualan'] = 'laporan/LaporanPenjualan';
+$route['laporan_penjualan/detail/(:num)'] = 'laporan/LaporanPenjualan/detail/$1';
 $route['laporan_penjualan/export_pdf'] = 'laporan/LaporanPenjualan/export_pdf';
 $route['laporan_penjualan/export_excel'] = 'laporan/LaporanPenjualan/export_excel';
 

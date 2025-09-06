@@ -71,7 +71,6 @@
         </form>
     </div>
 </div>
-
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Data Penjualan</h3>
@@ -82,23 +81,33 @@
                 <tr>
                     <th>No</th>
                     <th>No Invoice</th>
-                    <th>Tanggal</th>
                     <th>Pelanggan</th>
-                    <th>Total</th>
+                    <?php if ($this->session->userdata('id_role') == 5): // Super Admin ?>
+                    <th>Perusahaan</th>
+                    <?php endif; ?>
+                    <th>Barang</th>
+                    <th>@</th>
                     <th>Status</th>
                     <th>User</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 <?php $no = 1;
-                $total = 0;
                 foreach ($penjualan as $p): ?>
                     <tr>
                         <td><?php echo $no++; ?></td>
                         <td><?php echo $p->no_invoice; ?></td>
-                        <td><?php echo date('d-m-Y', strtotime($p->tanggal_penjualan)); ?></td>
                         <td><?php echo $p->nama_pelanggan; ?></td>
-                        <td><?php echo number_format($p->total_harga, 2, ',', '.'); ?></td>
+                        <?php if ($this->session->userdata('id_role') == 5): // Super Admin ?>
+                        <td><?php echo $p->nama_perusahaan; ?></td>
+                        <?php endif; ?>
+                        <td>
+                            <div style="max-width: 300px; overflow: auto;">
+                                <?php echo $p->daftar_barang; ?>
+                            </div>
+                        </td>
+                        <td><?php echo $p->jumlah_item; ?></td>
                         <td>
                             <?php if ($p->status == 'proses'): ?>
                                 <span class="badge badge-secondary">Proses</span>
@@ -113,15 +122,14 @@
                             <?php endif; ?>
                         </td>
                         <td><?php echo $p->created_by; ?></td>
+                        <td>
+                            <a href="<?php echo site_url('laporan_penjualan/detail/' . $p->id_penjualan); ?>" 
+                               class="btn btn-info btn-sm">
+                                <i class="fas fa-eye"></i> Detail
+                            </a>
+                        </td>
                     </tr>
-                    <?php if ($p->status == 'selesai')
-                        $total += $p->total_harga; ?>
                 <?php endforeach; ?>
-                <tr>
-                    <td colspan="4" class="text-right"><strong>Total Penjualan Selesai</strong></td>
-                    <td><strong><?php echo number_format($total, 2, ',', '.'); ?></strong></td>
-                    <td colspan="2"></td>
-                </tr>
             </tbody>
         </table>
     </div>
