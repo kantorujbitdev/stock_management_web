@@ -11,7 +11,10 @@
 		"source": "https://github.com/bcit-ci/CodeIgniter"
 	},
 	"require": {
-		"php": ">=5.3.7"
+		"twbs/bootstrap": "^4.6",
+		"components/jquery": "^3.6",
+		"datatables/datatables": "^1.11",
+		"fortawesome/font-awesome": "^5.15"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
