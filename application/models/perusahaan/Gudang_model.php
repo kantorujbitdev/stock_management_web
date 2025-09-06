@@ -1,9 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-
 class Gudang_model extends CI_Model
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -27,7 +25,7 @@ class Gudang_model extends CI_Model
         $this->db->select('g.*, p.nama_perusahaan');
         $this->db->from('gudang g');
         $this->db->join('perusahaan p', 'g.id_perusahaan = p.id_perusahaan', 'left');
-        $this->db->where('g.created_at', $id);
+        $this->db->where('g.id_gudang', $id); // Perbaikan di sini
         return $this->db->get()->row();
     }
 

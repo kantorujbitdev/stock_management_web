@@ -36,7 +36,7 @@
                             <td><?php echo $no++ ?></td>
                             <td><?php echo $row->nama_gudang ?></td>
                             <?php if ($this->session->userdata('id_role') == 5): ?>
-                                <td><?php echo isset($p->nama_perusahaan) ? $p->nama_perusahaan : '-'; ?></td>
+                                <td><?php echo isset($row->nama_perusahaan) ? $row->nama_perusahaan : '-'; ?></td>
                             <?php endif; ?>
                             <td><?php echo $row->alamat ?></td>
                             <td><?php echo $row->telepon ?></td>
@@ -46,14 +46,12 @@
                                 <?php else: ?>
                                     <span class="badge badge-danger">Tidak Aktif</span>
                                 <?php endif; ?>
-
                             </td>
                             <td>
                                 <a href="<?php echo site_url('gudang/edit/' . $row->id_gudang) ?>"
                                     class="btn btn-warning btn-sm">
                                     <i class="fas fa-edit"></i>Edit</a>
-
-                                <?php if ($row->status_aktif == '1'): ?>
+                                <?php if ($row->status_aktif == 1): ?>
                                     <a href="<?php echo site_url('gudang/nonaktif/' . $row->id_gudang) ?>"
                                         class="btn btn-sm btn-danger"
                                         onclick="return confirm('Apakah Anda yakin ingin menonaktifkan gudang ini?')">
