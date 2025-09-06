@@ -49,10 +49,19 @@
                     foreach ($barang as $b): ?>
                         <tr>
                             <td><?php echo $no++; ?></td>
-                            <td>
+                            <!-- <td>
                                 <?php if ($b->gambar): ?>
                                     <img src="<?php echo base_url('uploads/barang/' . $b->gambar); ?>" class="img-thumbnail"
                                         width="50">
+                                <?php else: ?>
+                                    <span class="text-muted">No Image</span>
+                                <?php endif; ?>
+                            </td> -->
+                            <td>
+                                <?php if ($b->gambar): ?>
+                                    <img src="<?php echo base_url('uploads/barang/' . $b->gambar); ?>"
+                                        class="img-thumbnail img-clickable" width="50"
+                                        data-src="<?php echo base_url('uploads/barang/' . $b->gambar); ?>">
                                 <?php else: ?>
                                     <span class="text-muted">No Image</span>
                                 <?php endif; ?>
@@ -103,3 +112,83 @@
         </div>
     </div>
 </div>
+<!-- Modal Fullscreen -->
+<div class="modal fade" id="gambarModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content bg-transparent border-0 shadow-none">
+
+            <!-- Tombol Tutup di pojok kanan atas -->
+            <button type="button" class="close position-absolute" data-dismiss="modal" aria-label="Close"
+                style="top: 15px; right: 20px; font-size: 2rem; color: white; z-index: 1051;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <div class="modal-body p-0 text-center">
+                <img id="gambarPreview" src="" class="img-fluid rounded-lg shadow-lg"
+                    style="max-height: 90vh; cursor: grab;" />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CSS Custom -->
+<style>
+    .img-clickable {
+        cursor: zoom-in;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .img-clickable:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+</style>
+
+
+<!-- JS Custom -->
+<script>
+    $(document).on('click', '.img-clickable', function () {
+        var src = $(this).data('src');
+        $('#gambarPreview').attr('src', src);
+        $('#gambarModal').modal('show');
+    });
+
+    // Zoom pakai scroll
+    $('#gambarPreview').on('wheel', function (e) {
+        e.preventDefault();
+        var scale = $(this).data('scale') || 1;
+        scale += (e.originalEvent.deltaY < 0 ? 0.1 : -0.1);
+        if (scale < 0.5) scale = 0.5;
+        if (scale > 3) scale = 3;
+        $(this).css('transform', 'translate(0,0) scale(' + scale + ')');
+        $(this).data('scale', scale);
+    });
+
+    // Drag gambar
+    let isDragging = false, startX, startY, translateX = 0, translateY = 0;
+
+    $('#gambarPreview').on('mousedown', function (e) {
+        isDragging = true;
+        startX = e.pageX - translateX;
+        startY = e.pageY - translateY;
+        $(this).css('cursor', 'grabbing');
+    });
+
+    $(document).on('mouseup', function () {
+        isDragging = false;
+        $('#gambarPreview').css('cursor', 'grab');
+    });
+
+    $(document).on('mousemove', function (e) {
+        if (!isDragging) return;
+        translateX = e.pageX - startX;
+        translateY = e.pageY - startY;
+        $('#gambarPreview').css('transform',
+            'translate(' + translateX + 'px,' + translateY + 'px) scale(' + ($('#gambarPreview').data('scale') || 1) + ')');
+    });
+
+    // Reset saat modal ditutup
+    $('#gambarModal').on('hidden.bs.modal', function () {
+        $('#gambarPreview').css('transform', 'scale(1)').data('scale', 1);
+        translateX = 0; translateY = 0;
+    });
+</script>
