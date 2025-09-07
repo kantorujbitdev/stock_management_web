@@ -145,9 +145,9 @@
 </div>
 
 <!-- Load jQuery terlebih dahulu -->
-<script src="<?php echo base_url('application/views/template/assets/js/jquery.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/jquery.min.js'); ?>"></script>
 <!-- Load Bootstrap JS -->
-<script src="<?php echo base_url('application/views/template/assets/js/bootstrap.bundle.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/bootstrap.bundle.min.js'); ?>"></script>
 
 <script>
     $(function () {
