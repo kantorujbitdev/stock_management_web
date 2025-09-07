@@ -53,11 +53,20 @@
                             </td>
                             <td>
                                 <a href="<?php echo site_url('auth/user/edit/' . $user->id_user) ?>"
-                                    class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                <a href="<?php echo site_url('auth/user/delete/' . $user->id_user) ?>"
-                                    class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Apakah Anda yakin ingin menghapus user ini?')"><i
-                                        class="fas fa-trash"></i></a>
+                                    class="btn btn-warning btn-sm"><i class="fas fa-edit"></i>Edit</a>
+
+                                <?php if ($user->aktif == '1'): ?>
+                                    <a href="<?php echo site_url('auth/user/delete/' . $user->id_user) ?>"
+                                        class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Apakah Anda yakin ingin menonaktifkan user ini?')">
+                                        <i class="fas fa-minus-square"></i> Nonaktifkan</a>
+                                <?php else: ?>
+                                    <a href="<?php echo site_url('auth/user/aktif/' . $user->id_user) ?>"
+                                        class="btn btn-sm btn-success"
+                                        onclick="return confirm('Apakah Anda yakin ingin mengaktifkan kembali user ini?')">
+                                        <i class="fas fa-check-square"></i> Aktifkan</a>
+                                <?php endif; ?>
+
                             </td>
                         </tr>
                     <?php endforeach; ?>

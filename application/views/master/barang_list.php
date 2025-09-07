@@ -2,7 +2,7 @@
     <div class="card-header py-3">
         <div class="row">
             <div class="col">
-                <h5 class="m-0 font-weight-bold text-primary">Daftar Barang</h6>
+                <h5 class="m-0 font-weight-bold text-primary">Daftar Barang</h5>
             </div>
             <div class="col text-right">
                 <a href="<?php echo site_url('barang/add') ?>" class="btn btn-primary btn-sm">
@@ -11,7 +11,6 @@
             </div>
         </div>
     </div>
-
     <div class="card-body">
         <?php if ($this->session->flashdata('success')): ?>
             <div class="alert alert-success alert-dismissible">
@@ -19,14 +18,12 @@
                 <i class="icon fas fa-check"></i> <?php echo $this->session->flashdata('success'); ?>
             </div>
         <?php endif; ?>
-
         <?php if ($this->session->flashdata('error')): ?>
             <div class="alert alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <i class="icon fas fa-ban"></i> <?php echo $this->session->flashdata('error'); ?>
             </div>
         <?php endif; ?>
-
         <div class="table-responsive">
             <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                 <thead>
@@ -49,14 +46,6 @@
                     foreach ($barang as $b): ?>
                         <tr>
                             <td><?php echo $no++; ?></td>
-                            <!-- <td>
-                                <?php if ($b->gambar): ?>
-                                    <img src="<?php echo base_url('uploads/barang/' . $b->gambar); ?>" class="img-thumbnail"
-                                        width="50">
-                                <?php else: ?>
-                                    <span class="text-muted">No Image</span>
-                                <?php endif; ?>
-                            </td> -->
                             <td>
                                 <?php if ($b->gambar): ?>
                                     <img src="<?php echo base_url('uploads/barang/' . $b->gambar); ?>"
@@ -87,6 +76,10 @@
                                 <?php endif; ?>
                             </td>
                             <td>
+                                <a href="<?php echo site_url('barang/edit/' . $b->id_barang); ?>"
+                                    class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
                                 <?php if ($b->aktif == 1): ?>
                                     <a href="<?php echo site_url('barang/nonaktif/' . $b->id_barang); ?>"
                                         class="btn btn-sm btn-danger"
@@ -100,10 +93,6 @@
                                         <i class="fas fa-check-square"></i> Aktifkan
                                     </a>
                                 <?php endif; ?>
-                                <a href="<?php echo site_url('barang/edit/' . $b->id_barang); ?>"
-                                    class="btn btn-warning btn-sm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -112,17 +101,16 @@
         </div>
     </div>
 </div>
+
 <!-- Modal Fullscreen -->
 <div class="modal fade" id="gambarModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content bg-transparent border-0 shadow-none">
-
             <!-- Tombol Tutup di pojok kanan atas -->
             <button type="button" class="close position-absolute" data-dismiss="modal" aria-label="Close"
                 style="top: 15px; right: 20px; font-size: 2rem; color: white; z-index: 1051;">
                 <span aria-hidden="true">&times;</span>
             </button>
-
             <div class="modal-body p-0 text-center">
                 <img id="gambarPreview" src="" class="img-fluid rounded-lg shadow-lg"
                     style="max-height: 90vh; cursor: grab;" />
@@ -130,6 +118,7 @@
         </div>
     </div>
 </div>
+
 <!-- CSS Custom -->
 <style>
     .img-clickable {
@@ -143,52 +132,71 @@
     }
 </style>
 
-
-<!-- JS Custom -->
+<!-- JS Custom untuk halaman ini -->
 <script>
-    $(document).on('click', '.img-clickable', function () {
-        var src = $(this).data('src');
-        $('#gambarPreview').attr('src', src);
-        $('#gambarModal').modal('show');
-    });
+    // Fungsi untuk mengeksekusi script setelah jQuery dan Bootstrap siap
+    function runImageFullscreenScript() {
+        if (window.jQuery && typeof jQuery.fn.modal === 'function') {
+            console.log("Initializing image fullscreen script");
 
-    // Zoom pakai scroll
-    $('#gambarPreview').on('wheel', function (e) {
-        e.preventDefault();
-        var scale = $(this).data('scale') || 1;
-        scale += (e.originalEvent.deltaY < 0 ? 0.1 : -0.1);
-        if (scale < 0.5) scale = 0.5;
-        if (scale > 3) scale = 3;
-        $(this).css('transform', 'translate(0,0) scale(' + scale + ')');
-        $(this).data('scale', scale);
-    });
+            // Klik gambar untuk fullscreen
+            jQuery(document).on('click', '.img-clickable', function (e) {
+                e.preventDefault();
+                console.log('Gambar diklik');
+                var src = jQuery(this).data('src');
+                console.log('SRC: ' + src);
+                jQuery('#gambarPreview').attr('src', src);
+                jQuery('#gambarModal').modal('show');
+            });
 
-    // Drag gambar
-    let isDragging = false, startX, startY, translateX = 0, translateY = 0;
+            // Zoom pakai scroll
+            jQuery('#gambarPreview').on('wheel', function (e) {
+                e.preventDefault();
+                var scale = jQuery(this).data('scale') || 1;
+                scale += (e.originalEvent.deltaY < 0 ? 0.1 : -0.1);
+                if (scale < 0.5) scale = 0.5;
+                if (scale > 3) scale = 3;
+                jQuery(this).css('transform', 'translate(0,0) scale(' + scale + ')');
+                jQuery(this).data('scale', scale);
+            });
 
-    $('#gambarPreview').on('mousedown', function (e) {
-        isDragging = true;
-        startX = e.pageX - translateX;
-        startY = e.pageY - translateY;
-        $(this).css('cursor', 'grabbing');
-    });
+            // Drag gambar
+            var isDragging = false, startX, startY, translateX = 0, translateY = 0;
+            jQuery('#gambarPreview').on('mousedown', function (e) {
+                isDragging = true;
+                startX = e.pageX - translateX;
+                startY = e.pageY - translateY;
+                jQuery(this).css('cursor', 'grabbing');
+            });
 
-    $(document).on('mouseup', function () {
-        isDragging = false;
-        $('#gambarPreview').css('cursor', 'grab');
-    });
+            jQuery(document).on('mouseup', function () {
+                isDragging = false;
+                jQuery('#gambarPreview').css('cursor', 'grab');
+            });
 
-    $(document).on('mousemove', function (e) {
-        if (!isDragging) return;
-        translateX = e.pageX - startX;
-        translateY = e.pageY - startY;
-        $('#gambarPreview').css('transform',
-            'translate(' + translateX + 'px,' + translateY + 'px) scale(' + ($('#gambarPreview').data('scale') || 1) + ')');
-    });
+            jQuery(document).on('mousemove', function (e) {
+                if (!isDragging) return;
+                translateX = e.pageX - startX;
+                translateY = e.pageY - startY;
+                jQuery('#gambarPreview').css('transform',
+                    'translate(' + translateX + 'px,' + translateY + 'px) scale(' + (jQuery('#gambarPreview').data('scale') || 1) + ')');
+            });
 
-    // Reset saat modal ditutup
-    $('#gambarModal').on('hidden.bs.modal', function () {
-        $('#gambarPreview').css('transform', 'scale(1)').data('scale', 1);
-        translateX = 0; translateY = 0;
+            // Reset saat modal ditutup
+            jQuery('#gambarModal').on('hidden.bs.modal', function () {
+                jQuery('#gambarPreview').css('transform', 'scale(1)').data('scale', 1);
+                translateX = 0; translateY = 0;
+            });
+
+            console.log("Image fullscreen script initialized");
+        } else {
+            console.log("jQuery or Bootstrap not ready yet, retrying...");
+            setTimeout(runImageFullscreenScript, 200);
+        }
+    }
+
+    // Jalankan script setelah dependencies siap
+    document.addEventListener('DOMContentLoaded', function () {
+        runImageFullscreenScript();
     });
 </script>

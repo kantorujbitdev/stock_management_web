@@ -56,11 +56,11 @@ class User_model extends CI_Model
         return $this->db->update('user', $data);
     }
 
-    public function delete_user($id)
+    public function aktif_user($id)
     {
         // Soft delete: update status menjadi tidak aktif
         $this->db->where('id_user', $id);
-        return $this->db->update('user', ['aktif' => 0]);
+        return $this->db->update('user', ['aktif' => 1]);
     }
 
     public function update_last_login($id)

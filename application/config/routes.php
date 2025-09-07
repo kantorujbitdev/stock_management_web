@@ -22,6 +22,7 @@ $route['user'] = 'auth/User';
 $route['user/add'] = 'auth/User/add';
 $route['user/edit/(:num)'] = 'auth/User/edit/$1';
 $route['user/delete/(:num)'] = 'auth/User/delete/$1';
+$route['user/aktif/(:num)'] = 'auth/User/aktif/$1';
 $route['user/hak_akses'] = 'auth/User/hak_akses';
 $route['user/simpan_hak_akses'] = 'auth/User/simpan_hak_akses';
 $route['user/get_hak_akses'] = 'auth/User/get_hak_akses';

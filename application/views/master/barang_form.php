@@ -110,7 +110,7 @@
             <label for="gambar" class="font-weight-bold">Gambar</label>
             <div class="row align-items-center">
                 <!-- Input File -->
-                <div class="col-md-3 col-12 mb-2 mb-md-0">
+                <div class="col-md-6 col-12 mb-2 mb-md-0">
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" name="gambar" id="gambar" accept="image/*">
                         <label class="custom-file-label" for="gambar">Pilih file</label>

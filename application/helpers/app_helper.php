@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 if (!function_exists('app_version')) {
     function app_version()
     {
-        return '1.0.2';
+        return '1.1.3';
     }
 }
 // Fungsi untuk menampilkan pesan alert
