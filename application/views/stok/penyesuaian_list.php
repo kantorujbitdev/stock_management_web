@@ -21,45 +21,46 @@
                 <i class="icon fas fa-ban"></i> <?php echo $this->session->flashdata('error'); ?>
             </div>
         <?php endif; ?>
-
-        <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Tanggal</th>
-                    <th>Barang</th>
-                    <th>Gudang</th>
-                    <th>Perusahaan</th>
-                    <th>Stok Awal</th>
-                    <th>Stok Baru</th>
-                    <th>Selisih</th>
-                    <th>Alasan</th>
-                    <th>Dibuat Oleh</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $no = 1;
-                foreach ($penyesuaian as $p): ?>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                <thead>
                     <tr>
-                        <td><?php echo $no++; ?></td>
-                        <td><?php echo date('d-m-Y H:i:s', strtotime($p->created_at)); ?></td>
-                        <td><?php echo $p->nama_barang; ?></td>
-                        <td><?php echo $p->nama_gudang; ?></td>
-                        <td><?php echo $p->nama_perusahaan; ?></td>
-                        <td><?php echo $p->jumlah_saat_ini; ?></td>
-                        <td><?php echo $p->jumlah_baru; ?></td>
-                        <td>
-                            <?php if ($p->selisih > 0): ?>
-                                <span class="text-success">+<?php echo $p->selisih; ?></span>
-                            <?php else: ?>
-                                <span class="text-danger"><?php echo $p->selisih; ?></span>
-                            <?php endif; ?>
-                        </td>
-                        <td><?php echo $p->alasan; ?></td>
-                        <td><?php echo $p->created_by; ?></td>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Barang</th>
+                        <th>Gudang</th>
+                        <th>Perusahaan</th>
+                        <th>Stok Awal</th>
+                        <th>Stok Baru</th>
+                        <th>Selisih</th>
+                        <th>Alasan</th>
+                        <th>Dibuat Oleh</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php $no = 1;
+                    foreach ($penyesuaian as $p): ?>
+                        <tr>
+                            <td><?php echo $no++; ?></td>
+                            <td><?php echo date('d-m-Y H:i:s', strtotime($p->created_at)); ?></td>
+                            <td><?php echo $p->nama_barang; ?></td>
+                            <td><?php echo $p->nama_gudang; ?></td>
+                            <td><?php echo $p->nama_perusahaan; ?></td>
+                            <td><?php echo $p->jumlah_saat_ini; ?></td>
+                            <td><?php echo $p->jumlah_baru; ?></td>
+                            <td>
+                                <?php if ($p->selisih > 0): ?>
+                                    <span class="text-success">+<?php echo $p->selisih; ?></span>
+                                <?php else: ?>
+                                    <span class="text-danger"><?php echo $p->selisih; ?></span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo $p->alasan; ?></td>
+                            <td><?php echo $p->created_by; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

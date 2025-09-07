@@ -1,14 +1,17 @@
-<div class="card">
-    <div class="card-header">
-        <h5 class="card-title">Data Penjualan</h3>
-            <div class="card-tools">
-                <a href="<?php echo site_url('penjualan/add'); ?>" class="btn btn-primary btn-sm">
-                    <i class="fas fa-plus"></i> Tambah Penjualan
-                </a>
-                <a href="<?php echo site_url('penjualan/export_excel'); ?>" class="btn btn-success btn-sm">
-                    <i class="fas fa-file-excel"></i> Export Excel
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col">
+                <h5 class="m-0 font-weight-bold text-primary">Daftar penjualan</h5>
+            </div>
+            <div class="col text-right">
+                <a href="<?php echo site_url('penjualan/add') ?>" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus">
+                    </i>
+                    Tambah Penjualan
                 </a>
             </div>
+        </div>
     </div>
     <div class="card-body">
         <?php if ($this->session->flashdata('success')): ?>
@@ -75,76 +78,77 @@
             </div>
         </form>
         <hr>
-        <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Invoice</th>
-                    <th>Tanggal</th>
-                    <th>Pelanggan</th>
-                    <th>Alamat Pelanggan</th>
-                    <th>Barang</th>
-                    <th>Status</th>
-                    <th>Dibuat Oleh</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $no = 1;
-                foreach ($penjualan as $p): ?>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                <thead>
                     <tr>
-                        <td><?php echo $no++; ?></td>
-                        <td><strong><?php echo $p->no_invoice; ?></strong></td>
-                        <td><?php echo date('d-m-Y H:i:s', strtotime($p->tanggal_penjualan)); ?></td>
-                        <td><?php echo $p->nama_pelanggan ?: '-'; ?></td>
-                        <td><?php echo $p->alamat ?: '-'; ?></td>
-                        <td>
-                            <?php
-                            if ($p->daftar_barang) {
-                                // Format daftar barang menjadi lebih rapi
-                                $barang_list = explode(',', $p->daftar_barang);
-                                foreach ($barang_list as $barang) {
-                                    echo '<div class="mb-1">' . trim($barang) . '</div>';
+                        <th>No</th>
+                        <th>Invoice</th>
+                        <th>Tanggal</th>
+                        <th>Pelanggan</th>
+                        <th>Alamat Pelanggan</th>
+                        <th>Barang</th>
+                        <th>Status</th>
+                        <th>Dibuat Oleh</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $no = 1;
+                    foreach ($penjualan as $p): ?>
+                        <tr>
+                            <td><?php echo $no++; ?></td>
+                            <td><strong><?php echo $p->no_invoice; ?></strong></td>
+                            <td><?php echo date('d-m-Y H:i:s', strtotime($p->tanggal_penjualan)); ?></td>
+                            <td><?php echo $p->nama_pelanggan ?: '-'; ?></td>
+                            <td><?php echo $p->alamat ?: '-'; ?></td>
+                            <td>
+                                <?php
+                                if ($p->daftar_barang) {
+                                    // Format daftar barang menjadi lebih rapi
+                                    $barang_list = explode(',', $p->daftar_barang);
+                                    foreach ($barang_list as $barang) {
+                                        echo '<div class="mb-1">' . trim($barang) . '</div>';
+                                    }
+                                } else {
+                                    echo '-';
                                 }
-                            } else {
-                                echo '-';
-                            }
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                            $status_class = '';
-                            switch ($p->status) {
-                                case 'proses':
-                                    $status_class = 'warning';
-                                    break;
-                                case 'packing':
-                                    $status_class = 'info';
-                                    break;
-                                case 'dikirim':
-                                    $status_class = 'primary';
-                                    break;
-                                case 'selesai':
-                                    $status_class = 'success';
-                                    break;
-                                case 'batal':
-                                    $status_class = 'danger';
-                                    break;
-                            }
-                            ?>
-                            <span class="badge badge-<?php echo $status_class; ?>">
-                                <?php echo ucfirst($p->status); ?>
-                            </span>
-                        </td>
-                        <td><?php echo $p->nama_user; ?></td>
-                        <td>
-                            <div class="btn-group">
-                                <a href="<?php echo site_url('penjualan/view/' . $p->id_penjualan); ?>"
-                                    class="btn btn-info btn-sm" title="Detail">
-                                    <i class="fas fa-eye"></i>
-                                </a>
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                $status_class = '';
+                                switch ($p->status) {
+                                    case 'proses':
+                                        $status_class = 'warning';
+                                        break;
+                                    case 'packing':
+                                        $status_class = 'info';
+                                        break;
+                                    case 'dikirim':
+                                        $status_class = 'primary';
+                                        break;
+                                    case 'selesai':
+                                        $status_class = 'success';
+                                        break;
+                                    case 'batal':
+                                        $status_class = 'danger';
+                                        break;
+                                }
+                                ?>
+                                <span class="badge badge-<?php echo $status_class; ?>">
+                                    <?php echo ucfirst($p->status); ?>
+                                </span>
+                            </td>
+                            <td><?php echo $p->nama_user; ?></td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="<?php echo site_url('penjualan/view/' . $p->id_penjualan); ?>"
+                                        class="btn btn-info btn-sm" title="Detail">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
 
-                                <!-- <?php if ($p->status == 'proses'): ?>
+                                    <!-- <?php if ($p->status == 'proses'): ?>
                                     <?php if ($this->session->userdata('id_role') == 3): // Admin Packing ?>
                                         <a href="<?php echo site_url('penjualan/update_status/' . $p->id_penjualan . '/packing'); ?>"
                                             class="btn btn-primary btn-sm" title="Proses"
@@ -173,11 +177,12 @@
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 <?php endif; ?> -->
-                            </div>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

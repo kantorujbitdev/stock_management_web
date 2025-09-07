@@ -70,33 +70,36 @@
         <h5 class="card-title">Data Stok</h3>
     </div>
     <div class="card-body">
-        <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Kode Barang</th>
-                    <th>Nama Barang</th>
-                    <th>Kategori</th>
-                    <th>Perusahaan</th>
-                    <th>Gudang</th>
-                    <th>Stok</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $no = 1;
-                foreach ($stok as $s): ?>
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                <thead>
                     <tr>
-                        <td><?php echo $no++; ?></td>
-                        <td><?php echo $s->sku; ?></td>
-                        <td><?php echo $s->nama_barang; ?></td>
-                        <td><?php echo $s->nama_kategori; ?></td>
-                        <td><?php echo $s->nama_perusahaan; ?></td>
-                        <td><?php echo $s->nama_gudang; ?></td>
-                        <td><?php echo $s->jumlah; ?></td>
+                        <th>No</th>
+                        <th>Kode Barang</th>
+                        <th>Nama Barang</th>
+                        <th>Kategori</th>
+                        <th>Perusahaan</th>
+                        <th>Gudang</th>
+                        <th>Stok</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php $no = 1;
+                    foreach ($stok as $s): ?>
+                        <tr>
+                            <td><?php echo $no++; ?></td>
+                            <td><?php echo $s->sku; ?></td>
+                            <td><?php echo $s->nama_barang; ?></td>
+                            <td><?php echo $s->nama_kategori; ?></td>
+                            <td><?php echo $s->nama_perusahaan; ?></td>
+                            <td><?php echo $s->nama_gudang; ?></td>
+                            <td><?php echo $s->jumlah; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

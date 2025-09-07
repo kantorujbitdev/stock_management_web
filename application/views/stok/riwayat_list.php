@@ -94,51 +94,53 @@
         <h5 class="card-title">Data Riwayat Stok</h3>
     </div>
     <div class="card-body">
-        <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Tanggal</th>
-                    <th>Barang</th>
-                    <th>Gudang</th>
-                    <th>Perusahaan</th>
-                    <th>Jenis</th>
-                    <th>Jumlah</th>
-                    <th>Keterangan</th>
-                    <th>User</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $no = 1;
-                foreach ($riwayat as $r): ?>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                <thead>
                     <tr>
-                        <td><?php echo $no++; ?></td>
-                        <td><?php echo date('d-m-Y H:i:s', strtotime($r->tanggal)); ?></td>
-                        <td><?php echo $r->nama_barang; ?></td>
-                        <td><?php echo $r->nama_gudang; ?></td>
-                        <td><?php echo $r->nama_perusahaan; ?></td>
-                        <td>
-                            <?php if ($r->jenis == 'masuk'): ?>
-                                <span class="badge badge-success">Masuk</span>
-                            <?php elseif ($r->jenis == 'keluar'): ?>
-                                <span class="badge badge-danger">Keluar</span>
-                            <?php elseif ($r->jenis == 'retur'): ?>
-                                <span class="badge badge-info">Retur</span>
-                            <?php elseif ($r->jenis == 'transfer_keluar'): ?>
-                                <span class="badge badge-warning">Transfer Keluar</span>
-                            <?php elseif ($r->jenis == 'transfer_masuk'): ?>
-                                <span class="badge badge-primary">Transfer Masuk</span>
-                            <?php elseif ($r->jenis == 'penyesuaian'): ?>
-                                <span class="badge badge-secondary">Penyesuaian</span>
-                            <?php endif; ?>
-                        </td>
-                        <td><?php echo $r->jumlah; ?></td>
-                        <td><?php echo $r->keterangan; ?></td>
-                        <td><?php echo $r->created_by; ?></td>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Barang</th>
+                        <th>Gudang</th>
+                        <th>Perusahaan</th>
+                        <th>Jenis</th>
+                        <th>Jumlah</th>
+                        <th>Keterangan</th>
+                        <th>User</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php $no = 1;
+                    foreach ($riwayat as $r): ?>
+                        <tr>
+                            <td><?php echo $no++; ?></td>
+                            <td><?php echo date('d-m-Y H:i:s', strtotime($r->tanggal)); ?></td>
+                            <td><?php echo $r->nama_barang; ?></td>
+                            <td><?php echo $r->nama_gudang; ?></td>
+                            <td><?php echo $r->nama_perusahaan; ?></td>
+                            <td>
+                                <?php if ($r->jenis == 'masuk'): ?>
+                                    <span class="badge badge-success">Masuk</span>
+                                <?php elseif ($r->jenis == 'keluar'): ?>
+                                    <span class="badge badge-danger">Keluar</span>
+                                <?php elseif ($r->jenis == 'retur'): ?>
+                                    <span class="badge badge-info">Retur</span>
+                                <?php elseif ($r->jenis == 'transfer_keluar'): ?>
+                                    <span class="badge badge-warning">Transfer Keluar</span>
+                                <?php elseif ($r->jenis == 'transfer_masuk'): ?>
+                                    <span class="badge badge-primary">Transfer Masuk</span>
+                                <?php elseif ($r->jenis == 'penyesuaian'): ?>
+                                    <span class="badge badge-secondary">Penyesuaian</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo $r->jumlah; ?></td>
+                            <td><?php echo $r->keterangan; ?></td>
+                            <td><?php echo $r->created_by; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
