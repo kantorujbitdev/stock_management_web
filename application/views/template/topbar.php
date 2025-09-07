@@ -45,7 +45,7 @@
                             Hai, <?php echo $nama ?> (<?php echo $nama_role ?>)
                         </span>
                         <img class="img-profile rounded-circle"
-                            src="<?php echo base_url('assets/img/profile/' . $profile_img) ?>">
+                            src="<?php echo base_url('application/views/template/assets/img/profile/' . $profile_img) ?>">
                     </a>
 
                     <!-- Dropdown - User Information -->
