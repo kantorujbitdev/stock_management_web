@@ -149,15 +149,27 @@ $route['penjualan/get_barang_by_perusahaan'] = 'penjualan/Penjualan/get_barang_b
 $route['penjualan/get_stock_by_barang'] = 'penjualan/Penjualan/get_stock_by_barang';
 $route['penjualan/update_status/(:num)/(:any)'] = 'penjualan/Penjualan/update_status/$1/$2';
 
+// Routes untuk Retur Penjualan
 $route['retur'] = 'penjualan/Retur';
 $route['retur/add'] = 'penjualan/Retur/add';
-$route['retur/detail/(:num)'] = 'penjualan/Retur/detail/$1';
-$route['retur/proses/(:num)'] = 'penjualan/Retur/proses/$1';
-$route['retur/tolak/(:num)'] = 'penjualan/Retur/tolak/$1';
-$route['retur/add_barang'] = 'penjualan/Retur/add_barang';
-$route['retur/delete_barang/(:num)'] = 'penjualan/Retur/delete_barang/$1';
+$route['retur/add_process'] = 'penjualan/Retur/add_process';
+$route['retur/view/(:num)'] = 'penjualan/Retur/view/$1';
+$route['retur/add/(:num)'] = 'penjualan/Retur/add/$1';
+
+// Routes untuk update status retur
+$route['retur/update_status/(:num)/(:any)'] = 'penjualan/Retur/update_status/$1/$2';
+$route['retur/diterima/(:num)'] = 'penjualan/Retur/update_status/$1/diterima';
+$route['retur/ditolak/(:num)'] = 'penjualan/Retur/update_status/$1/ditolak';
+$route['retur/batal/(:num)'] = 'penjualan/Retur/update_status/$1/batal';
+
+// Routes untuk API/AJAX (jika diperlukan)
 $route['retur/get_penjualan_by_perusahaan'] = 'penjualan/Retur/get_penjualan_by_perusahaan';
 $route['retur/get_barang_by_penjualan'] = 'penjualan/Retur/get_barang_by_penjualan';
+
+// Routes legacy (jika masih digunakan di tempat lain)
+$route['retur/detail/(:num)'] = 'penjualan/Retur/view/$1'; // Redirect ke view
+$route['retur/proses/(:num)'] = 'penjualan/Retur/update_status/$1/diproses'; // Jika masih digunakan
+$route['retur/tolak/(:num)'] = 'penjualan/Retur/update_status/$1/ditolak'; // Sudah ada di atas
 
 // Routes untuk Laporan (di subfolder laporan/)
 $route['laporan_stok'] = 'laporan/LaporanStok';

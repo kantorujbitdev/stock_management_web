@@ -26,15 +26,15 @@
 
             <div class="table-responsive">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="mb-0">Daftar Fitur</h6>
-                    <div>
-                        <button type="button" class="btn btn-sm btn-outline-primary" id="checkAll">
-                            <i class="fas fa-check-square"></i> Check All
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-secondary" id="uncheckAll">
-                            <i class="fas fa-square"></i> Uncheck All
-                        </button>
-                    </div>
+                    <h5 class="mb-0">Daftar Fitur</h6>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="checkAll">
+                                <i class="fas fa-check-square"></i> Check All
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="uncheckAll">
+                                <i class="fas fa-square"></i> Uncheck All
+                            </button>
+                        </div>
                 </div>
 
                 <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">

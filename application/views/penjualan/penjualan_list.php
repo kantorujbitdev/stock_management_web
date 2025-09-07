@@ -83,13 +83,12 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Invoice</th>
+                        <th>Nomor Invoice</th>
                         <th>Tanggal</th>
                         <th>Pelanggan</th>
-                        <th>Alamat Pelanggan</th>
                         <th>Barang</th>
-                        <th>Status</th>
-                        <th>Dibuat Oleh</th>
+                        <th>Status Penjualan</th>
+                        <th>Status Retur</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -98,23 +97,10 @@
                     foreach ($penjualan as $p): ?>
                         <tr>
                             <td><?php echo $no++; ?></td>
-                            <td><strong><?php echo $p->no_invoice; ?></strong></td>
-                            <td><?php echo date('d-m-Y H:i:s', strtotime($p->tanggal_penjualan)); ?></td>
-                            <td><?php echo $p->nama_pelanggan ?: '-'; ?></td>
-                            <td><?php echo $p->alamat ?: '-'; ?></td>
-                            <td>
-                                <?php
-                                if ($p->daftar_barang) {
-                                    // Format daftar barang menjadi lebih rapi
-                                    $barang_list = explode(',', $p->daftar_barang);
-                                    foreach ($barang_list as $barang) {
-                                        echo '<div class="mb-1">' . trim($barang) . '</div>';
-                                    }
-                                } else {
-                                    echo '-';
-                                }
-                                ?>
-                            </td>
+                            <td><?php echo $p->no_invoice; ?></td>
+                            <td><?php echo date('d-m-Y H:i', strtotime($p->tanggal_penjualan)); ?></td>
+                            <td><?php echo $p->nama_pelanggan; ?></td>
+                            <td><?php echo $p->daftar_barang; ?></td>
                             <td>
                                 <?php
                                 $status_class = '';
@@ -132,7 +118,7 @@
                                         $status_class = 'success';
                                         break;
                                     case 'batal':
-                                        $status_class = 'danger';
+                                        $status_class = 'secondary';
                                         break;
                                 }
                                 ?>
@@ -140,44 +126,31 @@
                                     <?php echo ucfirst($p->status); ?>
                                 </span>
                             </td>
-                            <td><?php echo $p->nama_user; ?></td>
                             <td>
-                                <div class="btn-group">
-                                    <a href="<?php echo site_url('penjualan/view/' . $p->id_penjualan); ?>"
-                                        class="btn btn-info btn-sm" title="Detail">
-                                        <i class="fas fa-eye"></i>
+                                <?php
+                                // Cek apakah penjualan ini memiliki retur
+                                $this->db->where('id_penjualan', $p->id_penjualan);
+                                $this->db->where('status !=', 'batal');
+                                $has_retur = $this->db->count_all_results('retur_penjualan') > 0;
+
+                                if ($has_retur) {
+                                    echo '<span class="badge badge-warning">Ada Retur</span>';
+                                } else {
+                                    echo '<span class="badge badge-light">Tidak Ada</span>';
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <a href="<?php echo site_url('penjualan/view/' . $p->id_penjualan); ?>"
+                                    class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i> Detail
+                                </a>
+                                <?php if ($p->status == 'selesai' && !$has_retur): ?>
+                                    <a href="<?php echo site_url('retur/add/' . $p->id_penjualan); ?>"
+                                        class="btn btn-warning btn-sm">
+                                        <i class="fas fa-undo"></i> Retur
                                     </a>
-
-                                    <!-- <?php if ($p->status == 'proses'): ?>
-                                    <?php if ($this->session->userdata('id_role') == 3): // Admin Packing ?>
-                                        <a href="<?php echo site_url('penjualan/update_status/' . $p->id_penjualan . '/packing'); ?>"
-                                            class="btn btn-primary btn-sm" title="Proses"
-                                            onclick="return confirm('Ubah status menjadi packing?')">
-                                            <i class="fas fa-box"></i> Proses
-                                        </a>
-                                    <?php endif; ?>
-
-                                    <?php if ($this->session->userdata('id_role') == 2): // Sales Online ?>
-                                        <a href="<?php echo site_url('penjualan/update_status/' . $p->id_penjualan . '/batal'); ?>"
-                                            class="btn btn-danger btn-sm" title="Batal"
-                                            onclick="return confirm('Batalkan penjualan?')">
-                                            <i class="fas fa-times"></i> Batal
-                                        </a>
-                                    <?php endif; ?>
                                 <?php endif; ?>
-
-                                <?php if ($this->session->userdata('id_role') == 1 || $this->session->userdata('id_role') == 5): // Admin Pusat atau Super Admin ?>
-                                    <a href="<?php echo site_url('penjualan/edit/' . $p->id_penjualan); ?>"
-                                        class="btn btn-warning btn-sm" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="<?php echo site_url('penjualan/delete/' . $p->id_penjualan); ?>"
-                                        class="btn btn-danger btn-sm" title="Hapus"
-                                        onclick="return confirm('Apakah Anda yakin menghapus data ini?')">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                <?php endif; ?> -->
-                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

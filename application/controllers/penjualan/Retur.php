@@ -1,9 +1,9 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-class Retur extends CI_Controller {
-
-    public function __construct() {
+defined('BASEPATH') or exit('No direct script access allowed');
+class Retur extends CI_Controller
+{
+    public function __construct()
+    {
         parent::__construct();
         $this->load->library('session');
         $this->load->helper('url');
@@ -13,312 +13,430 @@ class Retur extends CI_Controller {
         $this->load->model('penjualan/Retur_model');
         $this->load->model('penjualan/Detail_retur_model');
         $this->load->model('penjualan/Penjualan_model');
-        $this->load->model('perusahaan/Perusahaan_model');
-        $this->load->model('perusahaan/Gudang_model');
+        $this->load->model('penjualan/Detail_penjualan_model');
+        $this->load->model('master/Pelanggan_model');
         $this->load->model('master/Barang_model');
         $this->load->model('stok/Stok_gudang_model');
-        
+        $this->load->model('stok/Log_stok_model');
+        $this->load->model('perusahaan/Perusahaan_model');
+
         // Cek login
         if (!$this->session->userdata('logged_in')) {
             redirect('auth');
         }
-        
+
         // Cek hak akses
-        $this->hak_akses->cek_akses('retur');
+        if (!$this->hak_akses->cek_akses('retur')) {
+            $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke menu Retur');
+            redirect('dashboard');
+        }
     }
 
-    public function index() {
+    public function index()
+    {
         $data['title'] = 'Data Retur Penjualan';
-        
-        // Jika Super Admin, tampilkan semua retur
+
+        // Filter parameters
+        $filter = [
+            'id_perusahaan' => $this->input->get('id_perusahaan'),
+            'id_pelanggan' => $this->input->get('id_pelanggan'),
+            'status' => $this->input->get('status'),
+            'date_from' => $this->input->get('date_from'),
+            'date_to' => $this->input->get('date_to')
+        ];
+
+        // Get data with filter
         if ($this->session->userdata('id_role') == 5) {
-            $data['retur'] = $this->Retur_model->get_all_retur();
+            $data['retur'] = $this->Retur_model->get_all_retur_with_detail($filter);
+            $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
         } else {
-            // Jika Admin Pusat atau Admin Return, tampilkan retur milik perusahaannya saja
             $id_perusahaan = $this->session->userdata('id_perusahaan');
-            $data['retur'] = $this->Retur_model->get_retur_by_perusahaan($id_perusahaan);
+            $filter['id_perusahaan'] = $id_perusahaan;
+            $data['retur'] = $this->Retur_model->get_retur_by_perusahaan_with_detail($id_perusahaan, $filter);
+            $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
         }
-        
+
+        $data['pelanggan'] = $this->Pelanggan_model->get_pelanggan_aktif();
+        $data['filter'] = $filter;
         $data['content'] = 'penjualan/retur_list';
         $this->load->view('template/template', $data);
     }
 
-    public function add() {
+    public function add($id_penjualan = null)
+    {
         $data['title'] = 'Tambah Retur Penjualan';
-        
-        // Jika Super Admin, tampilkan semua perusahaan
-        if ($this->session->userdata('id_role') == 5) {
-            $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
-        } else {
-            // Jika Admin Pusat atau Admin Return, hanya tampilkan perusahaannya
-            $id_perusahaan = $this->session->userdata('id_perusahaan');
-            $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
+
+        // Jika tidak ada ID penjualan, tampilkan pilihan penjualan
+        if (!$id_penjualan) {
+            if ($this->session->userdata('id_role') == 5) {
+                // Ambil semua penjualan dengan status selesai
+                $all_penjualan = $this->Penjualan_model->get_all_penjualan_with_detail(['status' => 'selesai']);
+
+                // Filter penjualan yang bisa diretur
+                $data['penjualan'] = [];
+                foreach ($all_penjualan as $p) {
+                    if ($this->cek_bisa_retur($p->id_penjualan)) {
+                        $data['penjualan'][] = $p;
+                    }
+                }
+            } else {
+                $id_perusahaan = $this->session->userdata('id_perusahaan');
+                // Ambil penjualan perusahaan dengan status selesai
+                $all_penjualan = $this->Penjualan_model->get_penjualan_by_perusahaan_with_detail($id_perusahaan, ['status' => 'selesai']);
+
+                // Filter penjualan yang bisa diretur
+                $data['penjualan'] = [];
+                foreach ($all_penjualan as $p) {
+                    if ($this->cek_bisa_retur($p->id_penjualan)) {
+                        $data['penjualan'][] = $p;
+                    }
+                }
+            }
+
+            $data['content'] = 'penjualan/retur_pilih_penjualan';
+            $this->load->view('template/template', $data);
+            return;
         }
-        
+
+        // Get penjualan data
+        $data['penjualan'] = $this->Penjualan_model->get_penjualan_by_id($id_penjualan);
+        $data['detail_penjualan'] = $this->Detail_penjualan_model->get_detail_by_penjualan($id_penjualan);
+
+        if (!$data['penjualan']) {
+            show_404();
+        }
+
+        // Cek hak akses perusahaan
+        if ($this->session->userdata('id_role') == 4) {
+            if ($data['penjualan']->id_perusahaan != $this->session->userdata('id_perusahaan')) {
+                $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke penjualan ini');
+                redirect('retur');
+            }
+        }
+
+        // Cek status penjualan, hanya yang selesai yang bisa diretur
+        if ($data['penjualan']->status != 'selesai') {
+            $this->session->set_flashdata('error', 'Hanya penjualan dengan status selesai yang dapat diretur');
+            redirect('retur');
+        }
+
+        // Cek apakah penjualan ini masih bisa diretur
+        if (!$this->cek_bisa_retur($id_penjualan)) {
+            $this->session->set_flashdata('error', 'Penjualan ini tidak bisa diretur karena semua barang sudah diretur');
+            redirect('retur');
+        }
+
         $data['content'] = 'penjualan/retur_form';
         $this->load->view('template/template', $data);
     }
 
-    public function add_process() {
+    // Tambah method untuk cek apakah penjualan bisa diretur
+    private function cek_bisa_retur($id_penjualan)
+    {
+        // Ambil detail penjualan
+        $detail_penjualan = $this->Detail_penjualan_model->get_detail_by_penjualan($id_penjualan);
+
+        // Ambil semua retur untuk penjualan ini
+        $this->db->select('drp.id_barang, SUM(drp.jumlah_retur) as total_retur');
+        $this->db->from('detail_retur_penjualan drp');
+        $this->db->join('retur_penjualan rp', 'drp.id_retur = rp.id_retur', 'left');
+        $this->db->where('rp.id_penjualan', $id_penjualan);
+        $this->db->where('rp.status !=', 'batal'); // Kecuali retur yang dibatalkan
+        $this->db->group_by('drp.id_barang');
+        $retur_data = $this->db->get()->result();
+
+        // Jika tidak ada retur sama sekali, bisa diretur
+        if (empty($retur_data)) {
+            return true;
+        }
+
+        // Cek apakah ada barang yang belum diretur sepenuhnya
+        foreach ($detail_penjualan as $dp) {
+            $total_retur = 0;
+            foreach ($retur_data as $rd) {
+                if ($rd->id_barang == $dp->id_barang) {
+                    $total_retur = $rd->total_retur;
+                    break;
+                }
+            }
+
+            // Jika jumlah retur kurang dari jumlah jual, masih bisa diretur
+            if ($total_retur < $dp->jumlah) {
+                return true;
+            }
+        }
+
+        // Semua barang sudah diretur sepenuhnya
+        return false;
+    }
+
+    public function add_process()
+    {
         $this->form_validation->set_rules('id_penjualan', 'Penjualan', 'required');
-        $this->form_validation->set_rules('tanggal_retur', 'Tanggal Retur', 'required');
         $this->form_validation->set_rules('alasan_retur', 'Alasan Retur', 'required');
 
         if ($this->form_validation->run() == FALSE) {
-            $this->add();
+            $this->add($this->input->post('id_penjualan'));
         } else {
-            // Cek hak akses perusahaan
-            if ($this->session->userdata('id_role') != 5) {
-                $id_perusahaan_user = $this->session->userdata('id_perusahaan');
-                $id_penjualan = $this->input->post('id_penjualan');
-                
-                // Get penjualan to check perusahaan
-                $penjualan = $this->Penjualan_model->get_penjualan_by_id($id_penjualan);
-                $this->load->model('auth/User_model');
-                $user = $this->User_model->get_user_by_id($penjualan->id_user);
-                
-                if ($user->id_perusahaan != $id_perusahaan_user) {
-                    $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke penjualan ini');
-                    redirect('retur');
-                }
+            // Generate nomor retur
+            $no_retur = $this->generate_no_retur();
+
+            // Get items data directly from POST
+            $items = $this->input->post('items');
+
+            // Validate items
+            if (empty($items)) {
+                $this->session->set_flashdata('error', 'Item retur tidak boleh kosong');
+                redirect('retur/add/' . $this->input->post('id_penjualan'));
             }
-            
-            // Generate no retur
-            $id_perusahaan = $this->input->post('id_perusahaan');
-            $no_retur = 'RET-' . date('Ymd') . '-' . $this->Retur_model->get_next_number($id_perusahaan);
-            
-            $data = [
+
+            // Get penjualan data
+            $penjualan = $this->Penjualan_model->get_penjualan_by_id($this->input->post('id_penjualan'));
+
+            // Insert retur header
+            $data_retur = [
                 'no_retur' => $no_retur,
-                'id_penjualan' => $this->input->post('id_penjualan'),
                 'id_user' => $this->session->userdata('id_user'),
-                'tanggal_retur' => $this->input->post('tanggal_retur'),
+                'id_penjualan' => $this->input->post('id_penjualan'),
+                'tanggal_retur' => date('Y-m-d H:i:s'),
                 'alasan_retur' => $this->input->post('alasan_retur'),
-                'status' => 'diterima'
+                'status' => 'diproses' // Default status di database
             ];
 
-            $insert = $this->Retur_model->insert_retur($data);
-            
-            if ($insert) {
-                $id_retur = $this->db->insert_id();
-                redirect('retur/detail/' . $id_retur);
-            } else {
-                $this->session->set_flashdata('error', 'Gagal menambahkan retur penjualan');
-                redirect('retur/add');
+            $this->db->trans_start();
+
+            try {
+                $insert_retur = $this->Retur_model->insert_retur($data_retur);
+
+                if ($insert_retur) {
+                    $id_retur = $this->db->insert_id();
+
+                    // Insert detail retur
+                    foreach ($items as $item) {
+                        $detail_data = [
+                            'id_retur' => $id_retur,
+                            'id_barang' => $item['id_barang'],
+                            'jumlah_retur' => $item['jumlah'],
+                            'alasan_barang' => $item['kondisi'] // Simpan kondisi sebagai alasan_barang
+                        ];
+
+                        $insert_detail = $this->Detail_retur_model->insert_detail_retur($detail_data);
+
+                        if (!$insert_detail) {
+                            throw new Exception('Gagal menyimpan detail retur');
+                        }
+                    }
+
+                    $this->db->trans_complete();
+
+                    if ($this->db->trans_status() === FALSE) {
+                        $this->session->set_flashdata('error', 'Gagal menyimpan retur');
+                    } else {
+                        $this->session->set_flashdata('success', 'Retur berhasil disimpan dengan nomor: ' . $no_retur);
+                    }
+                } else {
+                    throw new Exception('Gagal menyimpan data retur');
+                }
+            } catch (Exception $e) {
+                $this->db->trans_rollback();
+                $this->session->set_flashdata('error', $e->getMessage());
             }
+
+            redirect('retur');
         }
     }
 
-    public function detail($id) {
-        // Cek apakah user punya akses ke retur ini
-        if ($this->session->userdata('id_role') != 5) {
-            $id_perusahaan_user = $this->session->userdata('id_perusahaan');
-            $retur = $this->Retur_model->get_retur_by_id($id);
-            
-            // Get user to check perusahaan
-            $this->load->model('auth/User_model');
-            $user = $this->User_model->get_user_by_id($retur->id_user);
-            
-            if ($user->id_perusahaan != $id_perusahaan_user) {
+    public function view($id)
+    {
+        $data['title'] = 'Detail Retur Penjualan';
+        $data['retur'] = $this->Retur_model->get_retur_by_id($id);
+        $data['detail'] = $this->Detail_retur_model->get_detail_by_retur($id);
+
+        if (!$data['retur']) {
+            show_404();
+        }
+
+        // Cek hak akses perusahaan
+        if ($this->session->userdata('id_role') == 4) {
+            if ($data['retur']->id_perusahaan != $this->session->userdata('id_perusahaan')) {
                 $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke retur ini');
                 redirect('retur');
             }
         }
-        
-        $data['title'] = 'Detail Retur Penjualan';
-        $data['retur'] = $this->Retur_model->get_retur_by_id($id);
-        $data['detail'] = $this->Detail_retur_model->get_detail_by_retur($id);
-        
-        // Get barang from penjualan
-        $this->load->model('penjualan/Detail_penjualan_model');
-        $data['barang_penjualan'] = $this->Detail_penjualan_model->get_detail_by_penjualan($data['retur']->id_penjualan);
-        
-        // Get gudang by perusahaan
-        $this->load->model('auth/User_model');
-        $user = $this->User_model->get_user_by_id($data['retur']->id_user);
-        $data['gudang'] = $this->Gudang_model->get_gudang_by_perusahaan($user->id_perusahaan);
-        
+
         $data['content'] = 'penjualan/retur_detail';
         $this->load->view('template/template', $data);
     }
 
-    public function add_barang() {
-        $id_retur = $this->input->post('id_retur');
-        $id_barang = $this->input->post('id_barang');
-        $id_gudang = $this->input->post('id_gudang');
-        $jumlah_retur = $this->input->post('jumlah_retur');
-        $alasan_barang = $this->input->post('alasan_barang');
-        
-        // Cek apakah barang sudah ada di detail
-        $check = $this->Detail_retur_model->get_detail_by_barang_retur($id_retur, $id_barang);
-        
-        if ($check) {
-            // Update existing detail
-            $data = [
-                'jumlah_retur' => $check->jumlah_retur + $jumlah_retur,
-                'alasan_barang' => $alasan_barang
-            ];
-            
-            $this->Detail_retur_model->update_detail($check->id_detail_retur, $data);
-        } else {
-            // Insert new detail
-            $data = [
-                'id_retur' => $id_retur,
-                'id_barang' => $id_barang,
-                'id_gudang' => $id_gudang,
-                'jumlah_retur' => $jumlah_retur,
-                'alasan_barang' => $alasan_barang
-            ];
-            
-            $this->Detail_retur_model->insert_detail($data);
+    public function update_status($id_retur, $status)
+    {
+        // Ambil data retur terlebih dahulu
+        $retur = $this->Retur_model->get_retur_by_id($id_retur);
+
+        if (!$retur) {
+            $this->session->set_flashdata('error', 'Data retur tidak ditemukan');
+            redirect('retur');
         }
-        
-        redirect('retur/detail/' . $id_retur);
-    }
 
-    public function delete_barang($id) {
-        $id_retur = $this->input->get('id_retur');
-        
-        $this->Detail_retur_model->delete_detail($id);
-        
-        redirect('retur/detail/' . $id_retur);
-    }
+        // Cek hak akses perusahaan
+        $user_role = $this->session->userdata('id_role');
+        $user_company = $this->session->userdata('id_perusahaan');
 
-    public function proses($id) {
-        // Cek apakah user punya akses ke retur ini
-        if ($this->session->userdata('id_role') != 5) {
-            $id_perusahaan_user = $this->session->userdata('id_perusahaan');
-            $retur = $this->Retur_model->get_retur_by_id($id);
-            
-            // Get user to check perusahaan
-            $this->load->model('auth/User_model');
-            $user = $this->User_model->get_user_by_id($retur->id_user);
-            
-            if ($user->id_perusahaan != $id_perusahaan_user) {
+        // Jika bukan Super Admin (5) atau Admin Pusat (1), cek akses perusahaan
+        if ($user_role != 5 && $user_role != 1) {
+            if ($retur->id_perusahaan != $user_company) {
                 $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke retur ini');
                 redirect('retur');
             }
         }
-        
-        $retur = $this->Retur_model->get_retur_by_id($id);
-        $detail = $this->Detail_retur_model->get_detail_by_retur($id);
-        
-        if (empty($detail)) {
-            $this->session->set_flashdata('error', 'Tidak ada barang yang diretur');
-            redirect('retur/detail/' . $id);
-        }
-        
-        // Update status retur
-        $this->Retur_model->update_retur($id, ['status' => 'selesai']);
-        
-        // Update stok gudang dan log stok
-        foreach ($detail as $d) {
-            $this->update_stok_gudang($d->id_barang, $d->id_gudang, $d->jumlah_retur, 'retur', $id);
-        }
-        
-        $this->session->set_flashdata('success', 'Retur penjualan berhasil diproses');
-        redirect('retur');
-    }
 
-    public function tolak($id) {
-        // Cek apakah user punya akses ke retur ini
-        if ($this->session->userdata('id_role') != 5) {
-            $id_perusahaan_user = $this->session->userdata('id_perusahaan');
-            $retur = $this->Retur_model->get_retur_by_id($id);
-            
-            // Get user to check perusahaan
-            $this->load->model('auth/User_model');
-            $user = $this->User_model->get_user_by_id($retur->id_user);
-            
-            if ($user->id_perusahaan != $id_perusahaan_user) {
-                $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke retur ini');
-                redirect('retur');
+        // Validasi status yang diizinkan berdasarkan role
+        $allowed = false;
+
+        // Super Admin (5) dan Admin Pusat (1) bisa mengubah ke status apa saja
+        if ($user_role == 5 || $user_role == 1) {
+            $allowed = true;
+        }
+        // Admin Gudang (4) bisa mengubah ke diterima, ditolak
+        else if ($user_role == 4 && in_array($status, ['diterima', 'ditolak'])) {
+            $allowed = true;
+        }
+        // Sales Online (2) hanya bisa mengubah ke batal
+        else if ($user_role == 2 && $status == 'batal') {
+            $allowed = true;
+        }
+
+        if (!$allowed) {
+            $this->session->set_flashdata('error', 'Anda tidak memiliki akses untuk mengubah status menjadi ' . $status);
+            redirect('retur');
+        }
+
+        // Cek apakah status transition valid
+        $current_status = $retur->status;
+        $valid_transitions = [
+            'diproses' => ['diterima', 'ditolak', 'batal'],
+            'diterima' => [],
+            'ditolak' => [],
+            'batal' => []
+        ];
+
+        if (!in_array($status, $valid_transitions[$current_status])) {
+            $this->session->set_flashdata('error', 'Tidak dapat mengubah status dari ' . $current_status . ' ke ' . $status);
+            redirect('retur');
+        }
+
+        // Update status
+        $this->Retur_model->update_retur($id_retur, ['status' => $status]);
+
+        // Jika status diterima, tambahkan stok kembali
+        if ($status == 'diterima') {
+            $detail_retur = $this->Detail_retur_model->get_detail_by_retur($id_retur);
+
+            foreach ($detail_retur as $detail) {
+                // Ambil data gudang dari detail penjualan asli
+                $detail_penjualan = $this->Detail_penjualan_model->get_detail_by_penjualan($retur->id_penjualan);
+                $id_gudang = null;
+
+                foreach ($detail_penjualan as $dp) {
+                    if ($dp->id_barang == $detail->id_barang) {
+                        $id_gudang = $dp->id_gudang;
+                        break;
+                    }
+                }
+
+                if ($id_gudang) {
+                    // Tambah stok kembali
+                    $add_result = $this->add_stock($detail->id_barang, $id_gudang, $detail->jumlah_retur, $id_retur);
+
+                    if (!$add_result['success']) {
+                        $this->session->set_flashdata('error', $add_result['message']);
+                        redirect('retur/view/' . $id_retur);
+                    }
+                }
             }
         }
-        
-        // Update status retur
-        $this->Retur_model->update_retur($id, ['status' => 'ditolak']);
-        
-        $this->session->set_flashdata('success', 'Retur penjualan berhasil ditolak');
-        redirect('retur');
+
+        $this->session->set_flashdata('success', 'Status retur berhasil diubah menjadi ' . $status);
+        redirect('retur/view/' . $id_retur);
     }
-    
-    // Helper function untuk update stok gudang
-    private function update_stok_gudang($id_barang, $id_gudang, $qty, $jenis, $id_referensi) {
-        $this->load->model('stok/Stok_gudang_model');
-        
-        // Get perusahaan from gudang
-        $this->load->model('perusahaan/Gudang_model');
-        $gudang = $this->Gudang_model->get_gudang_by_id($id_gudang);
-        $id_perusahaan = $gudang->id_perusahaan;
-        
-        // Update stok gudang
-        $stok_gudang = $this->Stok_gudang_model->get_stok_by_barang_gudang($id_barang, $id_gudang);
-        
-        if ($stok_gudang) {
-            $jumlah = $stok_gudang->jumlah + $qty;
-            $this->Stok_gudang_model->update_stok($stok_gudang->id_stok, ['jumlah' => $jumlah]);
+
+    private function generate_no_retur()
+    {
+        $prefix = 'RET-' . date('Ym');
+        $last_retur = $this->Retur_model->get_last_retur($prefix);
+
+        if ($last_retur) {
+            $last_number = intval(substr($last_retur, -4));
+            $new_number = str_pad($last_number + 1, 4, '0', STR_PAD_LEFT);
         } else {
-            // Insert stok gudang baru
-            $data_stok = [
-                'id_perusahaan' => $id_perusahaan,
-                'id_gudang' => $id_gudang,
-                'id_barang' => $id_barang,
-                'jumlah' => $qty
-            ];
-            
-            $this->Stok_gudang_model->insert_stok($data_stok);
+            $new_number = '0001';
         }
-        
-        // Insert log stok
-        $this->load->model('stok/Log_stok_model');
-        
-        $data_log = [
+
+        return $prefix . $new_number;
+    }
+
+    private function add_stock($id_barang, $id_gudang, $jumlah, $id_retur)
+    {
+        // Get current stock
+        $stock = $this->Stok_gudang_model->get_stok_by_barang_gudang($id_barang, $id_gudang);
+
+        if (!$stock) {
+            // Create new stock record if not exists
+            $insert_data = [
+                'id_perusahaan' => $this->session->userdata('id_perusahaan'),
+                'id_barang' => $id_barang,
+                'id_gudang' => $id_gudang,
+                'jumlah' => $jumlah,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+
+            $insert_result = $this->Stok_gudang_model->insert_stock($insert_data);
+
+            if (!$insert_result) {
+                return ['success' => false, 'message' => 'Gagal membuat record stok baru'];
+            }
+
+            $id_stok = $this->db->insert_id();
+        } else {
+            // Update existing stock
+            $update_data = [
+                'jumlah' => $stock->jumlah + $jumlah,
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+
+            $update_result = $this->Stok_gudang_model->update_stock($stock->id_stok, $update_data);
+
+            if (!$update_result) {
+                return ['success' => false, 'message' => 'Gagal mengupdate stok'];
+            }
+
+            $id_stok = $stock->id_stok;
+        }
+
+        // Get retur data for log
+        $retur = $this->Retur_model->get_retur_by_id($id_retur);
+        $no_retur = $retur ? $retur->no_retur : 'Unknown';
+
+        // Log stock movement
+        $log_data = [
             'id_barang' => $id_barang,
             'id_user' => $this->session->userdata('id_user'),
-            'id_perusahaan' => $id_perusahaan,
+            'id_perusahaan' => $stock ? $stock->id_perusahaan : $this->session->userdata('id_perusahaan'),
             'id_gudang' => $id_gudang,
-            'jenis' => 'retur',
-            'jumlah' => $qty,
-            'keterangan' => 'Retur Penjualan',
-            'id_referensi' => $id_referensi,
+            'jenis' => 'masuk',
+            'jumlah' => $jumlah,
+            'keterangan' => 'Retur Penjualan: ' . $no_retur,
+            'id_referensi' => $id_retur,
             'tipe_referensi' => 'retur'
         ];
-        
-        $this->Log_stok_model->insert_log($data_log);
-    }
-    
-    public function get_penjualan_by_perusahaan() {
-        $id_perusahaan = $this->input->post('id_perusahaan');
-        
-        $this->db->select('penjualan.*, pelanggan.nama_pelanggan');
-        $this->db->from('penjualan');
-        $this->db->join('pelanggan', 'pelanggan.id_pelanggan = penjualan.id_pelanggan');
-        $this->db->join('user', 'user.id_user = penjualan.id_user');
-        $this->db->join('user_perusahaan', 'user_perusahaan.id_user = user.id_user');
-        $this->db->where('user_perusahaan.id_perusahaan', $id_perusahaan);
-        $this->db->where('penjualan.status', 'selesai');
-        $this->db->order_by('penjualan.tanggal_penjualan', 'DESC');
-        $penjualan = $this->db->get()->result();
-        
-        echo '<option value="">-- Pilih Penjualan --</option>';
-        foreach ($penjualan as $row) {
-            echo '<option value="'.$row->id_penjualan.'">'.$row->no_invoice.' - '.$row->nama_pelanggan.' ('.date('d-m-Y', strtotime($row->tanggal_penjualan)).')</option>';
+
+        $log_result = $this->Log_stok_model->insert_log($log_data);
+
+        if (!$log_result) {
+            return ['success' => false, 'message' => 'Gagal mencatat log stok'];
         }
-    }
-    
-    public function get_barang_by_penjualan() {
-        $id_penjualan = $this->input->post('id_penjualan');
-        
-        $this->db->select('detail_penjualan.*, barang.nama_barang, barang.sku, gudang.nama_gudang, gudang.id_gudang');
-        $this->db->from('detail_penjualan');
-        $this->db->join('barang', 'barang.id_barang = detail_penjualan.id_barang');
-        $this->db->join('gudang', 'gudang.id_gudang = detail_penjualan.id_gudang');
-        $this->db->where('detail_penjualan.id_penjualan', $id_penjualan);
-        $barang = $this->db->get()->result();
-        
-        echo '<option value="">-- Pilih Barang --</option>';
-        foreach ($barang as $row) {
-            echo '<option value="'.$row->id_barang.'" data-gudang="'.$row->id_gudang.'" data-jumlah="'.$row->jumlah.'">'.$row->nama_barang.' - '.$row->sku.' (Jual: '.$row->jumlah.')</option>';
-        }
+
+        return ['success' => true];
     }
 }

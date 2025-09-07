@@ -1,15 +1,15 @@
 <div class="card">
     <div class="card-header">
         <h5 class="card-title">Detail Penjualan</h3>
-        <div class="card-tools">
-            <a href="<?php echo site_url('penjualan'); ?>" class="btn btn-secondary btn-sm">
-                <i class="fas fa-arrow-left"></i> Kembali
-            </a>
-            <a href="<?php echo site_url('penjualan/cetak/' . $penjualan->id_penjualan); ?>"
-                class="btn btn-primary btn-sm" target="_blank">
-                <i class="fas fa-print"></i> Cetak
-            </a>
-        </div>
+            <div class="card-tools">
+                <a href="<?php echo site_url('penjualan'); ?>" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
+                <a href="<?php echo site_url('penjualan/cetak/' . $penjualan->id_penjualan); ?>"
+                    class="btn btn-primary btn-sm" target="_blank">
+                    <i class="fas fa-print"></i> Cetak
+                </a>
+            </div>
     </div>
 
     <div class="card-body">
@@ -62,6 +62,78 @@
                         <td><?php echo $penjualan->keterangan ?: '-'; ?></td>
                     </tr>
                 </table>
+            </div>
+            <!-- Setelah detail penjualan -->
+            <div class="card mb-3">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Informasi Retur</h5>
+                </div>
+                <div class="card-body">
+                    <?php
+                    // Cek apakah penjualan ini memiliki retur
+                    $this->db->where('id_penjualan', $penjualan->id_penjualan);
+                    $this->db->where('status !=', 'batal');
+                    $retur_data = $this->db->get('retur_penjualan')->result();
+
+                    if (empty($retur_data)) {
+                        echo '<div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 
+                Belum ada retur untuk penjualan ini.
+            </div>';
+
+                        if ($penjualan->status == 'selesai') {
+                            echo '<a href="' . site_url('retur/add/' . $penjualan->id_penjualan) . '" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Buat Retur
+                </a>';
+                        }
+                    } else {
+                        echo '<div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No. Retur</th>
+                            <th>Tanggal</th>
+                            <th>Alasan Retur</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                        foreach ($retur_data as $r) {
+                            $status_class = '';
+                            switch ($r->status) {
+                                case 'diproses':
+                                    $status_class = 'warning';
+                                    break;
+                                case 'diterima':
+                                    $status_class = 'success';
+                                    break;
+                                case 'ditolak':
+                                    $status_class = 'danger';
+                                    break;
+                                case 'batal':
+                                    $status_class = 'secondary';
+                                    break;
+                            }
+
+                            echo '<tr>
+                    <td>' . $r->no_retur . '</td>
+                    <td>' . date('d-m-Y H:i', strtotime($r->tanggal_retur)) . '</td>
+                    <td>' . substr($r->alasan_retur, 0, 50) . '...</td>
+                    <td><span class="badge badge-' . $status_class . '">' . ucfirst($r->status) . '</span></td>
+                    <td>
+                        <a href="' . site_url('retur/view/' . $r->id_retur) . '" class="btn btn-info btn-sm">
+                            <i class="fas fa-eye"></i> Detail
+                        </a>
+                    </td>
+                </tr>';
+                        }
+
+                        echo '</tbody></table></div>';
+                    }
+                    ?>
+                </div>
             </div>
 
             <div class="col-md-6">

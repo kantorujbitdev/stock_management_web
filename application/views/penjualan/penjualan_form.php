@@ -99,11 +99,11 @@
                     <table class="table table-bordered table-striped" id="itemsTable">
                         <thead class="thead-dark">
                             <tr>
-                                <th width="40%">Barang</th>
-                                <th width="25%">Gudang</th>
-                                <th width="15%">Stok</th>
-                                <th width="15%">Jumlah</th>
-                                <th width="5%">Aksi</th>
+                                <th>Barang</th>
+                                <th>Gudang</th>
+                                <th>Stok</th>
+                                <th>Jumlah</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -158,9 +158,10 @@
         <?php echo form_close(); ?>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
+        console.log("jQuery siap digunakan");
+
         let itemCount = 0;
 
         // Tampilkan info pelanggan saat dipilih
@@ -168,7 +169,6 @@
             let selected = $(this).find('option:selected');
             let alamat = selected.data('alamat');
             let telepon = selected.data('telepon');
-
             if (alamat || telepon) {
                 $('#alamatPelanggan').text(alamat || '-');
                 $('#teleponPelanggan').text(telepon || '-');
@@ -181,7 +181,6 @@
         // Get barang by perusahaan
         function getBarangByPerusahaan(select) {
             let id_perusahaan;
-
             // Check if user is superadmin (role 5)
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 id_perusahaan = $('#id_perusahaan').val();
@@ -195,6 +194,9 @@
 
             console.log('Getting barang for company:', id_perusahaan);
 
+            // Tambahkan indikator loading
+            select.html('<option value="">-- Memuat data... --</option>');
+
             $.ajax({
                 url: "<?php echo site_url('penjualan/get_barang_by_perusahaan'); ?>",
                 method: "GET",
@@ -203,7 +205,6 @@
                 success: function (data) {
                     console.log('Barang data:', data);
                     let options = '<option value="">-- Pilih Barang --</option>';
-
                     if (data.length > 0) {
                         data.forEach(function (item) {
                             options += `<option value="${item.id_barang}">${item.nama_barang} - ${item.sku}</option>`;
@@ -211,11 +212,11 @@
                     } else {
                         options += '<option value="">-- Tidak ada barang dengan stok --</option>';
                     }
-
                     select.html(options);
                 },
                 error: function (xhr, status, error) {
                     console.error('Error getting barang:', error);
+                    console.error('Response:', xhr.responseText);
                     select.html('<option value="">-- Gagal memuat data --</option>');
                 }
             });
@@ -224,7 +225,6 @@
         // Get stock by barang
         function getStockByBarang(select, id_barang) {
             console.log('Getting stock for barang:', id_barang);
-
             $.ajax({
                 url: "<?php echo site_url('penjualan/get_stock_by_barang'); ?>",
                 method: "GET",
@@ -232,19 +232,15 @@
                 dataType: "json",
                 success: function (data) {
                     console.log('Stock data:', data);
-
                     // Jika ada stok, ambil gudang dengan stok terbanyak
                     if (data.length > 0) {
                         // Urutkan berdasarkan jumlah stok terbanyak
                         data.sort((a, b) => b.jumlah - a.jumlah);
-
                         // Ambil gudang dengan stok terbanyak
                         let gudangTerbanyak = data[0];
-
                         // Tampilkan nama gudang
                         select.closest('tr').find('.item-gudang').text(gudangTerbanyak.nama_gudang);
                         select.closest('tr').find('.item-gudang-id').val(gudangTerbanyak.id_gudang);
-
                         // Tampilkan stok
                         select.closest('tr').find('.item-stock').text(gudangTerbanyak.jumlah);
                     } else {
@@ -292,7 +288,6 @@
         `;
             $('#itemsTable tbody').append(newRow);
             console.log('New row added');
-
             // Populate the new dropdown with barang
             let newDropdown = $('#itemsTable tbody tr:last .item-barang');
             getBarangByPerusahaan(newDropdown);
@@ -308,12 +303,10 @@
             let row = $(this).closest('tr');
             let id_barang = $(this).val();
             console.log('Barang changed to:', id_barang);
-
             // Reset gudang dan stok
             row.find('.item-gudang').text('-');
             row.find('.item-gudang-id').val('');
             row.find('.item-stock').text('-');
-
             if (id_barang) {
                 // Get gudang dengan stok terbanyak
                 getStockByBarang($(this), id_barang);
@@ -326,7 +319,6 @@
             let jumlah = parseInt($(this).val()) || 0;
             let stockText = row.find('.item-stock').text();
             let stock = parseInt(stockText) || 0;
-
             if (jumlah > stock) {
                 $(this).addClass('is-invalid');
                 row.find('.stock-error').text('Stok hanya tersedia: ' + stock);
@@ -348,14 +340,12 @@
                 alert('Perbaiki dulu kesalahan pada jumlah barang!');
                 return false;
             }
-
             // Cek apakah ada item yang belum dipilih
             if ($('.item-barang').filter(function () { return !this.value; }).length > 0) {
                 e.preventDefault();
                 alert('Pilih barang untuk semua item!');
                 return false;
             }
-
             // Cek apakah ada item yang jumlahnya 0
             let hasZeroQuantity = false;
             $('.item-jumlah').each(function () {
@@ -363,13 +353,11 @@
                     hasZeroQuantity = true;
                 }
             });
-
             if (hasZeroQuantity) {
                 e.preventDefault();
                 alert('Jumlah barang tidak boleh 0!');
                 return false;
             }
-
             // Show loading
             $('#btnSubmit').html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...').prop('disabled', true);
         });
@@ -381,7 +369,6 @@
         <?php if ($this->session->userdata('id_role') == 5): ?>
             $('#id_perusahaan').change(function () {
                 console.log('Company changed to:', $(this).val());
-
                 // Update all barang dropdowns
                 $('.item-barang').each(function () {
                     getBarangByPerusahaan($(this));

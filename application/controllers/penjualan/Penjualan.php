@@ -335,6 +335,32 @@ class Penjualan extends CI_Controller
 
         return ['success' => true];
     }
+    // Di model Penjualan_model.php, tambahkan method:
+    public function get_penjualan_with_retur_info($id_penjualan)
+    {
+        $this->db->select('p.*, pl.nama_pelanggan, pl.alamat as alamat_pelanggan, 
+                      pl.telepon as telepon_pelanggan, u.nama as nama_user, per.nama_perusahaan');
+        $this->db->from('penjualan p');
+        $this->db->join('pelanggan pl', 'p.id_pelanggan = pl.id_pelanggan', 'left');
+        $this->db->join('user u', 'p.id_user = u.id_user', 'left');
+        $this->db->join('perusahaan per', 'pl.id_perusahaan = per.id_perusahaan', 'left');
+        $this->db->where('p.id_penjualan', $id_penjualan);
+
+        $query = $this->db->get();
+        $penjualan = $query->row();
+
+        if ($penjualan) {
+            // Cek apakah penjualan ini memiliki retur
+            $this->db->where('id_penjualan', $id_penjualan);
+            $this->db->where('status !=', 'batal');
+            $retur_count = $this->db->count_all_results('retur_penjualan');
+
+            $penjualan->has_retur = ($retur_count > 0);
+            $penjualan->retur_count = $retur_count;
+        }
+
+        return $penjualan;
+    }
     public function update_status($id_penjualan, $status)
     {
         // Ambil data penjualan terlebih dahulu
