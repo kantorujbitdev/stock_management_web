@@ -125,7 +125,8 @@
                         <img id="preview" src="<?php echo base_url('uploads/barang/' . $barang->gambar); ?>"
                             class="img-thumbnail shadow-sm" width="120" alt="Gambar Barang">
                     <?php else: ?>
-                        <img id="preview" src="<?php echo base_url('assets/img/no-image.png'); ?>"
+                        <img id="preview"
+                            src="<?php echo base_url('application/views/template/assets/img/no-image.png'); ?>"
                             class="img-thumbnail shadow-sm d-none" width="120" alt="Preview Gambar">
                     <?php endif; ?>
                 </div>
@@ -143,11 +144,6 @@
         <?php echo form_close(); ?>
     </div>
 </div>
-
-<!-- Load jQuery terlebih dahulu -->
-<script src="<?php echo base_url('assets/js/jquery.min.js'); ?>"></script>
-<!-- Load Bootstrap JS -->
-<script src="<?php echo base_url('assets/js/bootstrap.bundle.min.js'); ?>"></script>
 
 <script>
     $(function () {
