@@ -5,7 +5,10 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-warehouse"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Manajemen Stok</div>
+        <div class="sidebar-brand-text mx-3"><?= $this->session->userdata('nama_perusahaan'); ?>
+        </div>
+        <!-- <a href="<?= $link ?>"
+            class="text-white text-decoration-none fs-5"><?= $this->session->userdata('nama_perusahaan'); ?></a> -->
     </a>
     <!-- Divider -->
     <hr class="sidebar-divider my-0">

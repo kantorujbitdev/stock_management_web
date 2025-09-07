@@ -8,20 +8,46 @@
             <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                 <i class="fa fa-bars"></i>
             </button>
+
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
                 <!-- Nav Item - User Information -->
                 <li class="nav-item dropdown no-arrow">
+                    <?php
+                    $role_id = $this->session->userdata('id_role');
+                    $nama_role = $this->session->userdata('nama_role');
+                    $nama = $this->session->userdata('nama');
+
+                    // Tentukan icon berdasarkan role
+                    switch ($role_id) {
+                        case 2:
+                            $profile_img = 'undraw_profile_sales.svg';
+                            break;
+                        case 3:
+                            $profile_img = 'undraw_profile_packing.svg';
+                            break;
+                        case 4:
+                            $profile_img = 'undraw_profile_retur.svg';
+                            break;
+                        case 1:
+                        case 5:
+                        default:
+                            $profile_img = 'undraw_profile.svg';
+                            break;
+                    }
+                    ?>
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                        <span
-                            class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $this->session->userdata('id_role') ?>
-                            - </span>
-                        <span
-                            class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $this->session->userdata('nama') ?></span>
+                        <!-- <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                            <?php echo $role_id ?> -
+                        </span> -->
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                            Hai, <?php echo $nama ?> (<?php echo $nama_role ?>)
+                        </span>
                         <img class="img-profile rounded-circle"
-                            src="<?php echo base_url('assets/img/profile/undraw_profile.svg') ?>">
+                            src="<?php echo base_url('assets/img/profile/' . $profile_img) ?>">
                     </a>
+
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                         aria-labelledby="userDropdown">

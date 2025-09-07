@@ -39,6 +39,19 @@ class Auth extends CI_Controller
             $password = $this->input->post('password');
 
             $user = $this->User_model->get_user($username);
+            $role = $this->db->get_where('role_user', ['id_role' => $user->id_role])->row();
+
+            // Ambil nama perusahaan kalau ada (kecuali super user)
+            $nama_perusahaan = null;
+            if ($user->id_role != 5 && $user->id_perusahaan !== null) {
+                $perusahaan = $this->db->get_where('perusahaan', ['id_perusahaan' => $user->id_perusahaan])->row();
+                $nama_perusahaan = $perusahaan ? $perusahaan->nama_perusahaan : null;
+            }
+
+            // 👉 Kalau nama_perusahaan kosong atau NULL → isi "Super User"
+            if (empty($nama_perusahaan)) {
+                $nama_perusahaan = "Super Admin";
+            }
 
             if ($user && password_verify($password, $user->password_hash)) {
                 if ($user->aktif == 1) {
@@ -47,7 +60,9 @@ class Auth extends CI_Controller
                         'nama' => $user->nama,
                         'username' => $user->username,
                         'id_role' => $user->id_role,
+                        'nama_role' => $role ? $role->nama_role : null,
                         'id_perusahaan' => $user->id_perusahaan,
+                        'nama_perusahaan' => $nama_perusahaan,
                         'id_gudang' => $user->id_gudang,
                         'logged_in' => TRUE
                     ];
