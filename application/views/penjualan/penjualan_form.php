@@ -210,7 +210,7 @@
                             options += `<option value="${item.id_barang}">${item.nama_barang} - ${item.sku}</option>`;
                         });
                     } else {
-                        options += '<option value="">-- Tidak ada barang dengan stok --</option>';
+                        options += '<option value="">-- Barang tidak tersedia --</option>';
                     }
                     select.html(options);
                 },
