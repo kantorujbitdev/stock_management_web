@@ -5,9 +5,9 @@
     <a class="sidebar-brand d-flex align-items-center justify-content-center"
         href="<?php echo site_url('dashboard') ?>">
         <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-boxes"></i>
+            <i class="fas fa-warehouse"></i>
         </div>
-        <div class="sidebar-brand-text mx-3 text-truncate" style="max-width:140px;">
+        <div class="sidebar-brand-text mx-3" style="max-width:140px;">
             <?= $this->session->userdata('nama_perusahaan') ?: 'Stok App' ?>
         </div>
     </a>
