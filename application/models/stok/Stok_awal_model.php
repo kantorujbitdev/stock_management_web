@@ -69,20 +69,6 @@ class Stok_awal_model extends CI_Model
         $this->db->where('sa.id_stok_awal', $id);
         return $this->db->get()->row();
     }
-
-    // // Check if stok awal exists for barang and gudang
-    // public function check_stok_awal_exists($id_barang, $id_gudang, $id_stok_awal = null) {
-    //     $this->db->where('id_barang', $id_barang);
-    //     $this->db->where('id_gudang', $id_gudang);
-
-    //     if ($id_stok_awal) {
-    //         $this->db->where('id_stok_awal !=', $id_stok_awal);
-    //     }
-
-    //     $query = $this->db->get('stok_awal');
-    //     return $query->num_rows() > 0;
-    // }
-
     // Insert stok awal with transaction
     public function insert_stok_awal($data)
     {
@@ -179,8 +165,5 @@ class Stok_awal_model extends CI_Model
         return $query->num_rows() > 0;
     }
 
-    // // Insert stok awal
-    // public function insert_stok_awal($data) {
-    //     return $this->db->insert('stok_awal', $data);
-    // }
+
 }

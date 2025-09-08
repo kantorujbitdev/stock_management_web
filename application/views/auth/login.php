@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login - Sistem Manajemen Stok</title>
-    <link href="<?php echo base_url('assets/bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet">
+    <link href="<?php echo base_url('application/views/template/assets/css/bootstrap.min.css') ?>" rel="stylesheet">
     <style>
         body {
             background-color: #f8f9fa;
