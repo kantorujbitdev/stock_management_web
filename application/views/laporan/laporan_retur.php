@@ -1,16 +1,16 @@
 <div class="card">
     <div class="card-header">
-        <h5 class="card-title">Laporan Retur Penjualan</h3>
-            <div class="card-tools">
-                <a href="<?php echo site_url('laporan_retur/export_pdf?' . $_SERVER['QUERY_STRING']); ?>"
-                    class="btn btn-danger btn-sm">
-                    <i class="fas fa-file-pdf"></i> Export PDF
-                </a>
-                <a href="<?php echo site_url('laporan_retur/export_excel?' . $_SERVER['QUERY_STRING']); ?>"
-                    class="btn btn-success btn-sm">
-                    <i class="fas fa-file-excel"></i> Export Excel
-                </a>
-            </div>
+        <h5 class="card-title">Laporan Retur Penjualan</h5>
+        <div class="card-tools">
+            <a href="<?php echo site_url('laporan_retur/export_pdf?' . $_SERVER['QUERY_STRING']); ?>"
+                class="btn btn-danger btn-sm">
+                <i class="fas fa-file-pdf"></i> Export PDF
+            </a>
+            <a href="<?php echo site_url('laporan_retur/export_excel?' . $_SERVER['QUERY_STRING']); ?>"
+                class="btn btn-success btn-sm">
+                <i class="fas fa-file-excel"></i> Export Excel
+            </a>
+        </div>
     </div>
     <div class="card-body">
         <form method="get" action="<?php echo site_url('laporan_retur'); ?>">
@@ -71,47 +71,53 @@
 
 <div class="card">
     <div class="card-header">
-        <h5 class="card-title">Data Retur Penjualan</h3>
+        <h5 class="card-title">Data Retur Penjualan</h5>
     </div>
     <div class="card-body">
-        <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>No Retur</th>
-                    <th>Tanggal</th>
-                    <th>No Invoice</th>
-                    <th>Pelanggan</th>
-                    <th>Alasan Retur</th>
-                    <th>Status</th>
-                    <th>User</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $no = 1;
-                foreach ($retur as $r): ?>
+        <?php if (isset($retur) && count($retur) > 0): ?>
+            <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                <thead>
                     <tr>
-                        <td><?php echo $no++; ?></td>
-                        <td><?php echo $r->no_retur; ?></td>
-                        <td><?php echo date('d-m-Y', strtotime($r->tanggal_retur)); ?></td>
-                        <td><?php echo $r->no_invoice; ?></td>
-                        <td><?php echo $r->nama_pelanggan; ?></td>
-                        <td><?php echo $r->alasan_retur; ?></td>
-                        <td>
-                            <?php if ($r->status == 'diterima'): ?>
-                                <span class="badge badge-primary">Diterima</span>
-                            <?php elseif ($r->status == 'diproses'): ?>
-                                <span class="badge badge-warning">Diproses</span>
-                            <?php elseif ($r->status == 'selesai'): ?>
-                                <span class="badge badge-success">Selesai</span>
-                            <?php elseif ($r->status == 'ditolak'): ?>
-                                <span class="badge badge-danger">Ditolak</span>
-                            <?php endif; ?>
-                        </td>
-                        <td><?php echo $r->created_by; ?></td>
+                        <th>No</th>
+                        <th>No Retur</th>
+                        <th>Tanggal</th>
+                        <th>No Invoice</th>
+                        <th>Pelanggan</th>
+                        <th>Alasan Retur</th>
+                        <th>Status</th>
+                        <th>User</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php $no = 1;
+                    foreach ($retur as $r): ?>
+                        <tr>
+                            <td><?php echo $no++; ?></td>
+                            <td><?php echo $r->no_retur; ?></td>
+                            <td><?php echo date('d-m-Y', strtotime($r->tanggal_retur)); ?></td>
+                            <td><?php echo $r->no_invoice; ?></td>
+                            <td><?php echo $r->nama_pelanggan; ?></td>
+                            <td><?php echo $r->alasan_retur; ?></td>
+                            <td>
+                                <?php if ($r->status == 'diterima'): ?>
+                                    <span class="badge badge-primary">Diterima</span>
+                                <?php elseif ($r->status == 'diproses'): ?>
+                                    <span class="badge badge-warning">Diproses</span>
+                                <?php elseif ($r->status == 'selesai'): ?>
+                                    <span class="badge badge-success">Selesai</span>
+                                <?php elseif ($r->status == 'ditolak'): ?>
+                                    <span class="badge badge-danger">Ditolak</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo $r->created_by; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <div class="alert alert-info">
+                Tidak ada data retur penjualan dengan filter yang dipilih.
+            </div>
+        <?php endif; ?>
     </div>
 </div>

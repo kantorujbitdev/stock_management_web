@@ -1,9 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-
 class LaporanRetur extends CI_Controller
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -11,12 +9,10 @@ class LaporanRetur extends CI_Controller
         $this->load->helper('url');
         $this->load->library('hak_akses');
         $this->load->model('laporan/Laporan_retur_model');
-
         // Cek login
         if (!$this->session->userdata('logged_in')) {
             redirect('auth');
         }
-
         // Cek hak akses
         $this->hak_akses->cek_akses('laporan_retur');
     }
@@ -39,19 +35,34 @@ class LaporanRetur extends CI_Controller
             $tanggal_akhir = date('Y-m-t');
         }
 
-        // Get data berdasarkan role
-        if ($this->session->userdata('id_role') == 5) {
-            // Super Admin - lihat semua data
-            $data['perusahaan'] = $this->Laporan_retur_model->get_perusahaan_list();
-            $data['retur'] = $this->Laporan_retur_model->get_filtered_retur($id_perusahaan, $tanggal_awal, $tanggal_akhir, $status);
-        } else {
-            // User lain - lihat data perusahaannya saja
-            $id_perusahaan_user = $this->session->userdata('id_perusahaan');
-            $data['retur'] = $this->Laporan_retur_model->get_filtered_retur($id_perusahaan_user, $tanggal_awal, $tanggal_akhir, $status);
+        // Validasi tanggal
+        if (strtotime($tanggal_awal) > strtotime($tanggal_akhir)) {
+            $this->session->set_flashdata('error', 'Tanggal awal tidak boleh lebih besar dari tanggal akhir');
+            // Tukar tanggal
+            $temp = $tanggal_awal;
+            $tanggal_awal = $tanggal_akhir;
+            $tanggal_akhir = $temp;
+        }
 
-            // Get perusahaan data for filter
-            $this->load->model('perusahaan/Perusahaan_model');
-            $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan_user));
+        // Get data berdasarkan role
+        try {
+            if ($this->session->userdata('id_role') == 5) {
+                // Super Admin - lihat semua data
+                $data['perusahaan'] = $this->Laporan_retur_model->get_perusahaan_list();
+                $data['retur'] = $this->Laporan_retur_model->get_filtered_retur($id_perusahaan, $tanggal_awal, $tanggal_akhir, $status);
+            } else {
+                // User lain - lihat data perusahaannya saja
+                $id_perusahaan_user = $this->session->userdata('id_perusahaan');
+                $data['retur'] = $this->Laporan_retur_model->get_filtered_retur($id_perusahaan_user, $tanggal_awal, $tanggal_akhir, $status);
+                // Get perusahaan data for filter
+                $this->load->model('perusahaan/Perusahaan_model');
+                $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan_user));
+            }
+        } catch (Exception $e) {
+            // Tangkap exception dan log error
+            log_message('error', 'Error in LaporanRetur: ' . $e->getMessage());
+            $data['retur'] = array(); // Set retur sebagai array kosong
+            $this->session->set_flashdata('error', 'Terjadi kesalahan saat mengambil data retur');
         }
 
         // Set filter values for view
@@ -157,11 +168,10 @@ class LaporanRetur extends CI_Controller
         // Set active sheet index to the first sheet
         $objPHPExcel->setActiveSheetIndex(0);
 
-        // Redirect output to a client’s web browser (Excel5)
+        // Redirect output to a client's web browser (Excel5)
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="laporan_retur_' . date('YmdHis') . '.xls"');
         header('Cache-Control: max-age=0');
-
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
         exit;

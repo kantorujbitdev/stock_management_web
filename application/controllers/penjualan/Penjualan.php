@@ -83,23 +83,32 @@ class Penjualan extends CI_Controller
     public function add_process()
     {
         $this->form_validation->set_rules('id_pelanggan', 'Pelanggan', 'required');
-
         if ($this->form_validation->run() == FALSE) {
             $this->add();
         } else {
             // Generate invoice number
             $no_invoice = $this->generate_invoice();
-
             // Get items data directly from POST
             $items = $this->input->post('items');
-
             // Debug: Log items data
             log_message('debug', 'Items data: ' . print_r($items, true));
-
             // Validate items
             if (empty($items)) {
                 $this->session->set_flashdata('error', 'Item penjualan tidak boleh kosong');
                 redirect('penjualan/add');
+            }
+
+            // Tentukan id_perusahaan berdasarkan role
+            if ($this->session->userdata('id_role') == 5) {
+                // Super Admin: ambil dari form
+                $id_perusahaan = $this->input->post('id_perusahaan');
+                if (!$id_perusahaan) {
+                    $this->session->set_flashdata('error', 'Perusahaan harus dipilih');
+                    redirect('penjualan/add');
+                }
+            } else {
+                // User biasa: ambil dari session
+                $id_perusahaan = $this->session->userdata('id_perusahaan');
             }
 
             // Insert penjualan header
@@ -107,6 +116,7 @@ class Penjualan extends CI_Controller
                 'no_invoice' => $no_invoice,
                 'id_user' => $this->session->userdata('id_user'),
                 'id_pelanggan' => $this->input->post('id_pelanggan'),
+                'id_perusahaan' => $id_perusahaan, // Tambahkan ini
                 'tanggal_penjualan' => date('Y-m-d H:i:s'),
                 'keterangan' => $this->input->post('keterangan'),
                 'status' => 'proses'
@@ -116,7 +126,6 @@ class Penjualan extends CI_Controller
             log_message('debug', 'Penjualan data: ' . print_r($data_penjualan, true));
 
             $this->db->trans_start();
-
             try {
                 // Validate stock before processing
                 foreach ($items as $item) {
@@ -127,13 +136,11 @@ class Penjualan extends CI_Controller
                 }
 
                 $insert_penjualan = $this->Penjualan_model->insert_penjualan($data_penjualan);
-
                 // Debug: Log insert result
                 log_message('debug', 'Insert penjualan result: ' . ($insert_penjualan ? 'Success' : 'Failed'));
 
                 if ($insert_penjualan) {
                     $id_penjualan = $this->db->insert_id();
-
                     // Debug: Log inserted ID
                     log_message('debug', 'Inserted penjualan ID: ' . $id_penjualan);
 
@@ -154,9 +161,7 @@ class Penjualan extends CI_Controller
                             'id_gudang' => $item['id_gudang'],
                             'jumlah' => $item['jumlah'],
                         ];
-
                         $insert_detail = $this->Detail_penjualan_model->insert_detail_penjualan($detail_data);
-
                         // Debug: Log detail insert result
                         log_message('debug', 'Insert detail result: ' . ($insert_detail ? 'Success' : 'Failed'));
 
@@ -166,14 +171,12 @@ class Penjualan extends CI_Controller
 
                         // Reduce stock with better error handling
                         $reduce_result = $this->reduce_stock($item['id_barang'], $item['id_gudang'], $item['jumlah'], $id_penjualan);
-
                         if (!$reduce_result['success']) {
                             throw new Exception($reduce_result['message']);
                         }
                     }
 
                     $this->db->trans_complete();
-
                     // Debug: Log transaction status
                     log_message('debug', 'Transaction status: ' . ($this->db->trans_status() ? 'Success' : 'Failed'));
 
@@ -191,7 +194,6 @@ class Penjualan extends CI_Controller
                 log_message('error', 'Exception in add_process: ' . $e->getMessage());
                 $this->session->set_flashdata('error', $e->getMessage());
             }
-
             redirect('penjualan');
         }
     }
