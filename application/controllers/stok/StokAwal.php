@@ -34,7 +34,8 @@ class StokAwal extends CI_Controller
 
 
     // Helper function untuk update stok gudang
-    private function update_stok_gudang($id_barang, $id_gudang, $qty, $jenis, $qty_lama = 0)
+// Perbaikan fungsi update_stok_gudang
+    private function update_stok_gudang($id_barang, $id_gudang, $qty, $jenis, $qty_lama = 0, $id_perusahaan = null)
     {
         $this->load->model('stok/Stok_gudang_model');
         $this->load->model('stok/Log_stok_model');
@@ -42,8 +43,20 @@ class StokAwal extends CI_Controller
         // Gunakan transaksi untuk keamanan data
         $this->db->trans_start();
 
-        // Ambil data perusahaan
-        $id_perusahaan = $this->input->post('id_perusahaan') ?: $this->session->userdata('id_perusahaan');
+        // Ambil data perusahaan - perbaikan di sini
+        if ($id_perusahaan === null) {
+            $id_perusahaan = $this->input->post('id_perusahaan') ?: $this->session->userdata('id_perusahaan');
+        }
+
+        // Debug: Log parameter
+        log_message('debug', 'Update stok gudang params: ' . json_encode([
+            'id_barang' => $id_barang,
+            'id_gudang' => $id_gudang,
+            'qty' => $qty,
+            'jenis' => $jenis,
+            'qty_lama' => $qty_lama,
+            'id_perusahaan' => $id_perusahaan
+        ]));
 
         // Cek stok gudang
         $stok_gudang = $this->Stok_gudang_model->get_stok_by_barang_gudang($id_barang, $id_gudang);
@@ -56,9 +69,24 @@ class StokAwal extends CI_Controller
                 $jumlah = $stok_gudang->jumlah + $qty;
             }
 
+            // Debug: Log update
+            log_message('debug', 'Updating existing stock: ' . json_encode([
+                'old_stock' => $stok_gudang->jumlah,
+                'new_stock' => $jumlah
+            ]));
+
             // Update stok
-            $this->Stok_gudang_model->update_stok($stok_gudang->id_stok, ['jumlah' => $jumlah]);
+            $update_result = $this->Stok_gudang_model->update_stok($stok_gudang->id_stok, ['jumlah' => $jumlah]);
+
+            if (!$update_result) {
+                log_message('error', 'Failed to update stock_gudang record');
+                $this->db->trans_rollback();
+                return false;
+            }
         } else {
+            // Debug: Log insert
+            log_message('debug', 'Inserting new stock record');
+
             // Insert stok baru
             $data_stok = [
                 'id_perusahaan' => $id_perusahaan,
@@ -66,7 +94,14 @@ class StokAwal extends CI_Controller
                 'id_barang' => $id_barang,
                 'jumlah' => $qty
             ];
-            $this->Stok_gudang_model->insert_stok($data_stok);
+
+            $insert_result = $this->Stok_gudang_model->insert_stok($data_stok);
+
+            if (!$insert_result) {
+                log_message('error', 'Failed to insert stock_gudang record');
+                $this->db->trans_rollback();
+                return false;
+            }
         }
 
         // Insert log stok
@@ -81,18 +116,24 @@ class StokAwal extends CI_Controller
             'id_referensi' => isset($id) ? $id : null,
             'tipe_referensi' => 'stok_awal'
         ];
-        $this->Log_stok_model->insert_log($data_log);
+
+        $log_result = $this->Log_stok_model->insert_log($data_log);
+
+        if (!$log_result) {
+            log_message('error', 'Failed to insert stock log');
+            $this->db->trans_rollback();
+            return false;
+        }
 
         $this->db->trans_complete();
 
         if ($this->db->trans_status() === FALSE) {
-            log_message('error', 'Gagal update stok gudang untuk barang ID: ' . $id_barang);
+            log_message('error', 'Transaction failed in update_stok_gudang');
             return false;
         }
+
         return true;
     }
-
-
     public function get_gudang_by_perusahaan()
     {
         // Terima GET request (seperti di Barang controller)
@@ -302,10 +343,15 @@ class StokAwal extends CI_Controller
         $insert = $this->Stok_awal_model->insert_stok_awal($data_stok_awal);
 
         if ($insert) {
-            // Update stok gudang
-            $this->update_stok_gudang($id_barang, $id_gudang, $qty_awal, 'stok_awal');
+            // Perbaikan: Pass id_perusahaan explicitly dan cek hasilnya
+            $update_stok = $this->update_stok_gudang($id_barang, $id_gudang, $qty_awal, 'stok_awal', 0, $barang->id_perusahaan);
 
-            $this->session->set_flashdata('success', 'Stok awal berhasil ditambahkan');
+            if ($update_stok) {
+                $this->session->set_flashdata('success', 'Stok awal berhasil ditambahkan');
+            } else {
+                $this->session->set_flashdata('error', 'Stok awal berhasil ditambahkan, tetapi gagal memperbarui stok gudang');
+                log_message('error', 'Failed to update stok_gudang after inserting stok_awal');
+            }
         } else {
             $this->session->set_flashdata('error', 'Gagal menambahkan stok awal');
         }

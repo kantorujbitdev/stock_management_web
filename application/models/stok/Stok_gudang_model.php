@@ -70,16 +70,41 @@ class Stok_gudang_model extends CI_Model
     // Insert stok
     public function insert_stok($data)
     {
-        return $this->db->insert('stok_gudang', $data);
+        // Debug: Log data yang akan diinsert
+        log_message('debug', 'Inserting stock data: ' . json_encode($data));
+
+        $this->db->insert('stok_gudang', $data);
+
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        } else {
+            // Debug: Log error
+            $error = $this->db->error();
+            log_message('error', 'Insert stok_gudang failed: ' . $error['message']);
+            return false;
+        }
     }
 
-    // Update stok
     public function update_stok($id, $data)
     {
-        $this->db->where('id_stok', $id);
-        return $this->db->update('stok_gudang', $data);
-    }
+        // Debug: Log data yang akan diupdate
+        log_message('debug', 'Updating stock data: ' . json_encode([
+            'id' => $id,
+            'data' => $data
+        ]));
 
+        $this->db->where('id_stok', $id);
+        $this->db->update('stok_gudang', $data);
+
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        } else {
+            // Debug: Log error
+            $error = $this->db->error();
+            log_message('error', 'Update stok_gudang failed: ' . $error['message']);
+            return false;
+        }
+    }
     // Delete stok
     public function delete_stok($id)
     {
