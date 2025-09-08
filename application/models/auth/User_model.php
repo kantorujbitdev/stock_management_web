@@ -21,6 +21,7 @@ class User_model extends CI_Model
 
     public function get_all_users()
     {
+        $myUser = $this->session->userdata('username');
         $this->db->select('u.*, r.nama_role, p.nama_perusahaan, g.nama_gudang');
         $this->db->from('user u');
         $this->db->join('role_user r', 'u.id_role = r.id_role', 'left');
@@ -29,6 +30,7 @@ class User_model extends CI_Model
         if ($this->session->userdata('id_role') == 1) {
             $this->db->where('u.id_perusahaan', $this->session->userdata('id_perusahaan'));
         }
+        // $this->db->where('username !=', $myUser);
         $this->db->order_by('u.id_user', 'DESC');
         return $this->db->get()->result();
     }
