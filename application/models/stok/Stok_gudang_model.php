@@ -15,9 +15,6 @@ class Stok_gudang_model extends CI_Model
         $this->db->where('id_gudang', $id_gudang);
         $query = $this->db->get('stok_gudang');
 
-        // Debug: Log last query
-        log_message('debug', 'Stock query: ' . $this->db->last_query());
-
         if ($query->num_rows() > 0) {
             return $query->row();
         } else {

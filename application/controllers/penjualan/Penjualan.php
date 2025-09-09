@@ -367,7 +367,6 @@ class Penjualan extends CI_Controller
     {
         // Ambil data penjualan terlebih dahulu
         $penjualan = $this->Penjualan_model->get_penjualan_by_id($id_penjualan);
-
         if (!$penjualan) {
             $this->session->set_flashdata('error', 'Data penjualan tidak ditemukan');
             redirect('penjualan');
@@ -379,9 +378,7 @@ class Penjualan extends CI_Controller
 
         // Jika bukan Super Admin (5) atau Admin Pusat (1), cek akses perusahaan
         if ($user_role != 5 && $user_role != 1) {
-            // Ambil data penjualan dengan perusahaan
-            $penjualan_with_company = $this->Penjualan_model->get_penjualan_by_id($id_penjualan);
-            if ($penjualan_with_company && $penjualan_with_company->id_perusahaan != $user_company) {
+            if ($penjualan->id_perusahaan != $user_company) {
                 $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke penjualan ini');
                 redirect('penjualan');
             }
@@ -389,7 +386,6 @@ class Penjualan extends CI_Controller
 
         // Validasi status yang diizinkan berdasarkan role
         $allowed = false;
-
         // Super Admin (5) dan Admin Pusat (1) bisa mengubah ke status apa saja
         if ($user_role == 5 || $user_role == 1) {
             $allowed = true;
@@ -430,39 +426,137 @@ class Penjualan extends CI_Controller
             redirect('penjualan/view/' . $id_penjualan);
         }
 
-        // Update status
-        $this->Penjualan_model->update_penjualan($id_penjualan, ['status' => $status]);
+        $this->db->trans_start();
+        try {
+            // Update status
+            $this->Penjualan_model->update_penjualan($id_penjualan, ['status' => $status]);
 
-        // Catat log perubahan status
-        $keterangan = '';
-        switch ($status) {
-            case 'packing':
-                $keterangan = 'Penjualan sedang dipacking';
-                break;
-            case 'dikirim':
-                $keterangan = 'Penjualan telah dikirim';
-                break;
-            case 'selesai':
-                $keterangan = 'Penjualan telah selesai';
-                break;
-            case 'batal':
-                $keterangan = 'Penjualan dibatalkan';
-                break;
-            default:
-                $keterangan = 'Status diubah menjadi ' . $status;
+            // Catat log perubahan status
+            $keterangan = '';
+            switch ($status) {
+                case 'packing':
+                    $keterangan = 'Penjualan sedang dipacking';
+                    break;
+                case 'dikirim':
+                    $keterangan = 'Penjualan telah dikirim';
+                    break;
+                case 'selesai':
+                    $keterangan = 'Penjualan telah selesai';
+                    break;
+                case 'batal':
+                    $keterangan = 'Penjualan dibatalkan';
+                    // Kembalikan stok saat status dibatalkan
+                    $this->return_stock_for_penjualan($id_penjualan);
+                    break;
+                default:
+                    $keterangan = 'Status diubah menjadi ' . $status;
+            }
+
+            $log_data = [
+                'id_penjualan' => $id_penjualan,
+                'id_user' => $this->session->userdata('id_user'),
+                'status' => $status,
+                'keterangan' => $keterangan
+            ];
+
+            $this->Log_status_penjualan_model->insert_log($log_data);
+
+            $this->db->trans_complete();
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->session->set_flashdata('error', 'Gagal mengubah status penjualan');
+            } else {
+                $this->session->set_flashdata('success', 'Status penjualan berhasil diubah menjadi ' . $status);
+            }
+        } catch (Exception $e) {
+            $this->db->trans_rollback();
+            $this->session->set_flashdata('error', $e->getMessage());
         }
 
-        $log_data = [
-            'id_penjualan' => $id_penjualan,
-            'id_user' => $this->session->userdata('id_user'),
-            'status' => $status,
-            'keterangan' => $keterangan
-        ];
-
-        $this->Log_status_penjualan_model->insert_log($log_data);
-
-        $this->session->set_flashdata('success', 'Status penjualan berhasil diubah menjadi ' . $status);
         redirect('penjualan/view/' . $id_penjualan);
+    }
+
+    private function return_stock_for_penjualan($id_penjualan)
+    {
+        // Cek apakah stok sudah pernah dikembalikan untuk pembatalan ini
+        $this->db->where('id_referensi', $id_penjualan);
+        $this->db->where('tipe_referensi', 'penjualan');
+        $this->db->where('keterangan LIKE', '%Pembatalan Penjualan%');
+        $existing_log = $this->db->get('log_stok')->row();
+
+        if ($existing_log) {
+            // Stok sudah pernah dikembalikan, lewati
+            return true;
+        }
+
+        // Ambil detail penjualan
+        $detail_penjualan = $this->Detail_penjualan_model->get_detail_by_penjualan($id_penjualan);
+
+        if (empty($detail_penjualan)) {
+            throw new Exception('Detail penjualan tidak ditemukan');
+        }
+
+        // Ambil data penjualan untuk log
+        $penjualan = $this->Penjualan_model->get_penjualan_by_id($id_penjualan);
+        $no_invoice = $penjualan ? $penjualan->no_invoice : 'Unknown';
+
+        foreach ($detail_penjualan as $detail) {
+            // Ambil data stok saat ini
+            $stock = $this->Stok_gudang_model->get_stok_by_barang_gudang($detail->id_barang, $detail->id_gudang);
+
+            if (!$stock) {
+                // Jika tidak ada record stok, buat baru
+                $insert_data = [
+                    'id_perusahaan' => $penjualan->id_perusahaan,
+                    'id_barang' => $detail->id_barang,
+                    'id_gudang' => $detail->id_gudang,
+                    'jumlah' => $detail->jumlah,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+
+                $insert_result = $this->Stok_gudang_model->insert_stok($insert_data);
+
+                if (!$insert_result) {
+                    throw new Exception('Gagal membuat record stok baru untuk barang ID: ' . $detail->id_barang);
+                }
+
+                $id_stok = $this->db->insert_id();
+            } else {
+                // Update stok yang ada
+                $update_data = [
+                    'jumlah' => $stock->jumlah + $detail->jumlah,
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+
+                $update_result = $this->Stok_gudang_model->update_stock($stock->id_stok, $update_data);
+
+                if (!$update_result) {
+                    throw new Exception('Gagal mengupdate stok untuk barang ID: ' . $detail->id_barang);
+                }
+
+                $id_stok = $stock->id_stok;
+            }
+
+            // Log stock movement
+            $log_data = [
+                'id_barang' => $detail->id_barang,
+                'id_user' => $this->session->userdata('id_user'),
+                'id_perusahaan' => $penjualan->id_perusahaan,
+                'id_gudang' => $detail->id_gudang,
+                'jenis' => 'masuk',
+                'jumlah' => $detail->jumlah,
+                'keterangan' => 'Pembatalan Penjualan: ' . $no_invoice,
+                'id_referensi' => $id_penjualan,
+                'tipe_referensi' => 'penjualan'
+            ];
+
+            $log_result = $this->Log_stok_model->insert_log($log_data);
+
+            if (!$log_result) {
+                throw new Exception('Gagal mencatat log stok untuk barang ID: ' . $detail->id_barang);
+            }
+        }
     }
 
 }
