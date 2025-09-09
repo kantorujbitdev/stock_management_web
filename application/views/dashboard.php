@@ -1,6 +1,17 @@
 <div class="container-fluid">
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">Dashboard</h1>
+    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
+        <h5 class="m-0 font-weight-bold text-primary">Dashboard</h5>
+        <div class="mt-3 mt-md-0">
+            <a href="<?php echo site_url('penjualan/add') ?>" class="btn btn-success btn-sm mr-2 mb-2 mb-md-0">
+                <i class="fas fa-plus"></i> Tambah Penjualan
+            </a>
+            <a href="<?php echo site_url('retur/add'); ?>" class="btn btn-warning btn-sm">
+                <i class="fas fa-plus"></i> Tambah Retur
+            </a>
+        </div>
+    </div>
+
     <!-- Content Row -->
     <div class="row">
         <!-- Total Barang Card -->
@@ -9,7 +20,8 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Barang</div>
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Barang
+                            </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $total_barang; ?></div>
                         </div>
                         <div class="col-auto">
@@ -45,7 +57,8 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Penjualan Hari Ini</div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Penjualan Hari Ini
+                            </div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
                                     <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
@@ -68,7 +81,8 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Stok Menipis</div>
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Stok Menipis
+                            </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $stok_menipis; ?></div>
                         </div>
                         <div class="col-auto">
@@ -132,7 +146,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <h5>Informasi Perusahaan</h5>
+                    <h5 class="m-0 font-weight-bold text-primary mb-4">Informasi Perusahaan</h5>
                     <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                         <tr>
                             <th>Nama Perusahaan</th>
@@ -149,41 +163,41 @@
                     </table>
                 </div>
                 <div class="col-md-6">
-                    <h5>Daftar Gudang</h5>
-                    <?php if ($gudang): ?>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>Nama Gudang</th>
-                                        <th>Alamat</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($gudang as $g): ?>
+                    <h5 class="m-0 font-weight-bold text-primary mb-4">Daftar Gudang</h6>
+                        <?php if ($gudang): ?>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
                                         <tr>
-                                            <td><?php echo $g->nama_gudang ?></td>
-                                            <td><?php echo $g->alamat ?></td>
-                                            <td>
-                                                <?php if ($g->status_aktif == 1): ?>
-                                                    <span class="badge badge-success">Aktif</span>
-                                                <?php else: ?>
-                                                    <span class="badge badge-danger">Tidak Aktif</span>
-                                                <?php endif; ?>
-                                            </td>
+                                            <th>Nama Gudang</th>
+                                            <th>Alamat</th>
+                                            <th>Status</th>
                                         </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($gudang as $g): ?>
+                                            <tr>
+                                                <td><?php echo $g->nama_gudang ?></td>
+                                                <td><?php echo $g->alamat ?></td>
+                                                <td>
+                                                    <?php if ($g->status_aktif == 1): ?>
+                                                        <span class="badge badge-success">Aktif</span>
+                                                    <?php else: ?>
+                                                        <span class="badge badge-danger">Tidak Aktif</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else: ?>
+                            <p>Belum ada gudang</p>
+                        <?php endif; ?>
+                        <div class="col text-right">
+                            <a href="<?php echo site_url('gudang/add') ?>" class="btn btn-success btn-sm"><i
+                                    class="fas fa-plus"></i> Tambah Gudang</a>
                         </div>
-                    <?php else: ?>
-                        <p>Belum ada gudang</p>
-                    <?php endif; ?>
-                    <div class="col text-right">
-                        <a href="<?php echo site_url('gudang/add') ?>" class="btn btn-success btn-sm"><i
-                                class="fas fa-plus"></i> Tambah Gudang</a>
-                    </div>
                 </div>
             </div>
         </div>
