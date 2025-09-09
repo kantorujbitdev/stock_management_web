@@ -65,7 +65,11 @@
 
     <!-- MASTER DATA -->
     <?php
-    $master_children = ['kategori', 'barang', 'supplier', 'pelanggan', 'perusahaan', 'gudang'];
+    if ($role != 5) {
+        $master_children = ['kategori', 'barang', 'supplier', 'pelanggan', 'gudang'];
+    } else {
+        $master_children = ['kategori', 'barang', 'supplier', 'pelanggan', 'perusahaan', 'gudang'];
+    }
     $master_active = $hasSeg($master_children);
     $show_master = false;
     foreach ($master_children as $m) {

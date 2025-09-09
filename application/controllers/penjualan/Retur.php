@@ -19,8 +19,7 @@ class Retur extends CI_Controller
         $this->load->model('stok/Stok_gudang_model');
         $this->load->model('stok/Log_stok_model');
         $this->load->model('perusahaan/Perusahaan_model');
-        // Tambahkan model log status retur
-        $this->load->model('laporan/Log_status_retur_model');
+        $this->load->model('penjualan/Log_status_retur_model');
 
         // Cek login
         if (!$this->session->userdata('logged_in')) {
