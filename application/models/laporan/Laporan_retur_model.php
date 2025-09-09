@@ -7,23 +7,41 @@ class Laporan_retur_model extends CI_Model
         parent::__construct();
         $this->load->database();
     }
-
-    // Get filtered retur
     public function get_filtered_retur($id_perusahaan = null, $tanggal_awal = null, $tanggal_akhir = null, $status = null)
     {
-        // Debug: Log parameter
-        log_message('debug', 'get_filtered_retur called with: ' . json_encode(func_get_args()));
-
-        $this->db->select('retur_penjualan.*, penjualan.no_invoice, pelanggan.nama_pelanggan, user.nama as created_by');
+        $this->db->select('retur_penjualan.*, 
+                       penjualan.no_invoice, 
+                       penjualan.id_perusahaan, 
+                       pelanggan.nama_pelanggan, 
+                       user_created.nama as created_by,
+                       approval_log.id_user as approval_user_id,
+                       user_approval.nama as approval_by,
+                       approval_log.tanggal as approval_date,
+                       approval_log.status as approval_status');
         $this->db->from('retur_penjualan');
         $this->db->join('penjualan', 'penjualan.id_penjualan = retur_penjualan.id_penjualan', 'left');
         $this->db->join('pelanggan', 'pelanggan.id_pelanggan = penjualan.id_pelanggan', 'left');
-        $this->db->join('user', 'user.id_user = retur_penjualan.id_user', 'left');
+        $this->db->join('user user_created', 'user_created.id_user = retur_penjualan.id_user', 'left');
 
-        // Filter berdasarkan id_perusahaan di tabel penjualan
+        // Subquery untuk mendapatkan log approval terakhir
+        $this->db->join('(SELECT 
+                        lr1.id_retur, 
+                        lr1.id_user, 
+                        lr1.tanggal, 
+                        lr1.status
+                      FROM log_status_retur lr1
+                      INNER JOIN (
+                        SELECT id_retur, MAX(tanggal) as max_tanggal
+                        FROM log_status_retur
+                        WHERE status IN ("diterima", "ditolak")
+                        GROUP BY id_retur
+                      ) lr2 ON lr1.id_retur = lr2.id_retur AND lr1.tanggal = lr2.max_tanggal
+                     ) approval_log', 'approval_log.id_retur = retur_penjualan.id_retur', 'left');
+
+        $this->db->join('user user_approval', 'user_approval.id_user = approval_log.id_user', 'left');
+
         if ($id_perusahaan) {
             $this->db->where('penjualan.id_perusahaan', $id_perusahaan);
-            log_message('debug', 'Filtering by company: ' . $id_perusahaan);
         }
 
         if ($tanggal_awal) {
@@ -40,22 +58,16 @@ class Laporan_retur_model extends CI_Model
 
         $this->db->order_by('retur_penjualan.tanggal_retur', 'DESC');
 
-        // Debug: Tampilkan query
-        $sql = $this->db->get_compiled_select();
-        log_message('debug', 'Retur SQL: ' . $sql);
+        $result = $this->db->get();
 
-        $query = $this->db->get();
-
-        if ($query === FALSE) {
+        if ($result === FALSE) {
             $error = $this->db->error();
-            log_message('error', 'Database error: ' . json_encode($error));
+            log_message('error', 'Database Error: ' . $error['message']);
+            log_message('error', 'Query: ' . $this->db->last_query());
             return array();
         }
 
-        $result = $query->result();
-        log_message('debug', 'Retur result count: ' . count($result));
-
-        return $result;
+        return $result->result();
     }
 
     // Get perusahaan list

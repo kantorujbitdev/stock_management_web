@@ -39,6 +39,7 @@
             </a>
         </li>
     <?php endif; ?>
+    <hr class="sidebar-divider">
 
     <!-- Penjualan -->
     <?php if ($this->hak_akses->cek_akses('penjualan')): ?>

@@ -16,7 +16,6 @@ class LaporanRetur extends CI_Controller
         // Cek hak akses
         $this->hak_akses->cek_akses('laporan_retur');
     }
-
     public function index()
     {
         $data['title'] = 'Laporan Retur Penjualan';
@@ -35,34 +34,32 @@ class LaporanRetur extends CI_Controller
             $tanggal_akhir = date('Y-m-t');
         }
 
-        // Validasi tanggal
-        if (strtotime($tanggal_awal) > strtotime($tanggal_akhir)) {
-            $this->session->set_flashdata('error', 'Tanggal awal tidak boleh lebih besar dari tanggal akhir');
-            // Tukar tanggal
-            $temp = $tanggal_awal;
-            $tanggal_awal = $tanggal_akhir;
-            $tanggal_akhir = $temp;
-        }
+        // Debug: Log parameter
+        log_message('debug', 'Laporan Retur - Filter: ' . json_encode([
+            'id_perusahaan' => $id_perusahaan,
+            'tanggal_awal' => $tanggal_awal,
+            'tanggal_akhir' => $tanggal_akhir,
+            'status' => $status
+        ]));
 
         // Get data berdasarkan role
-        try {
-            if ($this->session->userdata('id_role') == 5) {
-                // Super Admin - lihat semua data
-                $data['perusahaan'] = $this->Laporan_retur_model->get_perusahaan_list();
-                $data['retur'] = $this->Laporan_retur_model->get_filtered_retur($id_perusahaan, $tanggal_awal, $tanggal_akhir, $status);
-            } else {
-                // User lain - lihat data perusahaannya saja
-                $id_perusahaan_user = $this->session->userdata('id_perusahaan');
-                $data['retur'] = $this->Laporan_retur_model->get_filtered_retur($id_perusahaan_user, $tanggal_awal, $tanggal_akhir, $status);
-                // Get perusahaan data for filter
-                $this->load->model('perusahaan/Perusahaan_model');
-                $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan_user));
-            }
-        } catch (Exception $e) {
-            // Tangkap exception dan log error
-            log_message('error', 'Error in LaporanRetur: ' . $e->getMessage());
-            $data['retur'] = array(); // Set retur sebagai array kosong
-            $this->session->set_flashdata('error', 'Terjadi kesalahan saat mengambil data retur');
+        if ($this->session->userdata('id_role') == 5) {
+            // Super Admin - lihat semua data
+            $data['perusahaan'] = $this->Laporan_retur_model->get_perusahaan_list();
+            $data['retur'] = $this->Laporan_retur_model->get_filtered_retur($id_perusahaan, $tanggal_awal, $tanggal_akhir, $status);
+        } else {
+            // User lain - lihat data perusahaannya saja
+            $id_perusahaan_user = $this->session->userdata('id_perusahaan');
+            $data['retur'] = $this->Laporan_retur_model->get_filtered_retur($id_perusahaan_user, $tanggal_awal, $tanggal_akhir, $status);
+            // Get perusahaan data for filter
+            $this->load->model('perusahaan/Perusahaan_model');
+            $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan_user));
+        }
+
+        // Debug: Log hasil query
+        log_message('debug', 'Laporan Retur - Jumlah data: ' . count($data['retur']));
+        if (count($data['retur']) > 0) {
+            log_message('debug', 'Laporan Retur - Sample data: ' . json_encode($data['retur'][0]));
         }
 
         // Set filter values for view

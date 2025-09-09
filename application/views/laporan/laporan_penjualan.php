@@ -102,14 +102,10 @@
                         <td><?php echo $p->no_invoice; ?></td>
                         <td><?php echo $p->nama_pelanggan; ?></td>
                         <?php if ($this->session->userdata('id_role') == 5): // Super Admin ?>
-                        <td><?php echo $p->nama_perusahaan; ?></td>
+                        <td><?php echo isset($p->nama_perusahaan) ? $p->nama_perusahaan : '-'; ?></td>
                         <?php endif; ?>
-                        <td>
-                            <div style="max-width: 300px; overflow: auto;">
-                                <?php echo $p->daftar_barang; ?>
-                            </div>
-                        </td>
-                        <td><?php echo $p->jumlah_item; ?></td>
+                        <td><?php echo isset($p->daftar_barang) ? $p->daftar_barang : '-'; ?></td>                            
+                        <td> <?php echo isset($p->jumlah_item) ? $p->jumlah_item : '0'; ?></td>
                         <td>
                             <?php if ($p->status == 'proses'): ?>
                                 <span class="badge badge-secondary">Proses</span>

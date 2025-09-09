@@ -1,16 +1,16 @@
-<div class="card">
-    <div class="card-header">
-        <h5 class="card-title">Laporan Retur Penjualan</h5>
-        <div class="card-tools">
-            <a href="<?php echo site_url('laporan_retur/export_pdf?' . $_SERVER['QUERY_STRING']); ?>"
-                class="btn btn-danger btn-sm">
-                <i class="fas fa-file-pdf"></i> Export PDF
-            </a>
-            <a href="<?php echo site_url('laporan_retur/export_excel?' . $_SERVER['QUERY_STRING']); ?>"
-                class="btn btn-success btn-sm">
-                <i class="fas fa-file-excel"></i> Export Excel
-            </a>
-        </div>
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+        <h5 class="card-title">Laporan Retur Penjualan</h3>
+            <div class="col text-right">
+                <a href="<?php echo site_url('laporan_retur/export_pdf?' . $_SERVER['QUERY_STRING']); ?>"
+                    class="btn btn-danger btn-sm">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </a>
+                <a href="<?php echo site_url('laporan_retur/export_excel?' . $_SERVER['QUERY_STRING']); ?>"
+                    class="btn btn-success btn-sm">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </a>
+            </div>
     </div>
     <div class="card-body">
         <form method="get" action="<?php echo site_url('laporan_retur'); ?>">

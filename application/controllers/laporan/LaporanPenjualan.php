@@ -21,51 +21,60 @@ class LaporanPenjualan extends CI_Controller
         // Cek hak akses
         $this->hak_akses->cek_akses('laporan_penjualan');
     }
-
     public function index()
     {
-        // Ambil parameter filter
-        $filter = [
-            'id_perusahaan' => $this->input->get('id_perusahaan'),
-            'tanggal_awal' => $this->input->get('tanggal_awal'),
-            'tanggal_akhir' => $this->input->get('tanggal_akhir'),
-            'status' => $this->input->get('status')
+        $data['title'] = 'Laporan Penjualan';
+
+        // Get filter values
+        $id_perusahaan = $this->input->get('id_perusahaan');
+        $tanggal_awal = $this->input->get('tanggal_awal');
+        $tanggal_akhir = $this->input->get('tanggal_akhir');
+        $status = $this->input->get('status');
+
+        // Set default tanggal
+        if (!$tanggal_awal) {
+            $tanggal_awal = date('Y-m-01');
+        }
+        if (!$tanggal_akhir) {
+            $tanggal_akhir = date('Y-m-t');
+        }
+
+        // Debug: Log parameter
+        log_message('debug', 'Laporan Penjualan - Filter: ' . json_encode([
+            'id_perusahaan' => $id_perusahaan,
+            'tanggal_awal' => $tanggal_awal,
+            'tanggal_akhir' => $tanggal_akhir,
+            'status' => $status
+        ]));
+
+        // Get data berdasarkan role
+        if ($this->session->userdata('id_role') == 5) {
+            // Super Admin - lihat semua data
+            $data['perusahaan'] = $this->Laporan_penjualan_model->get_perusahaan_list();
+            $data['penjualan'] = $this->Laporan_penjualan_model->get_filtered_penjualan($id_perusahaan, $tanggal_awal, $tanggal_akhir, $status);
+        } else {
+            // User lain - lihat data perusahaannya saja
+            $id_perusahaan_user = $this->session->userdata('id_perusahaan');
+            $data['penjualan'] = $this->Laporan_penjualan_model->get_filtered_penjualan($id_perusahaan_user, $tanggal_awal, $tanggal_akhir, $status);
+            // Get perusahaan data for filter
+            $this->load->model('perusahaan/Perusahaan_model');
+            $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan_user));
+        }
+
+        // Debug: Log hasil query
+        log_message('debug', 'Laporan Penjualan - Jumlah data: ' . count($data['penjualan']));
+        if (count($data['penjualan']) > 0) {
+            log_message('debug', 'Laporan Penjualan - Sample data: ' . json_encode($data['penjualan'][0]));
+        }
+
+        // Set filter values for view
+        $data['filter'] = [
+            'id_perusahaan' => $id_perusahaan,
+            'tanggal_awal' => $tanggal_awal,
+            'tanggal_akhir' => $tanggal_akhir,
+            'status' => $status
         ];
 
-        // Set default tanggal jika tidak ada
-        if (empty($filter['tanggal_awal'])) {
-            $filter['tanggal_awal'] = date('Y-m-01'); // Awal bulan
-        }
-        if (empty($filter['tanggal_akhir'])) {
-            $filter['tanggal_akhir'] = date('Y-m-d'); // Hari ini
-        }
-
-        // Validasi perusahaan untuk user bukan super admin
-        if ($this->session->userdata('id_role') != 5) { // Bukan super admin
-            $filter['id_perusahaan'] = $this->session->userdata('id_perusahaan');
-        }
-
-        // Ambil data
-        $data['penjualan'] = $this->Laporan_penjualan_model->get_filtered_penjualan(
-            $filter['id_perusahaan'],
-            $filter['tanggal_awal'],
-            $filter['tanggal_akhir'],
-            $filter['status']
-        );
-
-        // Ambil data perusahaan berdasarkan role user
-        $id_role = $this->session->userdata('id_role');
-        if ($id_role == 5) { // Super Admin
-            $data['perusahaan'] = $this->Laporan_penjualan_model->get_perusahaan_list();
-        } else {
-            // Hanya tampilkan perusahaan user tersebut
-            $id_perusahaan = $this->session->userdata('id_perusahaan');
-            $data['perusahaan'] = $this->db->get_where('perusahaan', ['id_perusahaan' => $id_perusahaan])->result();
-        }
-
-        $data['filter'] = $filter;
-
-        // Load view
         $data['content'] = 'laporan/laporan_penjualan';
         $this->load->view('template/template', $data);
     }

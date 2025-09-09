@@ -7,52 +7,59 @@ class Laporan_penjualan_model extends CI_Model
         parent::__construct();
         $this->load->database();
     }
-
-    // Get filtered penjualan dengan data lengkap
     public function get_filtered_penjualan($id_perusahaan = null, $tanggal_awal = null, $tanggal_akhir = null, $status = null)
     {
-        $this->db->select('penjualan.*, pelanggan.nama_pelanggan, user.nama as created_by, user.id_perusahaan, perusahaan.nama_perusahaan as nama_perusahaan');
+        $this->db->select('penjualan.*, pelanggan.nama_pelanggan, user.nama as created_by, perusahaan.nama_perusahaan,
+                       COUNT(detail_penjualan.id_detail) as jumlah_item,
+                       GROUP_CONCAT(CONCAT(barang.nama_barang, " (", detail_penjualan.jumlah, ") ") SEPARATOR "<br>") as daftar_barang');
         $this->db->from('penjualan');
         $this->db->join('pelanggan', 'pelanggan.id_pelanggan = penjualan.id_pelanggan', 'left');
-        $this->db->join('user', 'user.id_user = penjualan.id_user');
-        $this->db->join('perusahaan', 'perusahaan.id_perusahaan = user.id_perusahaan');
+        $this->db->join('user', 'user.id_user = penjualan.id_user', 'left');
+        $this->db->join('detail_penjualan', 'detail_penjualan.id_penjualan = penjualan.id_penjualan', 'left');
+        $this->db->join('perusahaan', 'perusahaan.id_perusahaan = penjualan.id_perusahaan', 'left'); // Tambahkan ini
+        $this->db->join('barang', 'barang.id_barang = detail_penjualan.id_barang', 'left');
 
-        // Filter berdasarkan perusahaan
+        // Perbaikan: Filter berdasarkan id_perusahaan di tabel penjualan
         if ($id_perusahaan) {
-            $this->db->where('user.id_perusahaan', $id_perusahaan);
+            $this->db->where('penjualan.id_perusahaan', $id_perusahaan);
         }
 
-        // Filter berdasarkan tanggal
         if ($tanggal_awal) {
             $this->db->where('DATE(penjualan.tanggal_penjualan) >=', $tanggal_awal);
         }
+
         if ($tanggal_akhir) {
             $this->db->where('DATE(penjualan.tanggal_penjualan) <=', $tanggal_akhir);
         }
 
-        // Filter berdasarkan status
         if ($status) {
             $this->db->where('penjualan.status', $status);
         }
 
+        $this->db->group_by('penjualan.id_penjualan');
         $this->db->order_by('penjualan.tanggal_penjualan', 'DESC');
 
-        $result = $this->db->get()->result();
+        // Eksekusi query
+        $result = $this->db->get();
 
-        // Tambahkan data tambahan untuk setiap penjualan
-        foreach ($result as $row) {
-            // Get tanggal status terakhir
-            $last_status = $this->get_last_status_date($row->id_penjualan);
-            $row->tanggal_status_terakhir = $last_status ? $last_status->tanggal : null;
+        // Debug: Tampilkan query yang dihasilkan
+        log_message('debug', 'Penjualan query: ' . $this->db->last_query());
 
-            // Get jumlah item
-            $row->jumlah_item = $this->get_jumlah_item($row->id_penjualan);
-
-            // Get daftar barang
-            $row->daftar_barang = $this->get_daftar_barang($row->id_penjualan);
+        // Cek jika query gagal
+        if ($result === FALSE) {
+            $error = $this->db->error();
+            log_message('error', 'Database Error: ' . $error['message']);
+            log_message('error', 'Query: ' . $this->db->last_query());
+            return array(); // Return array kosong untuk menghindari error
         }
 
-        return $result;
+        return $result->result();
+    }
+
+    // Get perusahaan list
+    public function get_perusahaan_list()
+    {
+        return $this->db->get('perusahaan')->result();
     }
 
     // Get daftar barang penjualan
@@ -127,9 +134,5 @@ class Laporan_penjualan_model extends CI_Model
         $this->db->order_by('log_status_penjualan.tanggal', 'ASC');
         return $this->db->get()->result();
     }
-    // Get perusahaan list
-    public function get_perusahaan_list()
-    {
-        return $this->db->get('perusahaan')->result();
-    }
+
 }
