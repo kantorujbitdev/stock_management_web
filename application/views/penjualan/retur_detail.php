@@ -49,6 +49,9 @@
                                     case 'batal':
                                         $status_class = 'secondary';
                                         break;
+                                    case 'selesai':
+                                        $status_class = 'primary';
+                                        break;
                                 }
                                 ?>
                                 <span
@@ -151,7 +154,6 @@
                             <i class="fas fa-times"></i> Tolak
                         </a>
                     <?php endif; ?>
-
                     <?php if ($this->session->userdata('id_role') == 2 || $this->session->userdata('id_role') == 5 || $this->session->userdata('id_role') == 1): ?>
                         <a href="<?php echo site_url('retur/update_status/' . $retur->id_retur . '/batal'); ?>"
                             class="btn btn-secondary"
@@ -161,6 +163,70 @@
                     <?php endif; ?>
                 </div>
             </div>
+        <?php elseif ($retur->status == 'diterima'): ?>
+            <div class="card mb-3">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Ubah Status</h5>
+                </div>
+                <div class="card-body">
+                    <?php if ($this->session->userdata('id_role') == 4 || $this->session->userdata('id_role') == 5 || $this->session->userdata('id_role') == 1): ?>
+                        <a href="<?php echo site_url('retur/update_status/' . $retur->id_retur . '/selesai'); ?>"
+                            class="btn btn-primary"
+                            onclick="return confirm('Apakah Anda yakin ingin menyelesaikan retur ini?')">
+                            <i class="fas fa-check"></i> Selesai
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
         <?php endif; ?>
+
+        <!-- Riwayat Status -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">Riwayat Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Status</th>
+                                <th>User</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (isset($riwayat_status) && !empty($riwayat_status)): ?>
+                                <?php foreach ($riwayat_status as $log): ?>
+                                    <tr>
+                                        <td><?php echo date('d-m-Y H:i:s', strtotime($log->tanggal)); ?></td>
+                                        <td>
+                                            <?php if ($log->status == 'diterima'): ?>
+                                                <span class="badge badge-success">Diterima</span>
+                                            <?php elseif ($log->status == 'diproses'): ?>
+                                                <span class="badge badge-warning">Diproses</span>
+                                            <?php elseif ($log->status == 'selesai'): ?>
+                                                <span class="badge badge-primary">Selesai</span>
+                                            <?php elseif ($log->status == 'ditolak'): ?>
+                                                <span class="badge badge-danger">Ditolak</span>
+                                            <?php elseif ($log->status == 'batal'): ?>
+                                                <span class="badge badge-secondary">Dibatalkan</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?php echo $log->nama; ?></td>
+                                        <td><?php echo $log->keterangan; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="4" class="text-center">Belum ada riwayat status</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

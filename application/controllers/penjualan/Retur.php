@@ -196,7 +196,7 @@ class Retur extends CI_Controller
                 'id_penjualan' => $this->input->post('id_penjualan'),
                 'tanggal_retur' => date('Y-m-d H:i:s'),
                 'alasan_retur' => $this->input->post('alasan_retur'),
-                'status' => 'diterima' // Default status di database
+                'status' => 'diproses' // PERUBAHAN: dari 'diterima' menjadi 'diproses'
             ];
 
             $this->db->trans_start();
@@ -210,7 +210,7 @@ class Retur extends CI_Controller
                     $log_data = [
                         'id_retur' => $id_retur,
                         'id_user' => $this->session->userdata('id_user'),
-                        'status' => 'diterima',
+                        'status' => 'diproses', // PERUBAHAN: sesuaikan dengan status di atas
                         'keterangan' => 'Retur dibuat'
                     ];
                     $this->Log_status_retur_model->insert_log($log_data);
@@ -221,7 +221,7 @@ class Retur extends CI_Controller
                             'id_retur' => $id_retur,
                             'id_barang' => $item['id_barang'],
                             'jumlah_retur' => $item['jumlah'],
-                            'alasan_barang' => $item['kondisi'] // Simpan kondisi sebagai alasan_barang
+                            'alasan_barang' => $item['kondisi']
                         ];
                         $insert_detail = $this->Detail_retur_model->insert_detail_retur($detail_data);
 
@@ -229,24 +229,7 @@ class Retur extends CI_Controller
                             throw new Exception('Gagal menyimpan detail retur');
                         }
 
-                        // Proses stok (tambah stok karena retur diterima)
-                        // Ambil data gudang dari detail penjualan asli
-                        $detail_penjualan = $this->Detail_penjualan_model->get_detail_by_penjualan($penjualan->id_penjualan);
-                        $id_gudang = null;
-                        foreach ($detail_penjualan as $dp) {
-                            if ($dp->id_barang == $item['id_barang']) {
-                                $id_gudang = $dp->id_gudang;
-                                break;
-                            }
-                        }
-
-                        if ($id_gudang) {
-                            // Tambah stok kembali
-                            $add_result = $this->add_stock($item['id_barang'], $id_gudang, $item['jumlah'], $id_retur);
-                            if (!$add_result['success']) {
-                                throw new Exception($add_result['message']);
-                            }
-                        }
+                        // HAPUS: Proses stok dipindahkan ke update_status saat status diterima
                     }
 
                     $this->db->trans_complete();
@@ -297,7 +280,6 @@ class Retur extends CI_Controller
     {
         // Ambil data retur terlebih dahulu
         $retur = $this->Retur_model->get_retur_by_id($id_retur);
-
         if (!$retur) {
             $this->session->set_flashdata('error', 'Data retur tidak ditemukan');
             redirect('retur');
@@ -321,10 +303,11 @@ class Retur extends CI_Controller
         if ($user_role == 5 || $user_role == 1) {
             $allowed = true;
         }
-        // Admin Gudang (4) bisa mengubah ke diterima, ditolak
-        else if ($user_role == 4 && in_array($status, ['diterima', 'ditolak'])) {
+        // Admin Gudang (4) bisa mengubah ke diterima, ditolak, selesai
+        else if ($user_role == 4 && in_array($status, ['diterima', 'ditolak', 'selesai'])) {
             $allowed = true;
         }
+
         // Sales Online (2) hanya bisa mengubah ke batal
         else if ($user_role == 2 && $status == 'batal') {
             $allowed = true;
@@ -338,8 +321,8 @@ class Retur extends CI_Controller
         // Cek apakah status transition valid
         $current_status = $retur->status;
         $valid_transitions = [
-            'diterima' => ['diproses', 'ditolak', 'batal'],
-            'diproses' => ['selesai'],
+            'diproses' => ['diterima', 'ditolak', 'batal'], // PERUBAHAN: dari 'diterima' menjadi 'diproses'
+            'diterima' => ['selesai'],
             'ditolak' => [],
             'batal' => [],
             'selesai' => []
@@ -358,6 +341,28 @@ class Retur extends CI_Controller
         switch ($status) {
             case 'diterima':
                 $keterangan = 'Retur diterima';
+                // Tambah stok hanya saat status diterima
+                $detail_retur = $this->Detail_retur_model->get_detail_by_retur($id_retur);
+                foreach ($detail_retur as $detail) {
+                    // Ambil data gudang dari detail penjualan asli
+                    $detail_penjualan = $this->Detail_penjualan_model->get_detail_by_penjualan($retur->id_penjualan);
+                    $id_gudang = null;
+                    foreach ($detail_penjualan as $dp) {
+                        if ($dp->id_barang == $detail->id_barang) {
+                            $id_gudang = $dp->id_gudang;
+                            break;
+                        }
+                    }
+
+                    if ($id_gudang) {
+                        // Tambah stok kembali
+                        $add_result = $this->add_stock($detail->id_barang, $id_gudang, $detail->jumlah_retur, $id_retur);
+                        if (!$add_result['success']) {
+                            $this->session->set_flashdata('error', $add_result['message']);
+                            redirect('retur/view/' . $id_retur);
+                        }
+                    }
+                }
                 break;
             case 'diproses':
                 $keterangan = 'Retur sedang diproses';
@@ -381,31 +386,6 @@ class Retur extends CI_Controller
         ];
 
         $this->Log_status_retur_model->insert_log($log_data);
-
-        // Jika status diterima, tambahkan stok kembali
-        if ($status == 'diterima') {
-            $detail_retur = $this->Detail_retur_model->get_detail_by_retur($id_retur);
-            foreach ($detail_retur as $detail) {
-                // Ambil data gudang dari detail penjualan asli
-                $detail_penjualan = $this->Detail_penjualan_model->get_detail_by_penjualan($retur->id_penjualan);
-                $id_gudang = null;
-                foreach ($detail_penjualan as $dp) {
-                    if ($dp->id_barang == $detail->id_barang) {
-                        $id_gudang = $dp->id_gudang;
-                        break;
-                    }
-                }
-
-                if ($id_gudang) {
-                    // Tambah stok kembali
-                    $add_result = $this->add_stock($detail->id_barang, $id_gudang, $detail->jumlah_retur, $id_retur);
-                    if (!$add_result['success']) {
-                        $this->session->set_flashdata('error', $add_result['message']);
-                        redirect('retur/view/' . $id_retur);
-                    }
-                }
-            }
-        }
 
         $this->session->set_flashdata('success', 'Status retur berhasil diubah menjadi ' . $status);
         redirect('retur/view/' . $id_retur);

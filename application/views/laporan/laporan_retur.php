@@ -80,12 +80,15 @@
                     <tr>
                         <th>No</th>
                         <th>No Retur</th>
-                        <th>Tanggal</th>
+                        <th>Tanggal Retur</th>
+                        <th>Diajukan Oleh</th>
                         <th>No Invoice</th>
                         <th>Pelanggan</th>
                         <th>Alasan Retur</th>
                         <th>Status</th>
-                        <th>User</th>
+                        <th>Tanggal Approval</th>
+                        <th>Diapproval Oleh</th>
+                        <th>Status Approval</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -94,7 +97,8 @@
                         <tr>
                             <td><?php echo $no++; ?></td>
                             <td><?php echo $r->no_retur; ?></td>
-                            <td><?php echo date('d-m-Y', strtotime($r->tanggal_retur)); ?></td>
+                            <td><?php echo date('d-m-Y H:i', strtotime($r->tanggal_retur)); ?></td>
+                            <td><?php echo $r->created_by; ?></td>
                             <td><?php echo $r->no_invoice; ?></td>
                             <td><?php echo $r->nama_pelanggan; ?></td>
                             <td><?php echo $r->alasan_retur; ?></td>
@@ -109,7 +113,23 @@
                                     <span class="badge badge-danger">Ditolak</span>
                                 <?php endif; ?>
                             </td>
-                            <td><?php echo $r->created_by; ?></td>
+                            <td>
+                                <?php if ($r->approval_date): ?>
+                                    <?php echo date('d-m-Y H:i', strtotime($r->approval_date)); ?>
+                                <?php else: ?>
+                                    -
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo isset($r->approval_by) ? $r->approval_by : '-'; ?></td>
+                            <td>
+                                <?php if ($r->approval_status == 'diterima'): ?>
+                                    <span class="badge badge-success">Disetujui</span>
+                                <?php elseif ($r->approval_status == 'ditolak'): ?>
+                                    <span class="badge badge-danger">Ditolak</span>
+                                <?php else: ?>
+                                    <span class="badge badge-secondary">Menunggu</span>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
