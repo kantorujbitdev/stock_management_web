@@ -25,7 +25,15 @@
     runAfterDependencies(function () {
         if (typeof $.fn.DataTable !== 'undefined') {
             $('#dataTable').DataTable({
-                responsive: true
+                responsive: true,
+                paging: true,
+                ordering: false,
+                info: true,
+                scrollX: true,
+                autoWidth: false,
+                dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6 d-flex justify-content-end"f>>' +
+                    'rt' +
+                    '<"row mt-3"<"col-md-6"i><"col-md-6 d-flex justify-content-end"p>>',
             });
         }
     });

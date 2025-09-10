@@ -117,7 +117,7 @@
 
                             echo '<tr>
                     <td>' . $r->no_retur . '</td>
-                    <td>' . date('d-m-Y H:i', strtotime($r->tanggal_retur)) . '</td>
+                    <td>' . date('d-m-Y H:i:s', strtotime($r->tanggal_retur)) . '</td>
                     <td>' . substr($r->alasan_retur, 0, 50) . '...</td>
                     <td><span class="badge badge-' . $status_class . '">' . ucfirst($r->status) . '</span></td>
                     <td>

@@ -39,7 +39,7 @@
                             <tr>
                                 <td><?php echo $no++; ?></td>
                                 <td><?php echo $p->no_invoice; ?></td>
-                                <td><?php echo date('d-m-Y H:i', strtotime($p->tanggal_penjualan)); ?></td>
+                                <td><?php echo date('d-m-Y H:i:s', strtotime($p->tanggal_penjualan)); ?></td>
                                 <td><?php echo $p->nama_pelanggan; ?></td>
                                 <td><?php echo $p->daftar_barang; ?></td>
                                 <td>

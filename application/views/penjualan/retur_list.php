@@ -1,20 +1,33 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h5 class="m-0 font-weight-bold text-primary">Data Retur Penjualan</h6>
+        <h5 class="m-0 font-weight-bold text-primary">Data Retur Penjualan</h5>
         <a href="<?php echo site_url('retur/add'); ?>" class="btn btn-primary btn-sm">
             <i class="fas fa-plus"></i> Tambah Retur
         </a>
     </div>
+
     <div class="card-body">
-        <!-- Filter Form -->
-        <div class="card mb-4">
-            <div class="card-header bg-light">
-                <a class="d-block text-dark" data-toggle="collapse" href="#filterCollapse" role="button">
-                    <i class="fas fa-filter"></i> Filter Data
-                </a>
+        <?php if ($this->session->flashdata('success')): ?>
+            <div class="alert alert-success alert-dismissible fade show">
+                <?php echo $this->session->flashdata('success'); ?>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
+        <?php endif; ?>
+
+        <?php if ($this->session->flashdata('error')): ?>
+            <div class="alert alert-danger alert-dismissible fade show">
+                <?php echo $this->session->flashdata('error'); ?>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        <?php endif; ?>
+
+        <!-- Filter Form -->
+        <div class="mb-4">
+            <a class="d-block text-dark" data-toggle="collapse" href="#filterCollapse" role="button">
+                <i class="fas fa-filter"></i> Filter Data
+            </a>
             <div class="collapse <?php echo !empty($filter) && array_filter($filter) ? 'show' : ''; ?>" id="filterCollapse">
-                <div class="card-body">
+                <div class="mt-3">
                     <?php echo form_open('retur', ['method' => 'GET']); ?>
                     <div class="row">
                         <div class="col-md-3">
@@ -58,16 +71,14 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="form-group">
-                                <label>&nbsp;</label>
-                                <div class="d-flex">
-                                    <button type="submit" class="btn btn-primary btn-sm mr-2">
-                                        <i class="fas fa-search"></i> Filter
-                                    </button>
-                                    <a href="<?php echo site_url('retur'); ?>" class="btn btn-secondary btn-sm">
-                                        <i class="fas fa-redo"></i> Reset
-                                    </a>
-                                </div>
+                            <label>&nbsp;</label>
+                            <div class="d-flex">
+                                <button type="submit" class="btn btn-primary btn-sm mr-2">
+                                    <i class="fas fa-search"></i> Filter
+                                </button>
+                                <a href="<?php echo site_url('retur'); ?>" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-redo"></i> Reset
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -93,8 +104,8 @@
         </div>
 
         <!-- Table -->
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+         <div class="table-responsive">
+            <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -113,7 +124,7 @@
                         <tr>
                             <td><?php echo $no++; ?></td>
                             <td><?php echo $r->no_retur; ?></td>
-                            <td><?php echo date('d-m-Y H:i', strtotime($r->tanggal_retur)); ?></td>
+                            <td><?php echo date('d-m-Y H:i:s', strtotime($r->tanggal_retur)); ?></td>
                             <td><?php echo $r->no_invoice; ?></td>
                             <td><?php echo $r->nama_pelanggan; ?></td>
                             <td><?php echo $r->daftar_barang; ?></td>
@@ -121,21 +132,15 @@
                                 <?php
                                 $status_class = '';
                                 switch ($r->status) {
-                                    case 'diproses':
-                                        $status_class = 'warning';
-                                        break;
-                                    case 'diterima':
-                                        $status_class = 'success';
-                                        break;
-                                    case 'ditolak':
-                                        $status_class = 'danger';
-                                        break;
-                                    case 'batal':
-                                        $status_class = 'secondary';
-                                        break;
+                                    case 'diproses': $status_class = 'warning'; break;
+                                    case 'diterima': $status_class = 'success'; break;
+                                    case 'ditolak':  $status_class = 'danger';  break;
+                                    case 'batal':    $status_class = 'secondary'; break;
                                 }
                                 ?>
-                                <span class="badge badge-<?php echo $status_class; ?>"><?php echo ucfirst($r->status); ?></span>
+                                <span class="badge badge-<?php echo $status_class; ?>">
+                                    <?php echo ucfirst($r->status); ?>
+                                </span>
                             </td>
                             <td>
                                 <a href="<?php echo site_url('retur/view/' . $r->id_retur); ?>" class="btn btn-info btn-sm">
@@ -149,16 +154,13 @@
         </div>
     </div>
 </div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    var filterCollapse = $('#filterCollapse'); // pakai jQuery
-
-    // restore state
+    var filterCollapse = $('#filterCollapse');
     if (localStorage.getItem("filterCollapse") === "show") {
         filterCollapse.collapse('show');
     }
-
-    // simpan setiap kali user buka/tutup
     filterCollapse.on('shown.bs.collapse', function () {
         localStorage.setItem("filterCollapse", "show");
     });

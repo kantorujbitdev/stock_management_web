@@ -158,7 +158,7 @@
                                 ?>
                                 <span class="badge badge-<?php echo $status_class; ?>"><?php echo $status_text; ?></span>
                             </td>
-                            <td><?php echo date('d-m-Y H:i', strtotime($s->updated_at)); ?></td>
+                            <td><?php echo date('d-m-Y H:i:s', strtotime($s->updated_at)); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

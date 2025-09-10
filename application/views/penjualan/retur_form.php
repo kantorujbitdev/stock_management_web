@@ -24,7 +24,7 @@
                         <div class="form-group">
                             <label>Tanggal Penjualan</label>
                             <input type="text" class="form-control"
-                                value="<?php echo date('d-m-Y H:i', strtotime($penjualan->tanggal_penjualan)); ?>"
+                                value="<?php echo date('d-m-Y H:i:s', strtotime($penjualan->tanggal_penjualan)); ?>"
                                 readonly>
                         </div>
                     </div>

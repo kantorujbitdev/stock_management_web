@@ -23,8 +23,11 @@ class Auth extends CI_Controller
             redirect('dashboard');
         }
 
-        // Tampilkan form login
-        $this->load->view('auth/login');
+
+        $data['title'] = 'Login';
+
+        $data['content'] = 'auth/login';
+        $this->load->view('template/template_login', $data);
     }
 
     public function login()

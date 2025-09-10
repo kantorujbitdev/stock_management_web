@@ -5,7 +5,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title><?php echo isset($title) ? $title . ' - ' : ''; ?><?= $this->session->userdata('nama_perusahaan'); ?></title>
+    <title>
+        <?php
+        $title_part = isset($title) && $title ? $title : '';
+        $company = $this->session->userdata('nama_perusahaan');
+
+        if ($title_part && $company) {
+            echo $title_part . ' - ' . $company;
+        } elseif ($title_part) {
+            echo $title_part;
+        } elseif ($company) {
+            echo $company;
+        } else {
+            echo "Sistem Manajemen Stok";
+        }
+        ?>
+    </title>
     <link rel="icon" type="image/x-icon"
         href="<?php echo base_url('application/views/template/assets/img/logo_warehouse.png'); ?>">
 

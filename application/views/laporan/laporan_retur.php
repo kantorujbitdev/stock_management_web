@@ -75,65 +75,67 @@
     </div>
     <div class="card-body">
         <?php if (isset($retur) && count($retur) > 0): ?>
-            <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>No Retur</th>
-                        <th>Tanggal Retur</th>
-                        <th>Diajukan Oleh</th>
-                        <th>No Invoice</th>
-                        <th>Pelanggan</th>
-                        <th>Alasan Retur</th>
-                        <th>Status</th>
-                        <th>Tanggal Approval</th>
-                        <th>Diapproval Oleh</th>
-                        <th>Status Approval</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $no = 1;
-                    foreach ($retur as $r): ?>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
                         <tr>
-                            <td><?php echo $no++; ?></td>
-                            <td><?php echo $r->no_retur; ?></td>
-                            <td><?php echo date('d-m-Y H:i', strtotime($r->tanggal_retur)); ?></td>
-                            <td><?php echo $r->created_by; ?></td>
-                            <td><?php echo $r->no_invoice; ?></td>
-                            <td><?php echo $r->nama_pelanggan; ?></td>
-                            <td><?php echo $r->alasan_retur; ?></td>
-                            <td>
-                                <?php if ($r->status == 'diterima'): ?>
-                                    <span class="badge badge-primary">Diterima</span>
-                                <?php elseif ($r->status == 'diproses'): ?>
-                                    <span class="badge badge-warning">Diproses</span>
-                                <?php elseif ($r->status == 'selesai'): ?>
-                                    <span class="badge badge-success">Selesai</span>
-                                <?php elseif ($r->status == 'ditolak'): ?>
-                                    <span class="badge badge-danger">Ditolak</span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <?php if ($r->approval_date): ?>
-                                    <?php echo date('d-m-Y H:i', strtotime($r->approval_date)); ?>
-                                <?php else: ?>
-                                    -
-                                <?php endif; ?>
-                            </td>
-                            <td><?php echo isset($r->approval_by) ? $r->approval_by : '-'; ?></td>
-                            <td>
-                                <?php if ($r->approval_status == 'diterima'): ?>
-                                    <span class="badge badge-success">Disetujui</span>
-                                <?php elseif ($r->approval_status == 'ditolak'): ?>
-                                    <span class="badge badge-danger">Ditolak</span>
-                                <?php else: ?>
-                                    <span class="badge badge-secondary">Menunggu</span>
-                                <?php endif; ?>
-                            </td>
+                            <th>No</th>
+                            <th>No Retur</th>
+                            <th>Tanggal Retur</th>
+                            <th>Diajukan Oleh</th>
+                            <th>No Invoice</th>
+                            <th>Pelanggan</th>
+                            <th>Alasan Retur</th>
+                            <th>Status</th>
+                            <th>Tanggal Approval</th>
+                            <th>Diapproval Oleh</th>
+                            <th>Status Approval</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php $no = 1;
+                        foreach ($retur as $r): ?>
+                            <tr>
+                                <td><?php echo $no++; ?></td>
+                                <td><?php echo $r->no_retur; ?></td>
+                                <td><?php echo date('d-m-Y H:i:s', strtotime($r->tanggal_retur)); ?></td>
+                                <td><?php echo $r->created_by; ?></td>
+                                <td><?php echo $r->no_invoice; ?></td>
+                                <td><?php echo $r->nama_pelanggan; ?></td>
+                                <td><?php echo $r->alasan_retur; ?></td>
+                                <td>
+                                    <?php if ($r->status == 'diterima'): ?>
+                                        <span class="badge badge-primary">Diterima</span>
+                                    <?php elseif ($r->status == 'diproses'): ?>
+                                        <span class="badge badge-warning">Diproses</span>
+                                    <?php elseif ($r->status == 'selesai'): ?>
+                                        <span class="badge badge-success">Selesai</span>
+                                    <?php elseif ($r->status == 'ditolak'): ?>
+                                        <span class="badge badge-danger">Ditolak</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if ($r->approval_date): ?>
+                                        <?php echo date('d-m-Y H:i:s', strtotime($r->approval_date)); ?>
+                                    <?php else: ?>
+                                        -
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo isset($r->approval_by) ? $r->approval_by : '-'; ?></td>
+                                <td>
+                                    <?php if ($r->approval_status == 'diterima'): ?>
+                                        <span class="badge badge-success">Disetujui</span>
+                                    <?php elseif ($r->approval_status == 'ditolak'): ?>
+                                        <span class="badge badge-danger">Ditolak</span>
+                                    <?php else: ?>
+                                        <span class="badge badge-secondary">Menunggu</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         <?php else: ?>
             <div class="alert alert-info">
                 Tidak ada data retur penjualan dengan filter yang dipilih.

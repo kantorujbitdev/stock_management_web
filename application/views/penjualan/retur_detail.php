@@ -25,7 +25,7 @@
                         <div class="form-group">
                             <label>Tanggal Retur</label>
                             <p class="form-control-plaintext">
-                                <?php echo date('d-m-Y H:i', strtotime($retur->tanggal_retur)); ?>
+                                <?php echo date('d-m-Y H:i:s', strtotime($retur->tanggal_retur)); ?>
                             </p>
                         </div>
                     </div>
