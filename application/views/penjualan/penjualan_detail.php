@@ -2,9 +2,7 @@
     <div class="card-header">
         <h5 class="card-title">Detail Penjualan</h3>
             <div class="card-tools">
-                <a href="<?php echo site_url('penjualan'); ?>" class="btn btn-secondary btn-sm">
-                    <i class="fas fa-arrow-left"></i> Kembali
-                </a>
+                <?php echo back_button('penjualan'); ?>
                 <a href="<?php echo site_url('penjualan/cetak/' . $penjualan->id_penjualan); ?>"
                     class="btn btn-primary btn-sm" target="_blank">
                     <i class="fas fa-print"></i> Cetak
@@ -326,9 +324,7 @@
             </div>
             <!-- Tombol kembali -->
             <div class="form-group">
-                <a href="<?php echo site_url('penjualan'); ?>" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Kembali
-                </a>
+                <?php echo back_button('penjualan'); ?>
             </div>
         </div>
     </div>

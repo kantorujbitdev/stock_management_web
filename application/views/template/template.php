@@ -57,6 +57,17 @@
     </div>
 
     <?php $this->load->view('template/js') ?>
+    <script>
+        $(document).ready(function () {
+            // Tutup sidebar otomatis kalau link di dalam sidebar di klik (di HP)
+            $('.sidebar a.nav-link, .sidebar a.collapse-item').on('click', function () {
+                if ($(window).width() < 768) {
+                    $('#accordionSidebar').collapse('hide');
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

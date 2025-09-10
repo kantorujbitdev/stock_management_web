@@ -14,9 +14,7 @@
                         <i class="fas fa-times"></i> Batalkan
                     </a>
                 <?php endif; ?>
-                <a href="<?php echo site_url('penerimaan'); ?>" class="btn btn-secondary btn-sm">
-                    <i class="fas fa-arrow-left"></i> Kembali
-                </a>
+                <?php echo back_button('penerimaan'); ?>
             </div>
     </div>
     <div class="card-body">

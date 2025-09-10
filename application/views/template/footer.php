@@ -8,10 +8,10 @@
 <footer class="sticky-footer bg-white">
     <div class="container my-auto">
         <div class="copyright text-center my-auto">
-            <span>
+            <small>
                 Copyright &copy; Sistem Manajemen Stok
                 <br>V<?php echo app_version(); ?> <?php echo date('Y') ?>
-            </span>
+            </small>
         </div>
     </div>
 </footer>

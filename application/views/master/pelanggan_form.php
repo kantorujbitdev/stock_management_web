@@ -1,9 +1,7 @@
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <a href="<?php echo site_url('pelanggan'); ?>" class="btn btn-light btn-sm">
-            <i class="fas fa-arrow-left"></i> Kembali
-        </a>
-        <h5 class="mb-0 ml-3">
+        <?php echo back_button('pelanggan'); ?>
+        <h5 class="mb-0 ml-3 d-flex align-items-center">
             <i class="fas fa-tags"></i>
             <?php echo isset($pelanggan) ? 'Edit Data Pelanggan' : 'Tambah Data Pelanggan'; ?>
         </h5>

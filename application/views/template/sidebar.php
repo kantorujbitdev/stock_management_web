@@ -6,7 +6,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-warehouse"></i>
         </div>
-        <div class="sidebar-brand-text mx-3" style="max-width:140px;">
+        <div class="sidebar-brand-text mx-3 sidebar-company-name">
             <?= $this->session->userdata('nama_perusahaan') ?: 'Stok App' ?>
         </div>
     </a>
@@ -213,12 +213,12 @@
         </li>
     <?php endif; ?>
 
-    <!-- <hr class="sidebar-divider d-none d-md-block"> -->
+    <hr class="sidebar-divider d-none d-md-block">
 
     <!-- Sidebar Toggler -->
-    <!-- <div class="text-center d-none d-md-inline">
+    <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div> -->
+    </div>
 
 </ul>
 <!-- End of Sidebar -->

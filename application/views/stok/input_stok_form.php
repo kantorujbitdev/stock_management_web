@@ -1,8 +1,6 @@
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <a href="<?php echo site_url('stok_awal'); ?>" class="btn btn-light btn-sm">
-            <i class="fas fa-arrow-left"></i> Kembali
-        </a>
+        <?php echo back_button('stok_awal'); ?>
         <h5 class="mb-0 ml-3">
             <i class="fas fa-tags"></i>
             Input Stok Awal - <?php echo $barang->nama_barang; ?>

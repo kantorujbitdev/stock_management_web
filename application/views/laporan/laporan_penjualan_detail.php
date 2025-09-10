@@ -1,8 +1,6 @@
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <a href="<?php echo site_url('laporan_penjualan'); ?>" class="btn btn-light btn-sm">
-            <i class="fas fa-arrow-left"></i> Kembali
-        </a>
+        <?php echo back_button('laporan_penjualan'); ?>
         <h5 class="mb-0 ml-3">
             Detail Penjualan</h5>
     </div>
@@ -160,9 +158,7 @@
             </table>
             <!-- Tombol kembali -->
             <div class="form-group">
-                <a href="<?php echo site_url('penjualan'); ?>" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Kembali
-                </a>
+                <?php echo back_button('penjualan'); ?>
             </div>
         </div>
     </div>

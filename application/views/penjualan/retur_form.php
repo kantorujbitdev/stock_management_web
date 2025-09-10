@@ -1,8 +1,6 @@
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <a href="<?php echo site_url('retur/add'); ?>" class="btn btn-light btn-sm">
-            <i class="fas fa-arrow-left"></i> Kembali
-        </a>
+        <?php echo back_button('retur/add'); ?>
         <h5 class="mb-0 ml-3">
             <i class="fas fa-undo"></i> Tambah Retur Penjualan
         </h5>
@@ -11,7 +9,7 @@
         <!-- Informasi Penjualan -->
         <div class="card mb-3">
             <div class="card-header bg-light">
-                <h5 class="mb-0">ssssInformasi Penjualan</h5>
+                <h5 class="mb-0">Informasi Penjualan</h5>
             </div>
             <div class="card-body">
                 <div class="row">

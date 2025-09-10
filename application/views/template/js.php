@@ -1,3 +1,13 @@
+<!-- Core plugin JavaScript-->
+<script src="<?php echo base_url('application/views/template/assets/js/jquery.easing.min.js'); ?>"></script>
+
+<!-- SB Admin 2 -->
+<script src="<?php echo base_url('application/views/template/assets/js/sb-admin-2.min.js'); ?>"></script>
+
+<!-- DataTables JS -->
+<script src="<?php echo base_url('application/views/template/assets/js/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo base_url('application/views/template/assets/js/dataTables.bootstrap4.min.js'); ?>"></script>
+
 <!-- Page level custom scripts -->
 <script>
     // Fungsi untuk mengeksekusi script setelah jQuery dan Bootstrap siap

@@ -55,3 +55,24 @@ function is_active($menu)
 
     return '';
 }
+
+if (!function_exists('back_button')) {
+    function back_button($fallback = 'dashboard', $label = 'Kembali')
+    {
+        $ci = get_instance();
+        $url = site_url($fallback);
+        return '<a href="#" onclick="if(document.referrer){window.history.back();}else{window.location=\'' . $url . '\';} return false;" class="btn btn-light btn-sm">
+                    <i class="fas fa-arrow-left"></i> ' . $label . '
+                </a>';
+    }
+}
+
+if (!function_exists('responsive_title')) {
+    function responsive_title($text, $icon_class = null)
+    {
+        $icon_html = $icon_class ? '<i class="' . $icon_class . ' ml-4 mr-2"></i>' : '';
+        return '<h5 class="mb-0 title-responsive d-flex align-items-center">'
+            . $icon_html . $text .
+            '</h5>';
+    }
+}

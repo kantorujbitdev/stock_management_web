@@ -1,8 +1,6 @@
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <a href="<?php echo site_url('kategori'); ?>" class="btn btn-light btn-sm">
-            <i class="fas fa-arrow-left"></i> Kembali
-        </a>
+        <?php echo back_button('kategori'); ?>
         <h5 class="mb-0 ml-3">
             <i class="fas fa-tags"></i>
             <?php echo isset($kategori) ? 'Edit Data Master Kategori' : 'Tambah Data Master Kategori'; ?>

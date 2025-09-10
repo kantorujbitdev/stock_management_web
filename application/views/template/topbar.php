@@ -39,11 +39,19 @@
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <!-- <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                            <?php echo $role_id ?> -
+                            Hai, <?php echo $nama ?> (<?php echo $nama_role ?>)
                         </span> -->
+
+
                         <span class="mr-2 d-none d-lg-inline text-gray-600 small">
                             Hai, <?php echo $nama ?> (<?php echo $nama_role ?>)
                         </span>
+                        <span class="mr-2 d-inline d-lg-none text-gray-600 small">
+                            <?php echo $nama ?>
+                        </span>
+
+
+
                         <img class="img-profile rounded-circle"
                             src="<?php echo base_url('application/views/template/assets/img/profile/' . $profile_img) ?>">
                     </a>

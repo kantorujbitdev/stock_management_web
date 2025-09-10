@@ -1,0 +1,19 @@
+/* Judul Responsif */
+.title-responsive {
+	font-size: 1.25rem !important; /* default layar besar */
+	font-weight: 600;
+	line-height: 1.2;
+	white-space: nowrap; /* biar ga kepotong ke bawah */
+}
+
+@media (max-width: 768px) {
+	.title-responsive {
+		font-size: 1.05rem !important;
+	}
+}
+
+@media (max-width: 576px) {
+	.title-responsive {
+		font-size: 0.9rem !important;
+	}
+}

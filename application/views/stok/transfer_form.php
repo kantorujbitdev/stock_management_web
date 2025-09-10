@@ -1,57 +1,76 @@
-<div class="card">
-    <div class="card-header">
-        <h5 class="card-title">Tambah Transfer Stok</h3>
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+        <?php echo back_button('transfer'); ?>
+        <h5 class="mb-0 ml-3 d-flex align-items-center">
+            <i class="fas fa-tags mr-1"></i>
+            <?php echo isset($pelanggan) ? 'Edit Transfer Stok' : 'Tambah Transfer Stok'; ?>
+        </h5>
     </div>
     <div class="card-body">
         <?php echo form_open('transfer/add_process'); ?>
 
-        <div class="form-group">
-            <label for="id_perusahaan">Perusahaan</label>
-            <select name="id_perusahaan" class="form-control" id="id_perusahaan" required>
-                <option value="">-- Pilih Perusahaan --</option>
-                <?php foreach ($perusahaan as $p): ?>
-                    <option value="<?php echo $p->id_perusahaan; ?>"><?php echo $p->nama_perusahaan; ?></option>
-                <?php endforeach; ?>
-            </select>
+        <div class="row">
+            <!-- Perusahaan -->
+            <div class="col-md-6 mb-3">
+                <label for="id_perusahaan" class="font-weight-bold">Perusahaan</label>
+                <select name="id_perusahaan" class="form-control" id="id_perusahaan" required>
+                    <option value="">-- Pilih Perusahaan --</option>
+                    <?php foreach ($perusahaan as $p): ?>
+                        <option value="<?php echo $p->id_perusahaan; ?>"><?php echo $p->nama_perusahaan; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Gudang Asal -->
+            <div class="col-md-6 mb-3">
+                <label for="id_gudang_asal" class="font-weight-bold">Gudang Asal</label>
+                <select name="id_gudang_asal" class="form-control" id="id_gudang_asal" required>
+                    <option value="">-- Pilih Gudang --</option>
+                </select>
+            </div>
+
+            <!-- Gudang Tujuan -->
+            <div class="col-md-6 mb-3">
+                <label for="id_gudang_tujuan" class="font-weight-bold">Gudang Tujuan</label>
+                <select name="id_gudang_tujuan" class="form-control" id="id_gudang_tujuan" required>
+                    <option value="">-- Pilih Gudang --</option>
+                </select>
+            </div>
+
+            <!-- Barang -->
+            <div class="col-md-6 mb-3">
+                <label for="id_barang" class="font-weight-bold">Barang</label>
+                <select name="id_barang" class="form-control" id="id_barang" required>
+                    <option value="">-- Pilih Barang --</option>
+                </select>
+            </div>
+
+            <!-- Jumlah -->
+            <div class="col-md-6 mb-3">
+                <label for="jumlah" class="font-weight-bold">Jumlah</label>
+                <input type="number" name="jumlah" class="form-control" id="jumlah" required min="1">
+                <small class="form-text text-muted">
+                    Stok tersedia: <span id="stok_tersedia" class="font-weight-bold text-success">0</span>
+                </small>
+            </div>
+
+            <!-- Keterangan -->
+            <div class="col-md-12 mb-3">
+                <label for="keterangan" class="font-weight-bold">Keterangan</label>
+                <textarea name="keterangan" class="form-control" rows="3"
+                    placeholder="Tambahkan catatan jika perlu..."></textarea>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="id_gudang_asal">Gudang Asal</label>
-            <select name="id_gudang_asal" class="form-control" id="id_gudang_asal" required>
-                <option value="">-- Pilih Gudang --</option>
-            </select>
+        <!-- ACTION BUTTONS -->
+        <div class="form-group text-right mt-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-save"></i> Simpan
+            </button>
+            <a href="<?php echo site_url('transfer'); ?>" class="btn btn-secondary">
+                <i class="fa fa-times"></i> Batal
+            </a>
         </div>
-
-        <div class="form-group">
-            <label for="id_gudang_tujuan">Gudang Tujuan</label>
-            <select name="id_gudang_tujuan" class="form-control" id="id_gudang_tujuan" required>
-                <option value="">-- Pilih Gudang --</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="id_barang">Barang</label>
-            <select name="id_barang" class="form-control" id="id_barang" required>
-                <option value="">-- Pilih Barang --</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="jumlah">Jumlah</label>
-            <input type="number" name="jumlah" class="form-control" id="jumlah" required min="1">
-            <small class="form-text text-muted">Stok tersedia: <span id="stok_tersedia">0</span></small>
-        </div>
-
-        <div class="form-group">
-            <label for="keterangan">Keterangan</label>
-            <textarea name="keterangan" class="form-control" rows="3"></textarea>
-        </div>
-
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Simpan</button>
-            <a href="<?php echo site_url('transfer'); ?>" class="btn btn-secondary">Batal</a>
-        </div>
-
         <?php echo form_close(); ?>
     </div>
 </div>
