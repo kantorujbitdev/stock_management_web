@@ -11,100 +11,99 @@
             </a>
         </div>
     </div>
-</div>
-<div class="card-body">
-    <?php if ($this->session->flashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <i class="icon fas fa-check"></i> <?php echo $this->session->flashdata('success'); ?>
-        </div>
-    <?php endif; ?>
-    <?php if ($this->session->flashdata('error')): ?>
-        <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <i class="icon fas fa-ban"></i> <?php echo $this->session->flashdata('error'); ?>
-        </div>
-    <?php endif; ?>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Gambar</th>
-                    <th>Nama Barang</th>
-                    <th>SKU</th>
-                    <th>Kategori</th>
-                    <?php if ($this->session->userdata('id_role') == 5): ?>
-                        <th>Perusahaan</th>
-                    <?php endif; ?>
-                    <th>Stok</th>
-                    <th>Status</th>
-                    <?php if ($this->session->userdata('id_role') == 5 || $this->session->userdata('id_role') == 1): ?>
-                        <th>Aksi</th>
-                    <?php endif; ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $no = 1;
-                foreach ($barang as $b): ?>
+    <div class="card-body">
+        <?php if ($this->session->flashdata('success')): ?>
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <i class="icon fas fa-check"></i> <?php echo $this->session->flashdata('success'); ?>
+            </div>
+        <?php endif; ?>
+        <?php if ($this->session->flashdata('error')): ?>
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <i class="icon fas fa-ban"></i> <?php echo $this->session->flashdata('error'); ?>
+            </div>
+        <?php endif; ?>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                <thead>
                     <tr>
-                        <td><?php echo $no++; ?></td>
-                        <td>
-                            <?php if ($b->gambar): ?>
-                                <img src="<?php echo base_url('uploads/barang/' . $b->gambar); ?>"
-                                    class="img-thumbnail img-clickable" width="50"
-                                    data-src="<?php echo base_url('uploads/barang/' . $b->gambar); ?>">
-                            <?php else: ?>
-                                <span class="text-muted">No Image</span>
-                            <?php endif; ?>
-                        </td>
-                        <td><?php echo $b->nama_barang; ?></td>
-                        <td><?php echo $b->sku; ?></td>
-                        <td><?php echo $b->nama_kategori; ?></td>
+                        <th>No</th>
+                        <th>Gambar</th>
+                        <th>Nama Barang</th>
+                        <th>SKU</th>
+                        <th>Kategori</th>
                         <?php if ($this->session->userdata('id_role') == 5): ?>
-                            <td><?php echo isset($b->nama_perusahaan) ? $b->nama_perusahaan : '-'; ?></td>
+                            <th>Perusahaan</th>
                         <?php endif; ?>
-                        <td>
-                            <?php
-                            $this->load->model('master/Barang_model');
-                            $stok = $this->Barang_model->get_stok_barang($b->id_barang);
-                            echo $stok ?: 0;
-                            ?>
-                        </td>
-                        <td>
-                            <?php if ($b->aktif == 1): ?>
-                                <span class="badge badge-success">Aktif</span>
-                            <?php else: ?>
-                                <span class="badge badge-danger">Tidak Aktif</span>
-                            <?php endif; ?>
-                        </td>
+                        <th>Stok</th>
+                        <th>Status</th>
                         <?php if ($this->session->userdata('id_role') == 5 || $this->session->userdata('id_role') == 1): ?>
-                            <td>
-                                <a href="<?php echo site_url('barang/edit/' . $b->id_barang); ?>"
-                                    class="btn btn-warning btn-sm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <?php if ($b->aktif == 1): ?>
-                                    <a href="<?php echo site_url('barang/nonaktif/' . $b->id_barang); ?>"
-                                        class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Apakah Anda yakin ingin menonaktifkan barang ini?')">
-                                        <i class="fas fa-minus-square"></i> Nonaktifkan
-                                    </a>
-                                <?php else: ?>
-                                    <a href="<?php echo site_url('barang/aktif/' . $b->id_barang); ?>"
-                                        class="btn btn-sm btn-success"
-                                        onclick="return confirm('Apakah Anda yakin ingin mengaktifkan barang ini?')">
-                                        <i class="fas fa-check-square"></i> Aktifkan
-                                    </a>
-                                <?php endif; ?>
-                            </td>
+                            <th>Aksi</th>
                         <?php endif; ?>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php $no = 1;
+                    foreach ($barang as $b): ?>
+                        <tr>
+                            <td><?php echo $no++; ?></td>
+                            <td>
+                                <?php if ($b->gambar): ?>
+                                    <img src="<?php echo base_url('uploads/barang/' . $b->gambar); ?>"
+                                        class="img-thumbnail img-clickable" width="50"
+                                        data-src="<?php echo base_url('uploads/barang/' . $b->gambar); ?>">
+                                <?php else: ?>
+                                    <span class="text-muted">No Image</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo $b->nama_barang; ?></td>
+                            <td><?php echo $b->sku; ?></td>
+                            <td><?php echo $b->nama_kategori; ?></td>
+                            <?php if ($this->session->userdata('id_role') == 5): ?>
+                                <td><?php echo isset($b->nama_perusahaan) ? $b->nama_perusahaan : '-'; ?></td>
+                            <?php endif; ?>
+                            <td>
+                                <?php
+                                $this->load->model('master/Barang_model');
+                                $stok = $this->Barang_model->get_stok_barang($b->id_barang);
+                                echo $stok ?: 0;
+                                ?>
+                            </td>
+                            <td>
+                                <?php if ($b->aktif == 1): ?>
+                                    <span class="badge badge-success">Aktif</span>
+                                <?php else: ?>
+                                    <span class="badge badge-danger">Tidak Aktif</span>
+                                <?php endif; ?>
+                            </td>
+                            <?php if ($this->session->userdata('id_role') == 5 || $this->session->userdata('id_role') == 1): ?>
+                                <td>
+                                    <a href="<?php echo site_url('barang/edit/' . $b->id_barang); ?>"
+                                        class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <?php if ($b->aktif == 1): ?>
+                                        <a href="<?php echo site_url('barang/nonaktif/' . $b->id_barang); ?>"
+                                            class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Apakah Anda yakin ingin menonaktifkan barang ini?')">
+                                            <i class="fas fa-minus-square"></i> Nonaktifkan
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="<?php echo site_url('barang/aktif/' . $b->id_barang); ?>"
+                                            class="btn btn-sm btn-success"
+                                            onclick="return confirm('Apakah Anda yakin ingin mengaktifkan barang ini?')">
+                                            <i class="fas fa-check-square"></i> Aktifkan
+                                        </a>
+                                    <?php endif; ?>
+                                </td>
+                            <?php endif; ?>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 </div>
 
 <!-- Modal Fullscreen -->
