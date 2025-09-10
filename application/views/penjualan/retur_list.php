@@ -149,3 +149,21 @@
         </div>
     </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var filterCollapse = $('#filterCollapse'); // pakai jQuery
+
+    // restore state
+    if (localStorage.getItem("filterCollapse") === "show") {
+        filterCollapse.collapse('show');
+    }
+
+    // simpan setiap kali user buka/tutup
+    filterCollapse.on('shown.bs.collapse', function () {
+        localStorage.setItem("filterCollapse", "show");
+    });
+    filterCollapse.on('hidden.bs.collapse', function () {
+        localStorage.setItem("filterCollapse", "hide");
+    });
+});
+</script>

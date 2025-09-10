@@ -1,6 +1,5 @@
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center"
         href="<?php echo site_url('dashboard') ?>">
@@ -100,8 +99,6 @@
             </div>
         </li>
     <?php endif; ?>
-
-    <!-- <hr class="sidebar-divider"> -->
 
     <!-- Manajemen Stok -->
     <?php

@@ -2,7 +2,10 @@ Bro kita sedang bikin aplikasi berbasis web ya bro dengan Codeigniter 3.1.13.
 
 gw akan kirim informasi yg sudah kita miliki
 
-Role User:
+Template yang digunakan yaitu
+SB Admin 2 dan Bootstrap 4
+
+Akses Role User:
 1. Admin Pusat
 2. Sales Online
 3. Admin Packing
