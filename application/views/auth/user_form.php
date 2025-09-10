@@ -1,15 +1,11 @@
+<div class="form-group text-left mt-4">
+    <?php echo back_button('auth/user'); ?>
+</div>
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <?php echo back_button('auth/user'); ?>
-
-        <h5 class="mb-0 ml-3">
-            <i class="fas fa-tags"></i>
-            <?php echo isset($user) ? 'Edit User' : 'Tambah User' ?>
-        </h5>
+        <?php echo responsive_title(isset($user) ? 'Edit User' : 'Tambah User') ?>
     </div>
-
     <div class="card-body px-4 py-4">
-
         <?php echo form_open(isset($user) ? 'auth/user/edit_process' : 'auth/user/add_process'); ?>
         <?php if (isset($user)): ?>
             <input type="hidden" name="id_user" value="<?php echo $user->id_user ?>">

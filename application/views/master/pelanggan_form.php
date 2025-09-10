@@ -1,10 +1,9 @@
+<div class="form-group text-left mt-4">
+    <?php echo back_button('pelanggan'); ?>
+</div>
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <?php echo back_button('pelanggan'); ?>
-        <h5 class="mb-0 ml-3 d-flex align-items-center">
-            <i class="fas fa-tags"></i>
-            <?php echo isset($pelanggan) ? 'Edit Data Pelanggan' : 'Tambah Data Pelanggan'; ?>
-        </h5>
+        <?php echo responsive_title(isset($pelanggan) ? 'Edit Data Pelanggan' : 'Tambah Data Pelanggan') ?>
     </div>
     <div class="card-body">
         <?php echo form_open(isset($pelanggan) ? 'pelanggan/edit_process' : 'pelanggan/add_process'); ?>

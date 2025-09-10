@@ -2,7 +2,7 @@
     <div class="card-header py-3">
         <div class="row">
             <div class="col">
-                <h5 class="m-0 font-weight-bold text-primary">Daftar Perusahaan</h6>
+                <?php echo responsive_title_blue('Daftar Perusahaan') ?>
             </div>
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 <div class="col text-right">

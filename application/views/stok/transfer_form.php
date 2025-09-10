@@ -1,10 +1,9 @@
+<div class="form-group text-left mt-4">
+    <?php echo back_button('transfer'); ?>
+</div>
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <?php echo back_button('transfer'); ?>
-        <h5 class="mb-0 ml-3 d-flex align-items-center">
-            <i class="fas fa-tags mr-1"></i>
-            <?php echo isset($pelanggan) ? 'Edit Transfer Stok' : 'Tambah Transfer Stok'; ?>
-        </h5>
+        <?php echo responsive_title(isset($transfer) ? 'Edit Transfer Stok' : 'Tambah Transfer Stok') ?>
     </div>
     <div class="card-body">
         <?php echo form_open('transfer/add_process'); ?>

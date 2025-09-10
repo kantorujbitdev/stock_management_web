@@ -1,6 +1,6 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h5 class="m-0 font-weight-bold text-primary">Data Retur Penjualan</h5>
+                <?php echo responsive_title_blue('Daftar Retur Penjualan') ?>
         <a href="<?php echo site_url('retur/add'); ?>" class="btn btn-primary btn-sm">
             <i class="fas fa-plus"></i> Tambah Retur
         </a>
@@ -37,7 +37,7 @@
                                     <option value="">-- Semua Perusahaan --</option>
                                     <?php foreach ($perusahaan as $p): ?>
                                         <option value="<?php echo $p->id_perusahaan; ?>" 
-                                            <?php echo isset($filter['id_perusahaan']) && $filter['id_perusahaan'] == $p->id_perusahaan ? 'selected' : ''; ?>>
+                                            <?php echo isset($filter['id_perusahaan']) && $filter['id_perusahaan'] == $p->id_perusahaan ? 'selected' : ''; ?>> 
                                             <?php echo $p->nama_perusahaan; ?>
                                         </option>
                                     <?php endforeach; ?>

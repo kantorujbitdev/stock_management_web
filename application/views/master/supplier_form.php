@@ -1,10 +1,9 @@
+<div class="form-group text-left mt-4">
+    <?php echo back_button('supplier'); ?>
+</div>
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <?php echo back_button('supplier'); ?>
-        <h5 class="mb-0 ml-3">
-            <i class="fas fa-tags"></i>
-            <?php echo isset($supplier) ? 'Edit Data Supplier' : 'Tambah Data Supplier'; ?>
-        </h5>
+        <?php echo responsive_title(isset($supplier) ? 'Edit Data Supplier' : 'Tambah Data Supplier') ?>
     </div>
     <div class="card-body">
         <?php echo form_open(isset($supplier) ? 'supplier/edit_process' : 'supplier/add_process'); ?>

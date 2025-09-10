@@ -1,12 +1,10 @@
+<div class="form-group text-left mt-4">
+    <?php echo back_button('perusahaan'); ?>
+</div>
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <?php echo back_button('perusahaan'); ?>
-        <h5 class="mb-0 ml-3">
-            <i class="fas fa-tags"></i>
-            <?php echo isset($perusahaan) ? 'Edit Data Perusahaan' : 'Tambah Data Perusahaan'; ?>
-        </h5>
+        <?php echo responsive_title(isset($perusahaan) ? 'Edit Data Perusahaan' : 'Tambah Data Perusahaan') ?>
     </div>
-
     <div class="card-body px-4 py-4">
         <?php if (isset($perusahaan)): ?>
             <input type="hidden" name="id_perusahaan" value="<?php echo $perusahaan->id_perusahaan; ?>">

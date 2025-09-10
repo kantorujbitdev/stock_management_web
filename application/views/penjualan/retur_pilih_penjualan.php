@@ -1,10 +1,9 @@
+<div class="form-group text-left mt-4">
+    <?php echo back_button('retur'); ?>
+</div>
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <?php echo back_button('retur'); ?>
-        <h5 class="mb-0 ml-3">
-            <i class="fas fa-tags"></i>
-            Pilih Penjualan untuk Retur
-        </h5>
+        <?php echo responsive_title('Pilih Penjualan untuk Retur') ?>
     </div>
     <div class="card-body">
         <div class="alert alert-info">

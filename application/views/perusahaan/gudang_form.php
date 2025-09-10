@@ -1,12 +1,10 @@
+<div class="form-group text-left mt-4">
+    <?php echo back_button('gudang'); ?>
+</div>
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <?php echo back_button('gudang'); ?>
-        <h5 class="mb-0 ml-3">
-            <i class="fas fa-tags"></i>
-            <?php echo isset($gudang) ? 'Edit Data Gudang' : 'Tambah Data Gudang'; ?>
-        </h5>
+        <?php echo responsive_title(isset($gudang) ? 'Edit Data Gudabg' : 'Tambah Data Gudabg') ?>
     </div>
-
     <div class="card-body px-4 py-4">
         <?php echo form_open(isset($gudang) ? 'gudang/edit_process' : 'gudang/add_process'); ?>
         <?php if (isset($gudang)): ?>

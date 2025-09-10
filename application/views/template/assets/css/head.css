@@ -1,19 +1,66 @@
 /* Judul Responsif */
 .title-responsive {
-	font-size: 1.25rem !important; /* default layar besar */
-	font-weight: 600;
-	line-height: 1.2;
-	white-space: nowrap; /* biar ga kepotong ke bawah */
+	font-size: 1.1rem;
+	font-weight: bold;
+	color: #fff;
+	white-space: normal; /* biar teks bisa turun ke bawah */
+	word-wrap: break-word;
+	flex: 1; /* isi sisa ruang */
 }
 
 @media (max-width: 768px) {
 	.title-responsive {
-		font-size: 1.05rem !important;
+		font-size: 1rem !important;
 	}
 }
 
 @media (max-width: 576px) {
 	.title-responsive {
+		font-size: 0.85rem !important;
+	}
+}
+
+/* Judul Biru */
+.title-blue-responsive {
+	font-weight: bold;
+	white-space: normal; /* biar teks bisa turun ke bawah */
+	word-wrap: break-word;
+	flex: 1; /* isi sisa ruang */
+}
+
+@media (max-width: 768px) {
+	.title-blue-responsive {
+		font-size: 1.1rem !important;
+	}
+}
+
+@media (max-width: 576px) {
+	.title-blue-responsive {
 		font-size: 0.9rem !important;
+	}
+}
+
+/* Responsif untuk tombol back */
+.btn-responsive {
+	font-size: 0.9rem;
+	padding: 0.4rem 0.75rem;
+}
+
+/* Layar tablet */
+@media (max-width: 768px) {
+	.btn-responsive {
+		font-size: 0.8rem;
+		padding: 0.35rem 0.6rem;
+	}
+	.btn-responsive .btn-label {
+		display: none; /* Hanya icon panah kalau layar kecil */
+	}
+}
+
+/* Layar HP kecil */
+@media (max-width: 480px) {
+	.btn-responsive {
+		font-size: 0.8rem;
+		padding: 0.3rem 0.5rem;
 	}
 }

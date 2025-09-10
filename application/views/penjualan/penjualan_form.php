@@ -1,10 +1,9 @@
+<div class="form-group text-left mt-4">
+    <?php echo back_button('penjualan'); ?>
+</div>
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <?php echo back_button('penjualan'); ?>
-        <h5 class="mb-0 ml-3">
-            <i class="fas fa-tags"></i>
-            Tambah Penjualan
-        </h5>
+        <?php echo responsive_title('Tambah Penjualan') ?>
     </div>
     <div class="card-body">
         <?php echo form_open('penjualan/add_process', ['id' => 'formPenjualan']); ?>

@@ -2,7 +2,7 @@
     <div class="card-header py-3">
         <div class="row">
             <div class="col">
-                <h5 class="m-0 font-weight-bold text-primary">Daftar Gudang</h5>
+                <?php echo responsive_title_blue('Daftar Gudang') ?>
             </div>
             <div class="col text-right">
                 <a href="<?php echo site_url('gudang/add') ?>" class="btn btn-primary btn-sm">

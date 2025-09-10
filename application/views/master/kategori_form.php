@@ -1,12 +1,10 @@
+<div class="form-group text-left mt-4">
+    <?php echo back_button('kategori'); ?>
+</div>
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <?php echo back_button('kategori'); ?>
-        <h5 class="mb-0 ml-3">
-            <i class="fas fa-tags"></i>
-            <?php echo isset($kategori) ? 'Edit Data Master Kategori' : 'Tambah Data Master Kategori'; ?>
-        </h5>
+        <?php echo responsive_title(isset($kategori) ? 'Edit Master Kategori' : 'Tambah Master Kategori') ?>
     </div>
-
     <div class="card-body px-4 py-4">
         <?php echo form_open(isset($kategori) ? 'kategori/edit_process' : 'kategori/add_process'); ?>
 

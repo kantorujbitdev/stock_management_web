@@ -1,12 +1,10 @@
+<div class="form-group text-left mt-4">
+    <?php echo back_button('stok_awal'); ?>
+</div>
 <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex align-items-center">
-        <?php echo back_button('stok_awal'); ?>
-        <h5 class="mb-0 ml-3">
-            <i class="fas fa-tags"></i>
-            Input Stok Awal - <?php echo $barang->nama_barang; ?>
-        </h5>
+        <?php echo responsive_title("Input Stok Awal") ?>
     </div>
-
     <div class="card-body">
         <?php echo form_open('stok_awal/process_input_stok'); ?>
 
@@ -17,7 +15,7 @@
                 <div class="form-group">
                     <label>Barang</label>
                     <input type="text" class="form-control"
-                        value="<?php echo $barang->nama_barang; ?> (<?php echo $barang->sku; ?>)" readonly>
+                        value="(SKU:<?php echo $barang->sku; ?>) <?php echo $barang->nama_barang; ?>" readonly>
                 </div>
             </div>
             <div class="col-md-6">

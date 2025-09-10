@@ -2,7 +2,7 @@
     <div class="card-header py-3">
         <div class="row">
             <div class="col">
-                <h5 class="m-0 font-weight-bold text-primary">Riwayat Stok</h6>
+                <?php echo responsive_title_blue('Riwayat Stok') ?>
             </div>
         </div>
     </div>
