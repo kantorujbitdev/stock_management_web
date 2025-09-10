@@ -4,11 +4,11 @@
             <div class="col">
                 <?php echo responsive_title_blue('Daftar Barang') ?>
             </div>
-        </div>
-        <div class="col text-right">
-            <a href="<?php echo site_url('barang/add') ?>" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus"></i> Tambah Barang
-            </a>
+            <div class="col text-right">
+                <a href="<?php echo site_url('barang/add') ?>" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Tambah Barang
+                </a>
+            </div>
         </div>
     </div>
     <div class="card-body">
