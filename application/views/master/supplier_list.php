@@ -39,7 +39,9 @@
                         <th>Alamat</th>
                         <th>Telepon</th>
                         <th>Status</th>
-                        <th>Aksi</th>
+                        <?php if ($this->session->userdata('id_role') == 5 || $this->session->userdata('id_role') == 1): ?>
+                            <th>Aksi</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,24 +62,25 @@
                                     <span class="badge badge-danger">Tidak Aktif</span>
                                 <?php endif; ?>
                             </td>
-                            <td>
-                                <a href="<?php echo site_url('supplier/edit/' . $s->id_supplier); ?>"
-                                    class="btn btn-warning btn-sm">
-                                    <i class="fas fa-edit"></i>Edit </a>
-                                </a>
+                            <?php if ($this->session->userdata('id_role') == 5 || $this->session->userdata('id_role') == 1): ?>
+                                <td><a href="<?php echo site_url('supplier/edit/' . $s->id_supplier); ?>"
+                                        class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i>Edit </a>
+                                    </a>
 
-                                <?php if ($s->status_aktif == 1): ?>
-                                    <a href="<?php echo site_url('supplier/nonaktif/' . $s->id_supplier); ?>"
-                                        class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Apakah Anda yakin ingin menonaktifkan supplier ini?')">
-                                        <i class="fas fa-minus-square"></i> Nonaktifkan</a>
-                                <?php else: ?>
-                                    <a href="<?php echo site_url('supplier/aktif/' . $s->id_supplier); ?>"
-                                        class="btn btn-sm btn-success"
-                                        onclick="return confirm('Apakah Anda yakin ingin mengaktifkan supplier ini?')">
-                                        <i class="fas fa-check-square"></i> Aktifkan</a>
-                                <?php endif; ?>
-                            </td>
+                                    <?php if ($s->status_aktif == 1): ?>
+                                        <a href="<?php echo site_url('supplier/nonaktif/' . $s->id_supplier); ?>"
+                                            class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Apakah Anda yakin ingin menonaktifkan supplier ini?')">
+                                            <i class="fas fa-minus-square"></i> Nonaktifkan</a>
+                                    <?php else: ?>
+                                        <a href="<?php echo site_url('supplier/aktif/' . $s->id_supplier); ?>"
+                                            class="btn btn-sm btn-success"
+                                            onclick="return confirm('Apakah Anda yakin ingin mengaktifkan supplier ini?')">
+                                            <i class="fas fa-check-square"></i> Aktifkan</a>
+                                    <?php endif; ?>
+                                </td>
+                            <?php endif; ?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

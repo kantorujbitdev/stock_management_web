@@ -38,7 +38,9 @@
                         <?php endif; ?>
                         <th>Stok</th>
                         <th>Status</th>
-                        <th>Aksi</th>
+                        <?php if ($this->session->userdata('id_role') == 5 || $this->session->userdata('id_role') == 1): ?>
+                            <th>Aksi</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,25 +77,27 @@
                                     <span class="badge badge-danger">Tidak Aktif</span>
                                 <?php endif; ?>
                             </td>
-                            <td>
-                                <a href="<?php echo site_url('barang/edit/' . $b->id_barang); ?>"
-                                    class="btn btn-warning btn-sm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <?php if ($b->aktif == 1): ?>
-                                    <a href="<?php echo site_url('barang/nonaktif/' . $b->id_barang); ?>"
-                                        class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Apakah Anda yakin ingin menonaktifkan barang ini?')">
-                                        <i class="fas fa-minus-square"></i> Nonaktifkan
+                            <?php if ($this->session->userdata('id_role') == 5 || $this->session->userdata('id_role') == 1): ?>
+                                <td>
+                                    <a href="<?php echo site_url('barang/edit/' . $b->id_barang); ?>"
+                                        class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i> Edit
                                     </a>
-                                <?php else: ?>
-                                    <a href="<?php echo site_url('barang/aktif/' . $b->id_barang); ?>"
-                                        class="btn btn-sm btn-success"
-                                        onclick="return confirm('Apakah Anda yakin ingin mengaktifkan barang ini?')">
-                                        <i class="fas fa-check-square"></i> Aktifkan
-                                    </a>
-                                <?php endif; ?>
-                            </td>
+                                    <?php if ($b->aktif == 1): ?>
+                                        <a href="<?php echo site_url('barang/nonaktif/' . $b->id_barang); ?>"
+                                            class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Apakah Anda yakin ingin menonaktifkan barang ini?')">
+                                            <i class="fas fa-minus-square"></i> Nonaktifkan
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="<?php echo site_url('barang/aktif/' . $b->id_barang); ?>"
+                                            class="btn btn-sm btn-success"
+                                            onclick="return confirm('Apakah Anda yakin ingin mengaktifkan barang ini?')">
+                                            <i class="fas fa-check-square"></i> Aktifkan
+                                        </a>
+                                    <?php endif; ?>
+                                </td>
+                            <?php endif; ?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

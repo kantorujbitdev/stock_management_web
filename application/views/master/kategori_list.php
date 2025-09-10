@@ -36,7 +36,9 @@
                         <?php endif; ?>
                         <th>Deskripsi</th>
                         <th>Status</th>
-                        <th>Aksi</th>
+                        <?php if ($this->session->userdata('id_role') == 5 || $this->session->userdata('id_role') == 1): ?>
+                            <th>Aksi</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,22 +60,23 @@
                             </td>
 
                             <td>
-                                <a href="<?php echo site_url('kategori/edit/' . $k->id_kategori); ?>"
-                                    class="btn btn-warning btn-sm">
-                                    <i class="fas fa-edit"></i>Edit </a>
+                                <?php if ($this->session->userdata('id_role') == 5 || $this->session->userdata('id_role') == 1): ?>
+                                    <a href="<?php echo site_url('kategori/edit/' . $k->id_kategori); ?>"
+                                        class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i>Edit </a>
 
-                                <?php if ($k->status_aktif == '1'): ?>
-                                    <a href="<?php echo site_url('kategori/nonaktif/' . $k->id_kategori) ?>"
-                                        class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Apakah Anda yakin ingin menonaktifkan kategori ini?')">
-                                        <i class="fas fa-minus-square"></i> Nonaktifkan</a>
-                                <?php else: ?>
-                                    <a href="<?php echo site_url('kategori/aktif/' . $k->id_kategori) ?>"
-                                        class="btn btn-sm btn-success"
-                                        onclick="return confirm('Apakah Anda yakin ingin mengaktifkan kembali kategori ini?')">
-                                        <i class="fas fa-check-square"></i> Aktifkan</a>
+                                    <?php if ($k->status_aktif == '1'): ?>
+                                        <a href="<?php echo site_url('kategori/nonaktif/' . $k->id_kategori) ?>"
+                                            class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Apakah Anda yakin ingin menonaktifkan kategori ini?')">
+                                            <i class="fas fa-minus-square"></i> Nonaktifkan</a>
+                                    <?php else: ?>
+                                        <a href="<?php echo site_url('kategori/aktif/' . $k->id_kategori) ?>"
+                                            class="btn btn-sm btn-success"
+                                            onclick="return confirm('Apakah Anda yakin ingin mengaktifkan kembali kategori ini?')">
+                                            <i class="fas fa-check-square"></i> Aktifkan</a>
+                                    <?php endif; ?>
                                 <?php endif; ?>
-
                             </td>
                         </tr>
                     <?php endforeach; ?>
