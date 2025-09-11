@@ -67,8 +67,6 @@ class Hak_akses_model extends CI_Model
             'barang' => 'Barang',
             'supplier' => 'Supplier',
             'pelanggan' => 'Pelanggan',
-            'stok_awal' => 'Stok Awal',
-            'penerimaan' => 'Penerimaan Barang',
             'transfer' => 'Transfer Stok',
             'penyesuaian' => 'Penyesuaian Stok',
             'riwayat' => 'Riwayat Stok',

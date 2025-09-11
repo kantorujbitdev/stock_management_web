@@ -192,59 +192,6 @@ class StokAwal extends CI_Controller
         echo $options;
     }
 
-    // Export ke Excel
-    public function export_excel()
-    {
-        $data['stok_awal'] = $this->Stok_awal_model->get_all_stok_awal();
-
-        $this->load->library('excel');
-        $object = new PHPExcel();
-
-        // Set properties
-        $object->setActiveSheetIndex(0)
-            ->setCellValue('A1', 'No')
-            ->setCellValue('B1', 'Barang')
-            ->setCellValue('C1', 'SKU')
-            ->setCellValue('D1', 'Gudang')
-            ->setCellValue('E1', 'Perusahaan')
-            ->setCellValue('F1', 'Qty Awal')
-            ->setCellValue('G1', 'Keterangan')
-            ->setCellValue('H1', 'Dibuat Oleh');
-
-        $row = 2;
-        $no = 1;
-        foreach ($data['stok_awal'] as $s) {
-            $object->setActiveSheetIndex(0)
-                ->setCellValue('A' . $row, $no++)
-                ->setCellValue('B' . $row, $s->nama_barang)
-                ->setCellValue('C' . $row, $s->sku)
-                ->setCellValue('D' . $row, $s->nama_gudang)
-                ->setCellValue('E' . $row, $s->nama_perusahaan)
-                ->setCellValue('F' . $row, $s->qty_awal)
-                ->setCellValue('G' . $row, $s->keterangan)
-                ->setCellValue('H' . $row, $s->created_by_name);
-            $row++;
-        }
-
-        $filename = 'Stok_Awal_' . date('Y-m-d') . '.xls';
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="' . $filename . '"');
-        header('Cache-Control: max-age=0');
-
-        $objWriter = PHPExcel_IOFactory::createWriter($object, 'Excel5');
-        $objWriter->save('php://output');
-    }
-
-    // Form validation rules
-    private function _set_rules()
-    {
-        $this->form_validation->set_rules('id_perusahaan', 'Perusahaan', 'required');
-        $this->form_validation->set_rules('id_gudang', 'Gudang', 'required');
-        $this->form_validation->set_rules('id_barang', 'Barang', 'required');
-        $this->form_validation->set_rules('qty_awal', 'Qty Awal', 'required|numeric|greater_than_equal_to[0]|max_length[10]');
-        $this->form_validation->set_rules('keterangan', 'Keterangan', 'max_length[255]');
-    }
-
     public function index()
     {
         $data['title'] = 'Data Barang';

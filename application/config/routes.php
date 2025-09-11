@@ -69,6 +69,8 @@ $route['barang/aktif/(:num)'] = 'master/Barang/aktif/$1';
 $route['barang/nonaktif/(:num)'] = 'master/Barang/nonaktif/$1';
 $route['barang/delete/(:num)'] = 'master/Barang/delete/$1';
 $route['barang/get_kategori_by_perusahaan'] = 'master/Barang/get_kategori_by_perusahaan';
+$route['barang/get_gudang_by_perusahaan'] = 'master/Barang/get_gudang_by_perusahaan';
+$route['barang/input_stok_awal_process'] = 'master/Barang/input_stok_awal_process';
 
 $route['supplier'] = 'master/Supplier';
 $route['supplier/add'] = 'master/Supplier/add';
@@ -87,28 +89,6 @@ $route['pelanggan/edit/(:num)'] = 'master/Pelanggan/edit/$1';
 $route['pelanggan/aktif/(:num)'] = 'master/Pelanggan/aktif/$1';
 $route['pelanggan/nonaktif/(:num)'] = 'master/Pelanggan/nonaktif/$1';
 $route['pelanggan/delete/(:num)'] = 'master/Pelanggan/delete/$1';
-
-// Routes untuk Stok (di subfolder stok/)
-$route['stok_awal'] = 'stok/StokAwal';
-$route['stok_awal/add'] = 'stok/StokAwal/add';
-$route['stok_awal/add_process'] = 'stok/StokAwal/add_process';
-$route['stok_awal/edit_process'] = 'stok/StokAwal/edit_process';
-$route['stok_awal/edit/(:num)'] = 'stok/StokAwal/edit/$1';
-$route['stok_awal/delete/(:num)'] = 'stok/StokAwal/delete/$1';
-$route['stok_awal/get_gudang_by_perusahaan'] = 'stok/StokAwal/get_gudang_by_perusahaan';
-$route['stok_awal/get_barang_by_perusahaan'] = 'stok/StokAwal/get_barang_by_perusahaan';
-$route['stok_awal/input_stok/(:num)'] = 'stok/StokAwal/input_stok/$1';
-$route['stok_awal/process_input_stok'] = 'stok/StokAwal/process_input_stok';
-
-$route['penerimaan'] = 'stok/Penerimaan';
-$route['penerimaan/add'] = 'stok/Penerimaan/add';
-$route['penerimaan/add_process'] = 'stok/Penerimaan/add_process';
-$route['penerimaan/detail/(:num)'] = 'stok/Penerimaan/detail/$1';
-$route['penerimaan/proses/(:num)'] = 'stok/Penerimaan/proses/$1';
-$route['penerimaan/batal/(:num)'] = 'stok/Penerimaan/batal/$1';
-$route['penerimaan/add_barang'] = 'stok/Penerimaan/add_barang';
-$route['penerimaan/delete_barang/(:num)'] = 'stok/Penerimaan/delete_barang/$1';
-$route['penerimaan/get_gudang_by_perusahaan'] = 'stok/Penerimaan/get_gudang_by_perusahaan';
 
 $route['transfer'] = 'stok/Transfer';
 $route['transfer/add'] = 'stok/Transfer/add';

@@ -8,6 +8,66 @@ class Barang_model extends CI_Model
         $this->load->database();
     }
 
+    // Get barang with stock status
+    public function get_barang_with_stok_status($filter = [])
+    {
+        $this->db->select('b.*, k.nama_kategori, p.nama_perusahaan, 
+                    COALESCE(sa.qty_awal, 0) as qty_awal,
+                    COALESCE(sa.id_stok_awal, 0) as has_stok_awal,
+                    COALESCE(sa.keterangan, "") as keterangan,
+                    COALESCE(sa.created_at) as tanggal_update,
+                    g.nama_gudang,
+                    u.nama as created_by_name');
+        $this->db->from('barang b');
+        $this->db->join('kategori k', 'b.id_kategori = k.id_kategori', 'left');
+        $this->db->join('perusahaan p', 'b.id_perusahaan = p.id_perusahaan', 'left');
+        $this->db->join('stok_awal sa', 'b.id_barang = sa.id_barang', 'left');
+        $this->db->join('gudang g', 'sa.id_gudang = g.id_gudang', 'left');
+        $this->db->join('user u', 'sa.created_by = u.id_user', 'left');
+
+        // Apply filter
+        if (!empty($filter['id_perusahaan'])) {
+            $this->db->where('b.id_perusahaan', $filter['id_perusahaan']);
+        }
+        if (!empty($filter['id_kategori'])) {
+            $this->db->where('b.id_kategori', $filter['id_kategori']);
+        }
+
+        // Filter by stock status
+        if (!empty($filter['stock_status'])) {
+            switch ($filter['stock_status']) {
+                case 'empty':
+                    $this->db->where('sa.id_stok_awal IS NULL');
+                    break;
+                case 'has_stock':
+                    $this->db->where('sa.id_stok_awal IS NOT NULL');
+                    break;
+            }
+        }
+        if ($this->session->userdata('id_role') != 1 && $this->session->userdata('id_role') != 5) {
+            $this->db->where('b.aktif', 1);
+        }
+        $this->db->order_by('b.nama_barang', 'ASC');
+        return $this->db->get()->result();
+    }
+
+    // Get gudang by perusahaan
+    public function get_gudang_by_perusahaan($id_perusahaan)
+    {
+        $this->db->where('id_perusahaan', $id_perusahaan);
+        $this->db->where('status_aktif', 1);
+        $this->db->order_by('nama_gudang', 'ASC');
+        return $this->db->get('gudang')->result();
+    }
+
+    // Check if stok awal exists for barang
+    public function check_stok_awal_exists($id_barang)
+    {
+        $this->db->where('id_barang', $id_barang);
+        $query = $this->db->get('stok_awal');
+        return $query->num_rows() > 0;
+    }
+
     // Get all barang dengan join untuk efisiensi query
     public function get_all_barang()
     {

@@ -102,7 +102,7 @@
 
     <!-- Manajemen Stok -->
     <?php
-    $manajement_stok_children = ['stok_awal', 'transfer', 'penyesuaian', 'riwayat'];
+    $manajement_stok_children = ['transfer', 'penyesuaian', 'riwayat'];
     $manajement_stok_active = $hasSeg($manajement_stok_children);
     $show_manajement_stok = false;
     foreach ($manajement_stok_children as $msc) {
