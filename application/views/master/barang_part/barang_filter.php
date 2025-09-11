@@ -35,7 +35,7 @@
                         <option value="">Semua</option>
                         <?php foreach ($perusahaan as $p): ?>
                             <option value="<?php echo $p->id_perusahaan; ?>" <?php echo ($filter['id_perusahaan'] == $p->id_perusahaan) ? 'selected' : ''; ?>>
-                                <?php echo substr($p->nama_perusahaan, 0, 10) . '...'; ?>
+                                <?php echo substr($p->nama_perusahaan, 0, 25) . '...'; ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
