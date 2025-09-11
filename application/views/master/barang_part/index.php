@@ -43,4 +43,5 @@
 <?php $this->load->view('master/barang_part/barang_image_modal'); ?>
 
 <!-- Load Script -->
+<?php $this->load->view('master/barang_part/barang_style'); ?>
 <?php $this->load->view('master/barang_part/barang_script'); ?>
