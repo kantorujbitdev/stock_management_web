@@ -44,6 +44,8 @@ application/
 │   │   ├── Sistem.php
 │   │   └── Backup.php
 │   └── Dashboard.php
+├── helper/
+│   ├── app_helper
 ├── models/
 │   ├── auth/
 │   │   ├── User_model.php
@@ -69,6 +71,8 @@ application/
 │   │   ├── Log_status_penjualan_model.php
 │   │   ├── Detail_penjualan_model.php
 │   │   └── Retur_model.php
+│   │   └── Log_status_penjualan_model.php
+│   │   └── Log_status_retur_model.php
 │   ├── laporan/
 │   │   ├── Laporan_stok_model.php
 │   │   ├── Laporan_penjualan_model.php
@@ -145,197 +149,385 @@ application/
     ├── app_helper.php
     └── stok_helper.php
 
+database SQL yg digunakan:
 
-kita akan perbaiki menu penjualan bro
-yg mana ada list barang yg selalu kosong datanya, sedangkan ada data di database.
-seperti ini di console
-jQuery siap digunakan
-Company changed to: 1
-Getting barang for company: 1
-Barang data: Array(0)
-lu mau gw kirim file yg mana bro?
-biar lu cek terus nanti lu bisa kasih perbaikannya?
+CREATE TABLE `barang` (
+  `id_barang` int(11) NOT NULL,
+  `id_perusahaan` int(11) NOT NULL,
+  `id_kategori` int(11) DEFAULT NULL,
+  `nama_barang` varchar(100) NOT NULL,
+  `gambar` varchar(255) DEFAULT NULL,
+  `sku` varchar(50) NOT NULL,
+  `deskripsi` text DEFAULT NULL,
+  `aktif` tinyint(1) DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `detail_penjualan` (
+  `id_detail` int(11) NOT NULL,
+  `id_penjualan` int(11) NOT NULL,
+  `id_barang` int(11) NOT NULL,
+  `id_gudang` int(11) NOT NULL,
+  `jumlah` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `detail_retur_penjualan` (
+  `id_detail_retur` int(11) NOT NULL,
+  `id_retur` int(11) NOT NULL,
+  `id_barang` int(11) NOT NULL,
+  `jumlah_retur` int(11) NOT NULL,
+  `alasan_barang` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `gudang` (
+  `id_gudang` int(11) NOT NULL,
+  `id_perusahaan` int(11) DEFAULT NULL,
+  `nama_gudang` varchar(100) NOT NULL,
+  `alamat` text DEFAULT NULL,
+  `telepon` varchar(20) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `status_aktif` tinyint(1) DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `hak_akses_fitur` (
+  `id_hak_akses` int(11) NOT NULL,
+  `id_role` int(11) NOT NULL,
+  `nama_fitur` varchar(50) NOT NULL,
+  `akses` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `kategori` (
+  `id_kategori` int(11) NOT NULL,
+  `id_perusahaan` int(11) NOT NULL,
+  `nama_kategori` varchar(50) NOT NULL,
+  `deskripsi` text DEFAULT NULL,
+  `status_aktif` tinyint(1) DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `log_status_penjualan` (
+  `id_log` int(11) NOT NULL,
+  `id_penjualan` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `status` varchar(20) NOT NULL,
+  `tanggal` datetime NOT NULL DEFAULT current_timestamp(),
+  `keterangan` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `log_status_retur` (
+  `id_log` int(11) NOT NULL,
+  `id_retur` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `status` enum('diterima','diproses','selesai','ditolak') NOT NULL,
+  `keterangan` text DEFAULT NULL,
+  `tanggal` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `log_stok` (
+  `id_log` int(11) NOT NULL,
+  `id_barang` int(11) NOT NULL,
+  `id_user` int(11) DEFAULT NULL,
+  `id_perusahaan` int(11) DEFAULT NULL,
+  `id_gudang` int(11) DEFAULT NULL,
+  `jenis` enum('masuk','keluar','retur','transfer_keluar','transfer_masuk','penyesuaian') NOT NULL,
+  `jumlah` int(11) NOT NULL,
+  `keterangan` text DEFAULT NULL,
+  `tanggal` datetime DEFAULT current_timestamp(),
+  `id_referensi` int(11) DEFAULT NULL COMMENT 'ID transaksi terkait (penjualan/penerimaan/retur)',
+  `tipe_referensi` enum('penjualan','penerimaan','retur','transfer','penyesuaian') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `pelanggan` (
+  `id_pelanggan` int(11) NOT NULL,
+  `id_perusahaan` int(11) NOT NULL,
+  `nama_pelanggan` varchar(100) NOT NULL,
+  `alamat` text DEFAULT NULL,
+  `telepon` varchar(20) DEFAULT NULL,
+  `status_aktif` tinyint(1) DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `pengaturan_sistem` (
+  `id_pengaturan` int(11) NOT NULL,
+  `key` varchar(50) NOT NULL,
+  `value` text DEFAULT NULL,
+  `keterangan` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `penjualan` (
+  `id_penjualan` int(11) NOT NULL,
+  `id_perusahaan` int(11) NOT NULL,
+  `no_invoice` varchar(50) DEFAULT NULL,
+  `id_user` int(11) NOT NULL,
+  `id_pelanggan` int(11) DEFAULT NULL,
+  `tanggal_penjualan` datetime NOT NULL,
+  `keterangan` text DEFAULT NULL,
+  `status` enum('proses','packing','dikirim','selesai','batal') DEFAULT 'proses'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `perusahaan` (
+  `id_perusahaan` int(11) NOT NULL,
+  `nama_perusahaan` varchar(255) NOT NULL,
+  `alamat` varchar(255) DEFAULT NULL,
+  `telepon` varchar(20) DEFAULT NULL,
+  `status_aktif` tinyint(1) DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `retur_penjualan` (
+  `id_retur` int(11) NOT NULL,
+  `no_retur` varchar(50) DEFAULT NULL,
+  `id_penjualan` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `tanggal_retur` datetime NOT NULL,
+  `alasan_retur` text NOT NULL,
+  `status` enum('diterima','diproses','selesai','ditolak') DEFAULT 'diterima'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `role_user` (
+  `id_role` int(11) NOT NULL,
+  `nama_role` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `stok_awal` (
+  `id_stok_awal` int(11) NOT NULL,
+  `id_barang` int(11) NOT NULL,
+  `id_gudang` int(11) NOT NULL,
+  `id_perusahaan` int(11) NOT NULL,
+  `qty_awal` int(11) NOT NULL,
+  `keterangan` text DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `created_by` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `stok_gudang` (
+  `id_stok` int(11) NOT NULL,
+  `id_perusahaan` int(11) NOT NULL,
+  `id_gudang` int(11) NOT NULL,
+  `id_barang` int(11) NOT NULL,
+  `jumlah` int(11) NOT NULL DEFAULT 0,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `supplier` (
+  `id_supplier` int(11) NOT NULL,
+  `id_perusahaan` int(11) NOT NULL,
+  `nama_supplier` varchar(100) NOT NULL,
+  `alamat` text DEFAULT NULL,
+  `telepon` varchar(20) DEFAULT NULL,
+  `status_aktif` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `transfer_stok` (
+  `id_transfer` int(11) NOT NULL,
+  `no_transfer` varchar(50) DEFAULT NULL,
+  `id_barang` int(11) NOT NULL,
+  `id_gudang_asal` int(11) NOT NULL,
+  `id_gudang_tujuan` int(11) NOT NULL,
+  `jumlah` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `tanggal` timestamp NOT NULL DEFAULT current_timestamp(),
+  `keterangan` varchar(255) DEFAULT NULL,
+  `status` enum('pending','selesai','batal') DEFAULT 'pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `user` (
+  `id_user` int(11) NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `id_role` int(11) NOT NULL,
+  `id_perusahaan` int(11) DEFAULT NULL,
+  `id_gudang` int(11) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `aktif` tinyint(1) DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL,
+  `last_login` datetime DEFAULT NULL,
+  `foto_profil` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `barang`
+  ADD PRIMARY KEY (`id_barang`),
+  ADD UNIQUE KEY `uniq_sku_perusahaan` (`id_perusahaan`,`sku`),
+  ADD KEY `id_kategori` (`id_kategori`);
+
+ALTER TABLE `detail_penjualan`
+  ADD PRIMARY KEY (`id_detail`),
+  ADD KEY `fk_penjualan_detail` (`id_penjualan`),
+  ADD KEY `fk_barang_penjualan` (`id_barang`);
+
+ALTER TABLE `detail_retur_penjualan`
+  ADD PRIMARY KEY (`id_detail_retur`),
+  ADD KEY `fk_retur` (`id_retur`),
+  ADD KEY `fk_barang` (`id_barang`);
+
+ALTER TABLE `gudang`
+  ADD PRIMARY KEY (`id_gudang`),
+  ADD KEY `id_perusahaan` (`id_perusahaan`);
+
+ALTER TABLE `hak_akses_fitur`
+  ADD PRIMARY KEY (`id_hak_akses`),
+  ADD UNIQUE KEY `uniq_role_fitur` (`id_role`,`nama_fitur`);
+
+ALTER TABLE `kategori`
+  ADD PRIMARY KEY (`id_kategori`),
+  ADD UNIQUE KEY `uniq_kategori_perusahaan` (`id_perusahaan`,`nama_kategori`);
+
+ALTER TABLE `log_status_penjualan`
+  ADD PRIMARY KEY (`id_log`),
+  ADD KEY `id_penjualan` (`id_penjualan`),
+  ADD KEY `id_user` (`id_user`);
+
+ALTER TABLE `log_status_retur`
+  ADD PRIMARY KEY (`id_log`),
+  ADD KEY `id_retur` (`id_retur`),
+  ADD KEY `id_user` (`id_user`);
+
+ALTER TABLE `log_stok`
+  ADD PRIMARY KEY (`id_log`),
+  ADD KEY `idx_barang` (`id_barang`),
+  ADD KEY `idx_gudang` (`id_gudang`),
+  ADD KEY `idx_referensi` (`id_referensi`),
+  ADD KEY `idx_tipe_referensi` (`tipe_referensi`);
+
+ALTER TABLE `pelanggan`
+  ADD PRIMARY KEY (`id_pelanggan`);
+
+ALTER TABLE `pengaturan_sistem`
+  ADD PRIMARY KEY (`id_pengaturan`),
+  ADD UNIQUE KEY `uniq_key` (`key`);
+
+ALTER TABLE `penjualan`
+  ADD PRIMARY KEY (`id_penjualan`),
+  ADD KEY `id_perusahaan` (`id_perusahaan`);
+
+ALTER TABLE `perusahaan`
+  ADD PRIMARY KEY (`id_perusahaan`);
+
+ALTER TABLE `retur_penjualan`
+  ADD PRIMARY KEY (`id_retur`);
+
+ALTER TABLE `role_user`
+  ADD PRIMARY KEY (`id_role`);
+
+ALTER TABLE `stok_awal`
+  ADD PRIMARY KEY (`id_stok_awal`),
+  ADD KEY `fk_stok_awal_barang` (`id_barang`),
+  ADD KEY `fk_stok_awal_gudang` (`id_gudang`),
+  ADD KEY `fk_stok_awal_perusahaan` (`id_perusahaan`);
+
+ALTER TABLE `stok_gudang`
+  ADD PRIMARY KEY (`id_stok`),
+  ADD UNIQUE KEY `uniq_barang_gudang` (`id_barang`,`id_gudang`);
+
+ALTER TABLE `supplier`
+  ADD PRIMARY KEY (`id_supplier`);
+
+ALTER TABLE `transfer_stok`
+  ADD PRIMARY KEY (`id_transfer`),
+  ADD KEY `fk_transfer_barang` (`id_barang`),
+  ADD KEY `fk_transfer_gudang_asal` (`id_gudang_asal`),
+  ADD KEY `fk_transfer_gudang_tujuan` (`id_gudang_tujuan`),
+  ADD KEY `fk_transfer_user` (`id_user`);
+
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id_user`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD KEY `id_role` (`id_role`),
+  ADD KEY `id_cabang` (`id_gudang`);
+
+ALTER TABLE `barang`
+  MODIFY `id_barang` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `detail_penjualan`
+  MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `detail_retur_penjualan`
+  MODIFY `id_detail_retur` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `gudang`
+  MODIFY `id_gudang` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `hak_akses_fitur`
+  MODIFY `id_hak_akses` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `kategori`
+  MODIFY `id_kategori` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `log_status_penjualan`
+  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `log_status_retur`
+  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `log_stok`
+  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `pelanggan`
+  MODIFY `id_pelanggan` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `pengaturan_sistem`
+  MODIFY `id_pengaturan` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `penjualan`
+  MODIFY `id_penjualan` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `perusahaan`
+  MODIFY `id_perusahaan` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `retur_penjualan`
+  MODIFY `id_retur` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `role_user`
+  MODIFY `id_role` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `stok_awal`
+  MODIFY `id_stok_awal` int(11) NOT NULL AUTO_INCREMENT;
 
 
-kita akan memperbaiki menu kategori:
-1. seharusnya ada id_perusahaan dalam tabel kategori sebagai penanda bahwa kategori_1 adalah milik perusahaan_i
-2. fitur hapus kategori langsung menghapus data, seharusnya hanya merubah status aktif dan tidak aktif (soft delete)
-3. fitur input data kategori jika role nya Admin Pusat seharusnya tidak perlu memilih Perusaan sebab Admin Pusat sudah memiliki id_perusahaan
-untuk update code fitur kategori ini file application/models/master/Kategori_model.php ini sudah terupdate
-mari kita lanjut generate code dan update untuk file application/controllers/master/Kategori.php
+ALTER TABLE `stok_gudang`
+  MODIFY `id_stok` int(11) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `supplier`
+  MODIFY `id_supplier` int(11) NOT NULL AUTO_INCREMENT;
 
-Berikut urutan pembangunan modul dari awal hingga akhir dengan penjelasan tujuan dan fungsinya:
+ALTER TABLE `transfer_stok`
+  MODIFY `id_transfer` int(11) NOT NULL AUTO_INCREMENT;
 
-🚀 Tahap 1: Fondasi Sistem (Wajib Dibuat Pertama)
-Modul Autentikasi & Hak Akses
-Tujuan: Mengatur login, logout, dan hak akses per role
-Fungsi:
-Login/logout user
-Cek hak akses fitur per role
-Manajemen user (Super Admin)
-Modul Perusahaan & Gudang
-Tujuan: Mengatur data perusahaan dan gudang
-Fungsi:
-CRUD perusahaan
-CRUD gudang per perusahaan
-Assign user ke gudang/perusahaan
+ALTER TABLE `user`
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT;
 
-📦 Tahap 2: Master Data (Prasyarat untuk Modul Lain)
-Modul Kategori Barang
-Tujuan: Mengelompokkan barang per kategori
-Fungsi:
-CRUD kategori per perusahaan
-Filter barang berdasarkan kategori
-Modul Barang
-Tujuan: Manajemen data barang
-Fungsi:
-CRUD barang dengan SKU unik
-Upload gambar barang
-Relasi ke kategori
-Modul Supplier & Pelanggan
-Tujuan: Manajemen partner bisnis
-Fungsi:
-CRUD supplier
-CRUD pelanggan
+ALTER TABLE `barang`
+  ADD CONSTRAINT `barang_ibfk_1` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id_kategori`);
 
-📊 Tahap 3: Inti Sistem (Manajemen Stok)
-Modul Stok Awal
-Tujuan: Input stok awal sistem
-Fungsi:
-Input stok awal per barang/gudang
-Generate log stok otomatis
-Modul Penerimaan Barang
-Tujuan: Pencatatan barang masuk
-Fungsi:
-Input penerimaan dari supplier
-Update stok otomatis
-Generate log stok "masuk"
-Modul Transfer Stok
-Tujuan: Pemindahan stok antar gudang
-Fungsi:
-Request transfer stok
-Approval transfer (Admin Pusat)
-Update stok otomatis
-Modul Penyesuaian Stok
-Tujuan: Koreksi stok manual
-Fungsi:
-Input penyesuaian stok
-Generate log stok "penyesuaian"
-Hanya untuk Admin Pusat
+ALTER TABLE `detail_penjualan`
+  ADD CONSTRAINT `fk_barang_penjualan` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`),
+  ADD CONSTRAINT `fk_penjualan_detail` FOREIGN KEY (`id_penjualan`) REFERENCES `penjualan` (`id_penjualan`);
 
-💰 Tahap 4: Transaksi Bisnis
-Modul Penjualan
-Tujuan: Pencatatan penjualan
-Fungsi:
-Input penjualan (Sales Online)
-Proses packing (Admin Packing)
-Update stok otomatis
-Generate log stok "keluar"
-Modul Retur Penjualan
-Tujuan: Pencatatan retur dari pelanggan
-Fungsi:
-Input retur (Admin Return)
-Update stok otomatis
-Generate log stok "retur"
+ALTER TABLE `detail_retur_penjualan`
+  ADD CONSTRAINT `fk_barang_retur` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`),
+  ADD CONSTRAINT `fk_retur_detail` FOREIGN KEY (`id_retur`) REFERENCES `retur_penjualan` (`id_retur`);
 
-📈 Tahap 5: Monitoring & Laporan
-Modul Dashboard
-Tujuan: Tampilan ringkasan sistem
-Fungsi:
-Ringkasan stok per gudang
-Grafik penjualan
-Notifikasi stok menipis
-Modul Riwayat Stok
-Tujuan: Audit trail pergerakan stok
-Fungsi:
-Tampilkan log stok dengan filter
-Tracking perubahan stok
-Modul Laporan
-Tujuan: Generate laporan sistem
-Fungsi:
-Laporan stok per gudang/kategori
-Laporan penjualan per periode
-Laporan retur penjualan
-Export ke PDF/Excel
+ALTER TABLE `gudang`
+  ADD CONSTRAINT `gudang_ibfk_1` FOREIGN KEY (`id_perusahaan`) REFERENCES `perusahaan` (`id_perusahaan`);
 
-⚙️ Tahap 6: Pengaturan Sistem (Terakhir)
-Modul Pengaturan Sistem
-Tujuan: Konfigurasi aplikasi
-Fungsi:
-Pengaturan nama toko, alamat
-Pengaturan minimal stok
-Backup database
+ALTER TABLE `stok_awal`
+  ADD CONSTRAINT `fk_stok_awal_barang` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`),
+  ADD CONSTRAINT `fk_stok_awal_gudang` FOREIGN KEY (`id_gudang`) REFERENCES `gudang` (`id_gudang`),
+  ADD CONSTRAINT `fk_stok_awal_perusahaan` FOREIGN KEY (`id_perusahaan`) REFERENCES `perusahaan` (`id_perusahaan`);
 
-untuk link source code lu bisa cek link git gw bro:
-https://github.com/kantorujbitdev/stock_management_web
+ALTER TABLE `transfer_stok`
+  ADD CONSTRAINT `fk_transfer_barang` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`),
+  ADD CONSTRAINT `fk_transfer_gudang_asal` FOREIGN KEY (`id_gudang_asal`) REFERENCES `gudang` (`id_gudang`),
+  ADD CONSTRAINT `fk_transfer_gudang_tujuan` FOREIGN KEY (`id_gudang_tujuan`) REFERENCES `gudang` (`id_gudang`),
+  ADD CONSTRAINT `fk_transfer_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`);
 
-coba cek code-code yang ada itu bro. coba analisa dan berikan saya penjelasan serta keterangan apabila ada yang perlu di perbaiki
-
-
-
-
-Okay gw akan upload ulang .zip nya bro.
-berarti saat ini lu mendeteksi adanya 10 kekurangan dalam kode gw ini bro, diantaranya:
-1. Base Controller (MY_Controller) untuk konsistensi auth & layout.
-2. Service Layer khusus stok (agar semua jalur ubah stok 100% konsisten & bertransaksi).
-3. Hardening auth (hash modern, rate limit, CSRF).
-4. Server-side DataTables di semua list besar.
-5. Index DB & constraint (foreign key, unique SKU).
-6. Activity Log umum (di luar Log Stok).
-7. Migrasi DB terkelola (walau CI3, tetap bisa).
-8. State machine yang jelas untuk Transfer dan Packing.
-9. Pola retur yang membedakan retur masuk stok vs retur rusak.
-10. Backup DB aman (non-public, role-limited).
-
-Tahap 1: Pondasi & Keamanan (Wajib duluan)
-Base Controller (MY_Controller)
-Bikin application/core/MY_Controller.php
-Semua controller extend MY_Controller → supaya auth check & layout konsisten.
-Auth Hardening
-Ubah password hashing ke password_hash (bcrypt) + password_verify.
-Tambahkan rate limit login (misal: gagal 5x → cooldown 10 menit).
-Aktifkan CSRF di application/config/config.php.
-Backup DB Aman
-Pastikan file backup disimpan di folder non-public (misal application/backups/), bukan di /public/.
-Akses backup hanya bisa oleh Super Admin.
-Tahap 2: Konsistensi Bisnis Proses
-Service Layer untuk Stok
-Bikin class StockService.php di application/libraries/.
-Semua mutasi stok (jual, retur, transfer, penyesuaian) lewat service ini → otomatis wrap dengan transaksi DB.
-State Machine Transfer & Packing
-Tambah field status (draft, approved, delivered, received).
-Buat function yang hanya bisa mengubah status sesuai alur.
-Hindari update langsung → pakai method service tadi.
-Pola Retur Jelas
-Retur baik → stok kembali.
-Retur rusak → masuk tabel khusus stok_rusak, bukan stok utama.
-Tahap 3: Skalabilitas & Maintainability
-Server-side DataTables
-Tambahkan endpoint JSON (ajax_list) untuk semua tabel besar.
-Di sisi view → pakai DataTables mode serverSide: true.
-Index DB & Constraint
-Tambah foreign key (misal: id_gudang di stok harus valid di gudang).
-SKU barang wajib unique.
-Tambah index di kolom pencarian (kode_barang, nama_barang).
-Activity Log Umum
-Buat tabel activity_log (id_user, aksi, keterangan, timestamp).
-Catat semua aktivitas besar (login, tambah barang, ubah stok, hapus data).
-Migrasi DB
-Walau CI3 nggak built-in, kita bisa bikin folder application/migrations/.
-Simpan file SQL numerik (001_create_barang.sql, 002_add_index.sql, dst).
-Buat library kecil MigrationRunner untuk apply patch secara teratur.
-
-📌 Cara Eksekusi
-Step by step → Jangan langsung 10 item sekaligus.
-Gw saranin urutannya gini:
-MY_Controller (pondasi)
-Hardening Auth
-Backup DB Aman
-Service Layer Stok
-State Machine Transfer & Retur
-Activity Log
-Migrasi DB
-Index & Constraint
-Server-side DataTables
-
+ALTER TABLE `user`
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `role_user` (`id_role`);
+COMMIT;
