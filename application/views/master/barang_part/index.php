@@ -34,6 +34,34 @@
                 <?php $this->load->view('master/barang_part/barang_card', ['b' => $b]); ?>
             <?php endforeach; ?>
         </div>
+        <!-- Info Items -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <span class="text-muted">
+                    <span id="showing-count"><?php echo count($barang); ?></span> dari
+                    <span id="total-count"><?php echo $total_items; ?></span> barang
+                </span>
+            </div>
+            <div>
+                <span class="text-muted">Halaman <span id="current-page"><?php echo $current_page; ?></span></span>
+            </div>
+        </div>
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="text-center py-4" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Memuat barang lainnya...</p>
+        </div>
+
+        <!-- No Results Message -->
+        <?php if (empty($barang)): ?>
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Tidak ada barang yang ditemukan</h5>
+                <p class="text-muted">Coba gunakan filter lain atau reset filter</p>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 

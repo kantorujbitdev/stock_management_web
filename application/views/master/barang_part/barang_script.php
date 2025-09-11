@@ -7,16 +7,33 @@
         }
     });
 
-    // Check localStorage for filter visibility preference
+    // Global variables
+    let isLoading = false;
+    let hasMoreData = <?php echo $has_more ? 'true' : 'false'; ?>;
+    let currentPage = <?php echo $current_page; ?>;
+    const itemsPerPage = <?php echo $items_per_page; ?>;
+
     document.addEventListener('DOMContentLoaded', function () {
+        // Initialize filter toggle
+        initializeFilterToggle();
+
+        // Initialize infinite scroll
+        initializeInfiniteScroll();
+
+        // Attach event listeners to existing items
+        attachEventListenersToItems();
+    });
+
+    // Initialize filter toggle
+    function initializeFilterToggle() {
         const filterCardBody = document.getElementById('filterCardBody');
         const toggleFilterBtn = document.getElementById('toggleFilter');
         const toggleIcon = toggleFilterBtn.querySelector('i');
 
-        // Get saved preference or default to hidden
+        // Get saved preference
         const isFilterVisible = localStorage.getItem('filterVisible') === 'true';
 
-        // Set initial state based on saved preference
+        // Set initial state
         if (isFilterVisible) {
             filterCardBody.style.display = 'block';
             toggleIcon.className = 'fas fa-chevron-up';
@@ -25,7 +42,7 @@
             toggleIcon.className = 'fas fa-chevron-down';
         }
 
-        // Toggle Filter Visibility
+        // Toggle filter
         toggleFilterBtn.addEventListener('click', function () {
             if (filterCardBody.style.display === 'none') {
                 filterCardBody.style.display = 'block';
@@ -38,12 +55,10 @@
             }
         });
 
-        // Reset All Filters
+        // Reset filter
         document.getElementById('resetFilter').addEventListener('click', function () {
-            // Reset search input
+            // Reset all inputs
             document.getElementById('searchBarang').value = '';
-
-            // Reset all dropdowns to default/first option
             document.getElementById('filterKategori').selectedIndex = 0;
             document.getElementById('filterStatus').selectedIndex = 0;
             document.getElementById('filterStok').selectedIndex = 0;
@@ -58,58 +73,146 @@
             toggleIcon.className = 'fas fa-chevron-down';
             localStorage.setItem('filterVisible', 'false');
 
-            // Trigger filter after reset
+            // Trigger filter
             filterBarang();
 
-            // Show notification that filter has been reset and hidden
+            // Reset pagination
+            resetPagination();
+
             showNotification('Filter berhasil direset dan disembunyikan', 'info');
         });
-    });
+    }
 
-    // Function to show notification
-    function showNotification(message, type) {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-        notification.style.top = '20px';
-        notification.style.right = '20px';
-        notification.style.zIndex = '9999';
-        notification.style.minWidth = '250px';
-        notification.innerHTML = `
-            ${message}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        `;
+    // Initialize infinite scroll
+    function initializeInfiniteScroll() {
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const barangGrid = document.getElementById('barangGrid');
 
-        // Add to body
-        document.body.appendChild(notification);
+        // Load more items function
+        function loadMoreItems() {
+            if (isLoading || !hasMoreData) return;
 
-        // Auto remove after 3 seconds
-        setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 150);
-        }, 3000);
+            console.log('Loading more items...'); // Debug log
+
+            isLoading = true;
+            loadingIndicator.style.display = 'block';
+
+            // Get filter values
+            const searchValue = document.getElementById('searchBarang').value;
+            const kategoriValue = document.getElementById('filterKategori').value;
+            const statusValue = document.getElementById('filterStatus').value;
+            const stokValue = document.getElementById('filterStok').value;
+            const sortByValue = document.getElementById('sortBy').value;
+
+            <?php if ($this->session->userdata('id_role') == 5): ?>
+                const perusahaanValue = document.getElementById('filterPerusahaan').value;
+            <?php endif; ?>
+
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('page', currentPage + 1);
+            formData.append('search', searchValue);
+            formData.append('id_kategori', kategoriValue);
+            formData.append('status', statusValue);
+            formData.append('stock_status', stokValue);
+            formData.append('sort_by', sortByValue);
+
+            <?php if ($this->session->userdata('id_role') == 5): ?>
+                formData.append('id_perusahaan', perusahaanValue);
+            <?php endif; ?>
+
+            // Send AJAX request
+            fetch('<?php echo site_url("barang/load_more"); ?>', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Server response:', data); // Debug log
+
+                    if (data.success) {
+                        // Append new items
+                        data.html.forEach(itemHtml => {
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = itemHtml;
+                            barangGrid.appendChild(tempDiv.firstElementChild);
+                        });
+
+                        // Update counters
+                        document.getElementById('showing-count').textContent = data.showing_count;
+                        document.getElementById('total-count').textContent = data.total_items;
+                        document.getElementById('current-page').textContent = data.current_page;
+
+                        // Update variables
+                        currentPage = data.current_page;
+                        hasMoreData = data.has_more;
+
+                        // Attach event listeners
+                        attachEventListenersToNewItems();
+                    } else {
+                        showNotification('Gagal memuat data: ' + data.message, 'danger');
+                    }
+
+                    isLoading = false;
+                    loadingIndicator.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('Terjadi kesalahan saat memuat data', 'danger');
+                    isLoading = false;
+                    loadingIndicator.style.display = 'none';
+                });
+        }
+
+        // Scroll event listener
+        function handleScroll() {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000) {
+                loadMoreItems();
+            }
+        }
+
+        // Add scroll listener with throttle
+        let scrollTimeout;
+        window.addEventListener('scroll', function () {
+            if (!scrollTimeout) {
+                scrollTimeout = setTimeout(function () {
+                    scrollTimeout = null;
+                    handleScroll();
+                }, 200);
+            }
+        });
+    }
+
+    // Reset pagination
+    function resetPagination() {
+        currentPage = 1;
+        hasMoreData = true;
+
+        // Remove items beyond first page
+        const items = document.querySelectorAll('#barangGrid .barang-item');
+        for (let i = itemsPerPage; i < items.length; i++) {
+            items[i].remove();
+        }
+
+        // Reset counters
+        const totalItems = parseInt(document.getElementById('total-count').textContent);
+        const initialShowing = Math.min(itemsPerPage, totalItems);
+
+        document.getElementById('showing-count').textContent = initialShowing;
+        document.getElementById('current-page').textContent = 1;
     }
 
     // Filter functionality
-    document.getElementById('searchBarang').addEventListener('keyup', filterBarang);
-    <?php if ($this->session->userdata('id_role') == 5): ?>
-        document.getElementById('filterPerusahaan').addEventListener('change', filterBarang);
-    <?php endif; ?>
-    document.getElementById('filterKategori').addEventListener('change', filterBarang);
-    document.getElementById('filterStatus').addEventListener('change', filterBarang);
-    document.getElementById('filterStok').addEventListener('change', filterBarang);
-    document.getElementById('sortBy').addEventListener('change', sortBarang);
-
     function filterBarang() {
         const searchValue = document.getElementById('searchBarang').value.toLowerCase();
         const kategoriValue = document.getElementById('filterKategori').value;
         const statusValue = document.getElementById('filterStatus').value;
         const stokValue = document.getElementById('filterStok').value;
         const items = document.querySelectorAll('.barang-item');
+
         <?php if ($this->session->userdata('id_role') == 5): ?>
             const perusahaanValue = document.getElementById('filterPerusahaan').value;
         <?php endif; ?>
@@ -145,6 +248,7 @@
             });
     }
 
+    // Sort functionality
     function sortBarang() {
         const sortBy = document.getElementById('sortBy').value;
         const grid = document.getElementById('barangGrid');
@@ -164,7 +268,7 @@
                 case 'stok':
                     aValue = parseInt(a.getAttribute('data-stok'));
                     bValue = parseInt(b.getAttribute('data-stok'));
-                    return bValue - aValue; // Descending for stock
+                    return bValue - aValue;
                 default:
                     return 0;
             }
@@ -174,43 +278,87 @@
         items.forEach(item => grid.appendChild(item));
     }
 
-    // Detail modal functionality
-    document.addEventListener('DOMContentLoaded', function () {
-        // Add click event to all detail buttons
-        const detailButtons = document.querySelectorAll('.detail-btn');
-        detailButtons.forEach(button => {
+    // Attach event listeners to existing items
+    function attachEventListenersToItems() {
+        // Detail buttons
+        document.querySelectorAll('.detail-btn').forEach(button => {
             button.addEventListener('click', function (e) {
-                e.stopPropagation(); // Prevent card click event
+                e.stopPropagation();
                 showDetailModal(this.closest('.barang-item'));
             });
         });
 
-        // Add click event to all cards
-        const cardItems = document.querySelectorAll('.card-clickable');
-        cardItems.forEach(card => {
+        // Card clicks
+        document.querySelectorAll('.card-clickable').forEach(card => {
             card.addEventListener('click', function () {
                 showDetailModal(this);
             });
         });
 
-        // Add click event to input stok buttons
-        const inputStokButtons = document.querySelectorAll('.input-stok-btn');
-        inputStokButtons.forEach(button => {
+        // Input stok buttons
+        document.querySelectorAll('.input-stok-btn').forEach(button => {
             button.addEventListener('click', function (e) {
-                e.stopPropagation(); // Prevent card click event
+                e.stopPropagation();
                 showInputStokModal(this);
             });
         });
+    }
 
-        // Load gudang when modal is shown
-        $('#inputStokModal').on('shown.bs.modal', function () {
-            const idPerusahaan = $('#stokIdPerusahaan').val();
-            if (idPerusahaan) {
-                loadGudangOptions(idPerusahaan);
-            }
+    // Attach event listeners to new items
+    function attachEventListenersToNewItems() {
+        // Detail buttons
+        document.querySelectorAll('.barang-item:not(.attached) .detail-btn').forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.stopPropagation();
+                showDetailModal(this.closest('.barang-item'));
+            });
+            button.closest('.barang-item').classList.add('attached');
         });
-    });
 
+        // Card clicks
+        document.querySelectorAll('.barang-item:not(.attached)').forEach(card => {
+            card.addEventListener('click', function () {
+                showDetailModal(this);
+            });
+            card.classList.add('attached');
+        });
+
+        // Input stok buttons
+        document.querySelectorAll('.barang-item:not(.attached) .input-stok-btn').forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.stopPropagation();
+                showInputStokModal(this);
+            });
+            button.closest('.barang-item').classList.add('attached');
+        });
+    }
+
+    // Show notification
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        notification.style.top = '20px';
+        notification.style.right = '20px';
+        notification.style.zIndex = '9999';
+        notification.style.minWidth = '250px';
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        `;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 150);
+        }, 3000);
+    }
+
+    // Modal functions (keep existing modal functions)
     function showDetailModal(barangItem) {
         const id = barangItem.getAttribute('data-id');
         const gambar = barangItem.getAttribute('data-gambar');
@@ -353,7 +501,7 @@
         });
     }
 
-    // Fungsi untuk mengeksekusi script setelah jQuery dan Bootstrap siap
+    // Image fullscreen
     function runImageFullscreenScript() {
         if (window.jQuery && typeof jQuery.fn.modal === 'function') {
             console.log("Initializing image fullscreen script");
@@ -361,7 +509,7 @@
             // Klik gambar untuk fullscreen
             jQuery(document).on('click', '.img-clickable', function (e) {
                 e.preventDefault();
-                e.stopPropagation(); // Prevent card click event
+                e.stopPropagation();
                 console.log('Gambar diklik');
                 var src = jQuery(this).data('src');
                 console.log('SRC: ' + src);
@@ -415,7 +563,7 @@
         }
     }
 
-    // Jalankan script setelah dependencies siap
+    // Initialize image fullscreen
     document.addEventListener('DOMContentLoaded', function () {
         runImageFullscreenScript();
     });

@@ -1,5 +1,41 @@
 <!-- CSS Custom -->
 <style>
+    /* Loading Indicator */
+    #loadingIndicator {
+        min-height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    /* Smooth scrolling */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Animation for new items */
+    .barang-item {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
     /* Styling untuk card header dan tombol toggle */
     .card-header {
         background-color: #f8f9fc !important;

@@ -27,15 +27,26 @@ class Barang extends CI_Controller
         $this->hak_akses->cek_akses('barang');
     }
 
+
     public function index()
     {
         $data['title'] = 'Data Barang';
+
+        // Get pagination parameters
+        $page = $this->input->get('page') ? $this->input->get('page') : 1;
+        $limit = 10; // Number of items per page
+        $offset = ($page - 1) * $limit;
 
         // Filter parameters
         $filter = [
             'id_perusahaan' => $this->session->userdata('id_role') == 5 ? $this->input->get('id_perusahaan') : $this->session->userdata('id_perusahaan'),
             'id_kategori' => $this->input->get('id_kategori'),
-            'stock_status' => $this->input->get('stock_status') // all, empty, has_stock
+            'stock_status' => $this->input->get('stock_status'), // all, empty, has_stock
+            'search' => $this->input->get('search'),
+            'status' => $this->input->get('status'),
+            'sort_by' => $this->input->get('sort_by'),
+            'limit' => $limit,
+            'offset' => $offset
         ];
 
         // Get data based on role
@@ -60,10 +71,71 @@ class Barang extends CI_Controller
             $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
         }
 
+        // Get total items for pagination
+        $total_items = $this->Barang_model->count_barang_with_stok_status($filter);
+
+        // Pagination data
+        $data['total_items'] = $total_items;
+        $data['current_page'] = $page;
+        $data['items_per_page'] = $limit;
+        $data['has_more'] = ($offset + $limit) < $total_items;
         $data['filter'] = $filter;
-        // $data['content'] = 'master/barang_list';
+
         $data['content'] = 'master/barang_part/index';
         $this->load->view('template/template', $data);
+    }
+
+    // Method untuk load more data via AJAX
+    public function load_more()
+    {
+        // Check if AJAX request
+        if (!$this->input->is_ajax_request()) {
+            echo json_encode(['success' => false, 'message' => 'Direct access not allowed']);
+            return;
+        }
+
+        // Get pagination parameters
+        $page = $this->input->post('page') ? (int) $this->input->post('page') : 1;
+        $limit = 10; // Same as index
+        $offset = ($page - 1) * $limit;
+
+        // Filter parameters
+        $filter = [
+            'id_perusahaan' => $this->input->post('id_perusahaan'),
+            'id_kategori' => $this->input->post('id_kategori'),
+            'stock_status' => $this->input->post('stock_status'),
+            'search' => $this->input->post('search'),
+            'status' => $this->input->post('status'),
+            'sort_by' => $this->input->post('sort_by'),
+            'limit' => $limit,
+            'offset' => $offset
+        ];
+
+        // Get data
+        $barang = $this->Barang_model->get_barang_with_stok_status($filter);
+
+        // Get total items for pagination
+        $total_items = $this->Barang_model->count_barang_with_stok_status($filter);
+        $showing_count = ($offset + count($barang));
+        $has_more = ($offset + $limit) < $total_items;
+
+        // Generate HTML for each item
+        $html = [];
+        foreach ($barang as $b) {
+            ob_start();
+            $this->load->view('master/barang_part/barang_card', ['b' => $b]);
+            $html[] = ob_get_clean();
+        }
+
+        // Return JSON response
+        echo json_encode([
+            'success' => true,
+            'html' => $html,
+            'showing_count' => $showing_count,
+            'total_items' => $total_items,
+            'current_page' => $page,
+            'has_more' => $has_more
+        ]);
     }
 
     // Get gudang by perusahaan for AJAX

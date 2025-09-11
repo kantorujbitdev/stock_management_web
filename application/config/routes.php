@@ -71,6 +71,7 @@ $route['barang/delete/(:num)'] = 'master/Barang/delete/$1';
 $route['barang/get_kategori_by_perusahaan'] = 'master/Barang/get_kategori_by_perusahaan';
 $route['barang/get_gudang_by_perusahaan'] = 'master/Barang/get_gudang_by_perusahaan';
 $route['barang/input_stok_awal_process'] = 'master/Barang/input_stok_awal_process';
+$route['barang/load_more'] = 'master/Barang/load_more';
 
 $route['supplier'] = 'master/Supplier';
 $route['supplier/add'] = 'master/Supplier/add';
