@@ -525,6 +525,221 @@ ALTER TABLE `user`
 COMMIT;
 
 
+INSERT INTO `hak_akses_fitur` (`id_hak_akses`, `id_role`, `nama_fitur`, `akses`) VALUES
+(1, 5, 'dashboard', 1),
+(2, 5, 'kategori', 1),
+(3, 5, 'barang', 1),
+(4, 5, 'perusahaan', 1),
+(5, 5, 'gudang', 1),
+(6, 5, 'supplier', 1),
+(7, 5, 'pelanggan', 1),
+(8, 5, 'transfer', 1),
+(9, 5, 'penyesuaian', 1),
+(10, 5, 'riwayat', 1),
+(11, 5, 'penjualan', 1),
+(12, 5, 'retur', 1),
+(13, 5, 'laporan_stok', 1),
+(14, 5, 'laporan_penjualan', 1),
+(15, 5, 'laporan_retur', 1),
+(16, 5, 'laporan_transfer', 1),
+(17, 5, 'user', 1),
+(18, 5, 'hak_akses', 1),
+
+(19, 1, 'dashboard', 1),
+(20, 1, 'kategori', 1),
+(21, 1, 'barang', 1),
+(22, 1, 'perusahaan', 1),
+(23, 1, 'gudang', 1),
+(24, 1, 'supplier', 1),
+(25, 1, 'pelanggan', 1),
+(26, 1, 'transfer', 1),
+(27, 1, 'penyesuaian', 1),
+(28, 1, 'riwayat', 1),
+(29, 1, 'penjualan', 1),
+(30, 1, 'retur', 1),
+(31, 1, 'laporan_stok', 1),
+(32, 1, 'laporan_penjualan', 1),
+(33, 1, 'laporan_retur', 1),
+(34, 1, 'laporan_transfer', 1),
+(35, 1, 'user', 1),
+(36, 1, 'hak_akses', 0),
+
+(37, 2, 'dashboard', 1),
+(38, 2, 'barang', 1),
+(39, 2, 'penjualan', 1),
+(40, 2, 'retur', 1),
+(41, 2, 'pelanggan', 1),
+(42, 2, 'supplier', 1),
+(43, 2, 'riwayat', 1),
+(44, 2, 'laporan_penjualan', 1),
+(45, 2, 'laporan_stok', 1),
+(46, 2, 'laporan_retur', 1),
+
+(47, 3, 'dashboard', 1),
+(48, 3, 'penjualan', 1),
+(49, 3, 'riwayat', 1),
+
+(50, 4, 'dashboard', 1),
+(51, 4, 'retur', 1),
+(52, 4, 'laporan_retur', 1);
+
+
+INSERT INTO `role_user` (`id_role`, `nama_role`) VALUES
+(1, 'Admin Pusat'),
+(2, 'Sales Online'),
+(3, 'Admin Packing'),
+(4, 'Admin Retur'),
+(5, 'Super Admin');
+
+INSERT INTO `user` (`id_user`, `nama`, `username`, `password_hash`, `id_role`, `id_perusahaan`, `id_gudang`, `created_by`, `aktif`, `created_at`, `updated_at`, `last_login`, `foto_profil`) VALUES
+(1, 'Akbar', 'sales_jakarta', '$2y$10$Jk0IyD8hFSY6CbpX5MJtD.3GlVjw.g9hAVM/rymsjmza2cnTl02aq', 2, 1, 1, NULL, 1, '2025-04-16 13:53:26', '2025-06-30 14:20:11', '2025-09-03 17:02:19', NULL),
+(2, 'Super Admin Nama', 'admin', '$2y$10$Jk0IyD8hFSY6CbpX5MJtD.3GlVjw.g9hAVM/rymsjmza2cnTl02aq', 5, NULL, NULL, NULL, 1, '2025-04-21 09:48:25', '2025-04-21 10:46:15', '2025-09-11 19:45:45', NULL),
+(3, 'Admin Pusat Nama', 'admin2', '$2y$10$Jk0IyD8hFSY6CbpX5MJtD.3GlVjw.g9hAVM/rymsjmza2cnTl02aq', 1, 1, 1, NULL, 1, '2025-04-21 14:01:42', '2025-04-21 16:48:20', '2025-09-09 19:35:28', NULL),
+(4, 'Sales Bandung Nama', 'sales_bandung', '$2y$10$Jk0IyD8hFSY6CbpX5MJtD.3GlVjw.g9hAVM/rymsjmza2cnTl02aq', 2, 1, 1, NULL, 1, '2025-04-21 14:26:38', '2025-06-30 13:33:03', '2025-09-10 21:35:16', NULL),
+(5, 'Admin Pack', 'admin_packing', '$2y$10$Jk0IyD8hFSY6CbpX5MJtD.3GlVjw.g9hAVM/rymsjmza2cnTl02aq', 3, 1, 2, NULL, 1, '2025-08-27 20:07:00', '2025-08-27 20:46:31', '2025-09-04 00:30:58', NULL),
+(6, 'Admin Retur Nama', 'admin_retur', '$2y$10$Jk0IyD8hFSY6CbpX5MJtD.3GlVjw.g9hAVM/rymsjmza2cnTl02aq', 4, 1, 1, NULL, 1, '2025-08-27 20:07:50', NULL, '2025-09-03 12:28:32', NULL);
+
+-- Data Perusahaan (2 row)
+INSERT INTO `perusahaan` (`nama_perusahaan`, `alamat`, `telepon`, `status_aktif`) VALUES
+('PT. Maju Bersama', 'Jl. Sudirman No. 10, Jakarta', '021-12345678', 1),
+('CV. Sukses Jaya', 'Jl. Gajah Mada No. 25, Bandung', '022-87654321', 1);
+
+-- Data Gudang (4 row)
+INSERT INTO `gudang` (`id_perusahaan`, `nama_gudang`, `alamat`, `telepon`, `status_aktif`) VALUES
+(1, 'Gudang Utama Jakarta', 'Jl. Industri I No. 5, Jakarta', '021-11111111', 1),
+(1, 'Gudang Tambunan Jakarta', 'Jl. Industri II No. 15, Jakarta', '021-22222222', 1),
+(2, 'Gudang Pusat Bandung', 'Jl. Pahlawan No. 30, Bandung', '022-33333333', 1),
+(2, 'Gudang Cabang Bandung', 'Jl. Merdeka No. 45, Bandung', '022-44444444', 1);
+
+-- Data Kategori (6 row)
+INSERT INTO `kategori` (`id_perusahaan`, `nama_kategori`, `deskripsi`, `status_aktif`) VALUES
+(1, 'Elektronik', 'Produk elektronik rumah tangga', 1),
+(1, 'Fashion', 'Pakaian dan aksesoris', 1),
+(1, 'Makanan', 'Makanan kemasan', 1),
+(2, 'Otomotif', 'Aksesoris kendaraan', 1),
+(2, 'Kesehatan', 'Produk kesehatan', 1),
+(2, 'Perabotan', 'Furniture rumah tangga', 1);
+
+-- Data Barang (10 row)
+INSERT INTO `barang` (`id_perusahaan`, `id_kategori`, `nama_barang`, `gambar`, `sku`, `deskripsi`, `aktif`) VALUES
+(1, 1, 'TV LED 32 Inch', 'tv_led.jpg', 'TV001', 'TV LED dengan resolusi HD', 1),
+(1, 1, 'Kulkas 2 Pintu', 'kulkas.jpg', 'KL001', 'Kulkas hemat energi', 1),
+(1, 2, 'Kemeja Batik', 'kemeja.jpg', 'KM001', 'Kemeja batik premium', 1),
+(1, 3, 'Keripik Kentang', 'keripik.jpg', 'KK001', 'Keripik kentang original', 1),
+(1, 3, 'Minuman Soda', 'soda.jpg', 'MN001', 'Minuman soda rasa cola', 1),
+(2, 4, 'Cover Mobil', 'cover.jpg', 'CV001', 'Cover mobil anti air', 1),
+(2, 4, 'Pompa Ban', 'pompa.jpg', 'PM001', 'Pompa ban elektrik', 1),
+(2, 5, 'Masker Medis', 'masker.jpg', 'MK001', 'Masker 3 ply', 1),
+(2, 6, 'Meja Belajar', 'meja.jpg', 'MB001', 'Meja belajar anak', 1),
+(2, 6, 'Kursi Kantor', 'kursi.jpg', 'KR001', 'Kursi kantor ergonomis', 1);
+
+-- Data Pelanggan (6 row)
+INSERT INTO `pelanggan` (`id_perusahaan`, `nama_pelanggan`, `alamat`, `telepon`, `status_aktif`) VALUES
+(1, 'Toko Elektronik Abadi', 'Jl. Thamrin No. 5, Jakarta', '0811-11111111', 1),
+(1, 'Butik Batik Nusantara', 'Jl. Gatot Subroto No. 20, Jakarta', '0812-22222222', 1),
+(1, 'Warung Makan Sederhana', 'Jl. Kebon Sirih No. 15, Jakarta', '0813-33333333', 1),
+(2, 'Sparepart Motor Bandung', 'Jl. Asia Afrika No. 10, Bandung', '0814-44444444', 1),
+(2, 'Apotek Sehat Sentosa', 'Jl. Cihampelas No. 25, Bandung', '0815-55555555', 1),
+(2, 'Furniture Rumah Idaman', 'Jl. Dago No. 30, Bandung', '0816-66666666', 1);
+
+-- Data Stok Awal (10 row)
+INSERT INTO `stok_awal` (`id_barang`, `id_gudang`, `id_perusahaan`, `qty_awal`, `keterangan`, `created_by`) VALUES
+(1, 1, 1, 50, 'Stok awal TV LED', 3),
+(2, 1, 1, 30, 'Stok awal Kulkas', 3),
+(3, 1, 1, 100, 'Stok awal Kemeja', 3),
+(4, 1, 1, 200, 'Stok awal Keripik', 3),
+(5, 1, 1, 150, 'Stok awal Minuman', 3),
+(6, 3, 2, 40, 'Stok awal Cover Mobil', 3),
+(7, 3, 2, 25, 'Stok awal Pompa Ban', 3),
+(8, 3, 2, 300, 'Stok awal Masker', 3),
+(9, 3, 2, 20, 'Stok awal Meja', 3),
+(10, 3, 2, 35, 'Stok awal Kursi', 3);
+
+-- Data Stok Gudang (10 row)
+INSERT INTO `stok_gudang` (`id_perusahaan`, `id_gudang`, `id_barang`, `jumlah`) VALUES
+(1, 1, 1, 50),
+(1, 1, 2, 30),
+(1, 1, 3, 100),
+(1, 1, 4, 200),
+(1, 1, 5, 150),
+(2, 3, 6, 40),
+(2, 3, 7, 25),
+(2, 3, 8, 300),
+(2, 3, 9, 20),
+(2, 3, 10, 35);
+
+-- Data Penjualan (5 row)
+INSERT INTO `penjualan` (`id_perusahaan`, `no_invoice`, `id_user`, `id_pelanggan`, `tanggal_penjualan`, `keterangan`, `status`) VALUES
+(1, 'INV/JKT/001', 1, 1, '2023-10-01 10:00:00', 'Penjualan TV LED', 'selesai'),
+(1, 'INV/JKT/002', 4, 2, '2023-10-02 14:30:00', 'Penjualan Kemeja', 'dikirim'),
+(1, 'INV/JKT/003', 1, 3, '2023-10-03 09:15:00', 'Penjualan Makanan', 'selesai'),
+(2, 'INV/BDG/001', 1, 4, '2023-10-04 11:20:00', 'Penjualan Cover Mobil', 'selesai'),
+(2, 'INV/BDG/002', 4, 5, '2023-10-05 16:45:00', 'Penjualan Masker', 'proses');
+
+-- Data Detail Penjualan (10 row)
+INSERT INTO `detail_penjualan` (`id_penjualan`, `id_barang`, `id_gudang`, `jumlah`) VALUES
+(1, 1, 1, 5),
+(1, 2, 1, 2),
+(2, 3, 1, 10),
+(2, 1, 1, 1),
+(3, 4, 1, 20),
+(3, 5, 1, 15),
+(4, 6, 3, 8),
+(4, 7, 3, 3),
+(5, 8, 3, 50),
+(5, 9, 3, 2);
+
+-- Data Retur Penjualan (3 row)
+INSERT INTO `retur_penjualan` (`no_retur`, `id_penjualan`, `id_user`, `tanggal_retur`, `alasan_retur`, `status`) VALUES
+('RET/JKT/001', 1, 6, '2023-10-10 09:00:00', 'Barang rusak', 'diproses'),
+('RET/JKT/002', 2, 6, '2023-10-12 13:30:00', 'Salah ukuran', 'selesai'),
+('RET/BDG/001', 4, 6, '2023-10-15 10:15:00', 'Kualitas tidak sesuai', 'diterima');
+
+-- Data Detail Retur Penjualan (5 row)
+INSERT INTO `detail_retur_penjualan` (`id_retur`, `id_barang`, `jumlah_retur`, `alasan_barang`) VALUES
+(1, 1, 1, 'Layar pecah'),
+(1, 2, 1, 'Tidak dingin'),
+(2, 3, 3, 'Ukuran terlalu besar'),
+(3, 6, 2, 'Bahan tipis'),
+(3, 7, 1, 'Tidak berfungsi');
+
+-- Data Transfer Stok (5 row)
+INSERT INTO `transfer_stok` (`no_transfer`, `id_barang`, `id_gudang_asal`, `id_gudang_tujuan`, `jumlah`, `id_user`, `keterangan`, `status`) VALUES
+('TRF/JKT/001', 1, 1, 2, 10, 3, 'Transfer ke gudang tambunan', 'selesai'),
+('TRF/JKT/002', 4, 1, 2, 50, 3, 'Transfer keripik', 'selesai'),
+('TRF/BDG/001', 6, 3, 4, 5, 3, 'Transfer ke cabang', 'pending'),
+('TRF/BDG/002', 8, 3, 4, 100, 3, 'Transfer masker', 'selesai'),
+('TRF/BDG/003', 9, 3, 4, 3, 3, 'Transfer meja', 'batal');
+
+-- Data Log Stok (10 row)
+INSERT INTO `log_stok` (`id_barang`, `id_user`, `id_perusahaan`, `id_gudang`, `jenis`, `jumlah`, `keterangan`, `id_referensi`, `tipe_referensi`) VALUES
+(1, 3, 1, 1, 'masuk', 50, 'Stok awal', NULL, NULL),
+(2, 3, 1, 1, 'masuk', 30, 'Stok awal', NULL, NULL),
+(1, 1, 1, 1, 'keluar', 5, 'Penjualan INV/JKT/001', 1, 'penjualan'),
+(3, 4, 1, 1, 'keluar', 10, 'Penjualan INV/JKT/002', 2, 'penjualan'),
+(6, 1, 2, 3, 'keluar', 8, 'Penjualan INV/BDG/001', 4, 'penjualan'),
+(1, 6, 1, 1, 'retur', 1, 'Retur RET/JKT/001', 1, 'retur'),
+(3, 6, 1, 1, 'retur', 3, 'Retur RET/JKT/002', 2, 'retur'),
+(1, 3, 1, 1, 'transfer_keluar', 10, 'Transfer ke gudang 2', NULL, 'transfer'),
+(1, 3, 1, 2, 'transfer_masuk', 10, 'Transfer dari gudang 1', NULL, 'transfer'),
+(8, 3, 2, 3, 'transfer_keluar', 100, 'Transfer ke gudang 4', NULL, 'transfer');
+
+-- Data Log Status Penjualan (5 row)
+INSERT INTO `log_status_penjualan` (`id_penjualan`, `id_user`, `status`, `keterangan`) VALUES
+(1, 1, 'selesai', 'Pesanan selesai'),
+(2, 4, 'dikirim', 'Sedang dalam pengiriman'),
+(3, 1, 'selesai', 'Pesanan selesai'),
+(4, 1, 'selesai', 'Pesanan selesai'),
+(5, 4, 'proses', 'Sedang diproses');
+
+-- Data Log Status Retur (3 row)
+INSERT INTO `log_status_retur` (`id_retur`, `id_user`, `status`, `keterangan`) VALUES
+(1, 6, 'diproses', 'Sedang diperiksa'),
+(2, 6, 'selesai', 'Retur selesai'),
+(3, 6, 'diterima', 'Retur diterima');
+
+
 kebutan saat ini,
-tolong buatkan data dummy sebanyak 30 row data ya bro,
-namun untuk tabel "user, role_user, hak_akses_fitur, supplier, pengaturan_sistem" ini tidak perlu dibuatkan data dummy nya bro. buat dalam bentuk sql agar mudah kita copas bro
+membuat data dummy sebanyak 30 row data ya bro,
+namun untuk tabel "user dan role_user" tidak perlu sebab sudah ada datanya,
+dan untuk tabel "hak_akses_fitur, supplier, pengaturan_sistem" ini tidak perlu dibuatkan data dummy nya bro. buat dalam bentuk sql agar mudah kita copas bro

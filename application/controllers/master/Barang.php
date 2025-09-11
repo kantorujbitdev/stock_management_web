@@ -61,7 +61,8 @@ class Barang extends CI_Controller
         }
 
         $data['filter'] = $filter;
-        $data['content'] = 'master/barang_list';
+        // $data['content'] = 'master/barang_list';
+        $data['content'] = 'master/barang_part/index';
         $this->load->view('template/template', $data);
     }
 
