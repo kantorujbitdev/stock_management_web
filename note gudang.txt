@@ -27,8 +27,6 @@ application/
 │   │   ├── Supplier.php
 │   │   └── Pelanggan.php
 │   ├── stok/
-│   │   ├── StokAwal.php
-│   │   ├── Penerimaan.php
 │   │   ├── Transfer.php
 │   │   ├── Penyesuaian.php
 │   │   └── Riwayat.php
@@ -60,8 +58,6 @@ application/
 │   │   └── Pelanggan_model.php
 │   ├── stok/
 │   │   ├── Stok_awal_model.php
-│   │   ├── Penerimaan_model.php
-│   │   ├── Detail_penerimaan_model.php
 │   │   ├── Transfer_model.php
 │   │   ├── Penyesuaian_model.php
 │   │   ├── Stok_gudang_model.php
@@ -103,10 +99,6 @@ application/
 │   │   ├── pelanggan_list.php
 │   │   └── pelanggan_form.php
 │   ├── stok/
-│   │   ├── stok_awal_list.php
-│   │   ├── stok_awal_form.php
-│   │   ├── penerimaan_list.php
-│   │   ├── penerimaan_form.php
 │   │   ├── transfer_list.php
 │   │   ├── transfer_form.php
 │   │   ├── penyesuaian_list.php
@@ -531,3 +523,8 @@ ALTER TABLE `transfer_stok`
 ALTER TABLE `user`
   ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `role_user` (`id_role`);
 COMMIT;
+
+
+kebutan saat ini,
+tolong buatkan data dummy sebanyak 30 row data ya bro,
+namun untuk tabel "user, role_user, hak_akses_fitur, supplier, pengaturan_sistem" ini tidak perlu dibuatkan data dummy nya bro. buat dalam bentuk sql agar mudah kita copas bro
