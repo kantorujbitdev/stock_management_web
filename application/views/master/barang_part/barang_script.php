@@ -26,10 +26,12 @@
         $('#detailModal').on('hidden.bs.modal', function () {
             // Remove focus from any element inside the modal
             $(this).find('button, a, input, select, textarea').blur();
+            $('body').focus();
         });
         $('#inputStokModal').on('hidden.bs.modal', function () {
             // Remove focus from any element inside the modal
             $(this).find('button, a, input, select, textarea').blur();
+            $('body').focus();
         });
     });
     // Initialize filter toggle
@@ -66,6 +68,7 @@
             document.getElementById('filterKategori').selectedIndex = 0;
             document.getElementById('filterStatus').selectedIndex = 0;
             document.getElementById('filterStok').selectedIndex = 0;
+            document.getElementById('filterGudang').selectedIndex = 0; // Reset filter gudang
             document.getElementById('sortBy').selectedIndex = 0;
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 document.getElementById('filterPerusahaan').selectedIndex = 0;
@@ -97,6 +100,11 @@
             reloadWithFilters();
         });
 
+        // Event listener untuk filter gudang
+        document.getElementById('filterGudang').addEventListener('change', function () {
+            reloadWithFilters();
+        });
+
         // Event listener untuk filter status
         document.getElementById('filterStatus').addEventListener('change', function () {
             reloadWithFilters();
@@ -112,6 +120,7 @@
             reloadWithFilters();
         });
 
+
         <?php if ($this->session->userdata('id_role') == 5): ?>
             // Event listener untuk filter perusahaan (hanya untuk Super Admin)
             document.getElementById('filterPerusahaan').addEventListener('change', function () {
@@ -123,6 +132,31 @@
             });
         <?php endif; ?>
     }
+
+
+    // Load gudang options based on perusahaan
+    function loadGudangOptions(idPerusahaan) {
+        $.ajax({
+            url: "<?php echo site_url('barang/get_gudang_by_perusahaan'); ?>",
+            type: "GET",
+            data: { id_perusahaan: idPerusahaan },
+            dataType: "json",
+            success: function (response) {
+                let options = '<option value="">Semua Gudang</option>';
+                if (response && Array.isArray(response)) {
+                    response.forEach(function (gudang) {
+                        options += `<option value="${gudang.id_gudang}">${gudang.nama_gudang}</option>`;
+                    });
+                }
+                document.getElementById('filterGudang').innerHTML = options;
+            },
+            error: function (xhr, status, error) {
+                console.error("Error loading gudang:", error);
+                document.getElementById('filterGudang').innerHTML = '<option value="">-- Error --</option>';
+            }
+        });
+    }
+
     // Load kategori options based on perusahaan
     function loadKategoriOptions(idPerusahaan) {
         $.ajax({
@@ -172,6 +206,7 @@
         const kategoriValue = document.getElementById('filterKategori').value;
         const statusValue = document.getElementById('filterStatus').value;
         const stokValue = document.getElementById('filterStok').value;
+        const gudangValue = document.getElementById('filterGudang').value;
         const sortByValue = document.getElementById('sortBy').value;
         <?php if ($this->session->userdata('id_role') == 5): ?>
             const perusahaanValue = document.getElementById('filterPerusahaan').value;
@@ -184,6 +219,7 @@
         formData.append('id_kategori', kategoriValue);
         formData.append('status', statusValue);
         formData.append('stock_status', stokValue);
+        formData.append('id_gudang', gudangValue);
         formData.append('sort_by', sortByValue);
         <?php if ($this->session->userdata('id_role') == 5): ?>
             formData.append('id_perusahaan', perusahaanValue);
@@ -280,6 +316,7 @@
             const kategoriValue = document.getElementById('filterKategori').value;
             const statusValue = document.getElementById('filterStatus').value;
             const stokValue = document.getElementById('filterStok').value;
+            const gudangValue = document.getElementById('filterGudang').value;
             const sortByValue = document.getElementById('sortBy').value;
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 const perusahaanValue = document.getElementById('filterPerusahaan').value;
@@ -292,6 +329,7 @@
             formData.append('id_kategori', kategoriValue);
             formData.append('status', statusValue);
             formData.append('stock_status', stokValue);
+            formData.append('id_gudang', gudangValue);
             formData.append('sort_by', sortByValue);
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 formData.append('id_perusahaan', perusahaanValue);

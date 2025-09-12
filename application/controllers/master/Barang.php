@@ -41,6 +41,7 @@ class Barang extends CI_Controller
         $filter = [
             'id_perusahaan' => $this->session->userdata('id_role') == 5 ? $this->input->get('id_perusahaan') : $this->session->userdata('id_perusahaan'),
             'id_kategori' => $this->input->get('id_kategori'),
+            'id_gudang' => $this->input->get('id_gudang'), // Tambahkan filter gudang
             'stock_status' => $this->input->get('stock_status'), // all, empty, has_stock
             'search' => $this->input->get('search'),
             'status' => $this->input->get('status'),
@@ -55,11 +56,14 @@ class Barang extends CI_Controller
             if (!empty($filter['id_perusahaan'])) {
                 $data['barang'] = $this->Barang_model->get_barang_with_stok_status($filter);
                 $data['kategori'] = $this->Kategori_model->get_kategori_by_perusahaan($filter['id_perusahaan']);
+                // Load gudang untuk filter
+                $data['gudang'] = $this->Gudang_model->get_gudang_by_perusahaan($filter['id_perusahaan']);
             } else {
                 // Jika tidak ada filter perusahaan, ambil semua barang dari semua perusahaan
                 $data['barang'] = $this->Barang_model->get_barang_with_stok_status($filter);
                 // Ambil semua kategori dari semua perusahaan untuk Super Admin
                 $data['kategori'] = $this->Kategori_model->get_all_kategori();
+                $data['gudang'] = array(); // Kosongkan gudang jika belum ada perusahaan yang dipilih
             }
             $data['perusahaan'] = $this->Perusahaan_model->get_perusahaan_aktif();
         } else {
@@ -69,6 +73,7 @@ class Barang extends CI_Controller
             $data['barang'] = $this->Barang_model->get_barang_with_stok_status($filter);
             $data['kategori'] = $this->Kategori_model->get_kategori_by_perusahaan($id_perusahaan);
             $data['perusahaan'] = array($this->Perusahaan_model->get_perusahaan_by_id($id_perusahaan));
+            $data['gudang'] = $this->Gudang_model->get_gudang_by_perusahaan($id_perusahaan);
         }
 
         // Get total items for pagination
@@ -103,6 +108,7 @@ class Barang extends CI_Controller
         $filter = [
             'id_perusahaan' => $this->input->post('id_perusahaan'),
             'id_kategori' => $this->input->post('id_kategori'),
+            'id_gudang' => $this->input->post('id_gudang'), // Tambahkan filter gudang
             'stock_status' => $this->input->post('stock_status'),
             'search' => $this->input->post('search'),
             'status' => $this->input->post('status'),

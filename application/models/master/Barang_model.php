@@ -8,45 +8,56 @@ class Barang_model extends CI_Model
         $this->load->database();
     }
 
-    // Get barang with stock status
-    public function get_barang_with_stok_status($filter)
+    // Fungsi untuk mendapatkan data barang dengan status stok
+    public function get_barang_with_stok_status($filter = [])
     {
-        $this->db->select('b.*, k.nama_kategori, p.nama_perusahaan, sg.id_stok, sg.jumlah as stok');
+        $this->db->select('b.*, k.nama_kategori, p.nama_perusahaan, 
+                      (SELECT COUNT(*) FROM stok_awal sa WHERE sa.id_barang = b.id_barang) as has_stok_awal');
         $this->db->from('barang b');
         $this->db->join('kategori k', 'b.id_kategori = k.id_kategori', 'left');
         $this->db->join('perusahaan p', 'b.id_perusahaan = p.id_perusahaan', 'left');
-        $this->db->join('stok_gudang sg', 'b.id_barang = sg.id_barang', 'left');
 
-        // Apply filters
-        if (!empty($filter['id_perusahaan'])) {
+        // Filter by perusahaan
+        if (isset($filter['id_perusahaan']) && !empty($filter['id_perusahaan'])) {
             $this->db->where('b.id_perusahaan', $filter['id_perusahaan']);
         }
 
-        if (!empty($filter['id_kategori'])) {
+        // Filter by kategori
+        if (isset($filter['id_kategori']) && !empty($filter['id_kategori'])) {
             $this->db->where('b.id_kategori', $filter['id_kategori']);
         }
 
+        // Filter by gudang
+        if (isset($filter['id_gudang']) && !empty($filter['id_gudang'])) {
+            // Join dengan stok_gudang untuk filter berdasarkan gudang
+            $this->db->join('stok_gudang sg', 'b.id_barang = sg.id_barang AND sg.id_gudang = ' . $filter['id_gudang'], 'left');
+            $this->db->where('sg.id_gudang', $filter['id_gudang']);
+        }
+
+        // Filter by status
         if (isset($filter['status']) && $filter['status'] !== '') {
             $this->db->where('b.aktif', $filter['status']);
         }
 
-        if (!empty($filter['search'])) {
+        // Filter by search
+        if (isset($filter['search']) && !empty($filter['search'])) {
             $this->db->group_start();
             $this->db->like('b.nama_barang', $filter['search']);
             $this->db->or_like('b.sku', $filter['search']);
             $this->db->group_end();
         }
 
-        if (!empty($filter['stock_status'])) {
+        // Filter by stock status
+        if (isset($filter['stock_status']) && !empty($filter['stock_status'])) {
             if ($filter['stock_status'] == 'empty') {
-                $this->db->where('sg.id_stok IS NULL');
+                $this->db->where('(SELECT COUNT(*) FROM stok_awal sa WHERE sa.id_barang = b.id_barang) = 0');
             } elseif ($filter['stock_status'] == 'has_stock') {
-                $this->db->where('sg.id_stok IS NOT NULL');
+                $this->db->where('(SELECT COUNT(*) FROM stok_awal sa WHERE sa.id_barang = b.id_barang) > 0');
             }
         }
 
-        // Apply sorting
-        if (!empty($filter['sort_by'])) {
+        // Order by
+        if (isset($filter['sort_by']) && !empty($filter['sort_by'])) {
             switch ($filter['sort_by']) {
                 case 'nama_barang':
                     $this->db->order_by('b.nama_barang', 'ASC');
@@ -55,20 +66,79 @@ class Barang_model extends CI_Model
                     $this->db->order_by('b.sku', 'ASC');
                     break;
                 case 'stok':
-                    $this->db->order_by('sg.jumlah', 'DESC');
+                    $this->db->order_by('(SELECT COALESCE(SUM(sg.jumlah), 0) FROM stok_gudang sg WHERE sg.id_barang = b.id_barang)', 'DESC');
                     break;
+                default:
+                    $this->db->order_by('b.nama_barang', 'ASC');
             }
         } else {
             $this->db->order_by('b.nama_barang', 'ASC');
         }
 
-        // Apply pagination - PASTIKAN INI ADA
+        // Limit and offset
         if (isset($filter['limit']) && isset($filter['offset'])) {
             $this->db->limit($filter['limit'], $filter['offset']);
         }
 
         $query = $this->db->get();
         return $query->result();
+    }
+
+    // Fungsi untuk menghitung data barang dengan status stok
+    public function count_barang_with_stok_status($filter = [])
+    {
+        $this->db->select('COUNT(*) as total');
+        $this->db->from('barang b');
+        $this->db->join('kategori k', 'b.id_kategori = k.id_kategori', 'left');
+        $this->db->join('perusahaan p', 'b.id_perusahaan = p.id_perusahaan', 'left');
+
+        // Filter by perusahaan
+        if (isset($filter['id_perusahaan']) && !empty($filter['id_perusahaan'])) {
+            $this->db->where('b.id_perusahaan', $filter['id_perusahaan']);
+        }
+
+        // Filter by kategori
+        if (isset($filter['id_kategori']) && !empty($filter['id_kategori'])) {
+            $this->db->where('b.id_kategori', $filter['id_kategori']);
+        }
+
+        // Filter by gudang
+        if (isset($filter['id_gudang']) && !empty($filter['id_gudang'])) {
+            // Join dengan stok_gudang untuk filter berdasarkan gudang
+            $this->db->join('stok_gudang sg', 'b.id_barang = sg.id_barang AND sg.id_gudang = ' . $filter['id_gudang'], 'left');
+            $this->db->where('sg.id_gudang', $filter['id_gudang']);
+        }
+
+        // Filter by status
+        if (isset($filter['status']) && $filter['status'] !== '') {
+            $this->db->where('b.aktif', $filter['status']);
+        }
+
+        // Filter by search
+        if (isset($filter['search']) && !empty($filter['search'])) {
+            $this->db->group_start();
+            $this->db->like('b.nama_barang', $filter['search']);
+            $this->db->or_like('b.sku', $filter['search']);
+            $this->db->group_end();
+        }
+
+        // Filter by stock status
+        if (isset($filter['stock_status']) && !empty($filter['stock_status'])) {
+            if ($filter['stock_status'] == 'empty') {
+                $this->db->where('(SELECT COUNT(*) FROM stok_awal sa WHERE sa.id_barang = b.id_barang) = 0');
+            } elseif ($filter['stock_status'] == 'has_stock') {
+                $this->db->where('(SELECT COUNT(*) FROM stok_awal sa WHERE sa.id_barang = b.id_barang) > 0');
+            }
+        }
+
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            $result = $query->row();
+            return $result->total;
+        }
+
+        return 0;
     }
 
     // Get gudang by perusahaan
@@ -141,55 +211,7 @@ class Barang_model extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
-    // Pastikan fungsi count_barang_with_stok_status ada dan benar
-    public function count_barang_with_stok_status($filter = [])
-    {
-        $this->db->select('COUNT(*) as total');
-        $this->db->from('barang b');
-        $this->db->join('kategori k', 'b.id_kategori = k.id_kategori', 'left');
-        $this->db->join('perusahaan p', 'b.id_perusahaan = p.id_perusahaan', 'left');
 
-        // Filter by perusahaan
-        if (isset($filter['id_perusahaan']) && !empty($filter['id_perusahaan'])) {
-            $this->db->where('b.id_perusahaan', $filter['id_perusahaan']);
-        }
-
-        // Filter by kategori
-        if (isset($filter['id_kategori']) && !empty($filter['id_kategori'])) {
-            $this->db->where('b.id_kategori', $filter['id_kategori']);
-        }
-
-        // Filter by status
-        if (isset($filter['status']) && $filter['status'] !== '') {
-            $this->db->where('b.aktif', $filter['status']);
-        }
-
-        // Filter by search
-        if (isset($filter['search']) && !empty($filter['search'])) {
-            $this->db->group_start();
-            $this->db->like('b.nama_barang', $filter['search']);
-            $this->db->or_like('b.sku', $filter['search']);
-            $this->db->group_end();
-        }
-
-        // Filter by stock status
-        if (isset($filter['stock_status']) && !empty($filter['stock_status'])) {
-            if ($filter['stock_status'] == 'empty') {
-                $this->db->where('(SELECT COUNT(*) FROM stok_awal sa WHERE sa.id_barang = b.id_barang) = 0');
-            } elseif ($filter['stock_status'] == 'has_stock') {
-                $this->db->where('(SELECT COUNT(*) FROM stok_awal sa WHERE sa.id_barang = b.id_barang) > 0');
-            }
-        }
-
-        $query = $this->db->get();
-
-        if ($query->num_rows() > 0) {
-            $result = $query->row();
-            return $result->total;
-        }
-
-        return 0;
-    }
     public function count_all_barang($filter)
     {
         $this->db->from('barang b');
