@@ -10,6 +10,31 @@
 
 <!-- Page level custom scripts -->
 <script>
+    // Show notification
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        notification.style.top = '20px';
+        notification.style.right = '20px';
+        notification.style.zIndex = '9999';
+        notification.style.minWidth = '250px';
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 150);
+        }, 3000);
+    }
+
     // Fungsi untuk mengeksekusi script setelah jQuery dan Bootstrap siap
     function runAfterDependencies(callback) {
         if (window.jQuery && typeof jQuery.fn.modal === 'function') {

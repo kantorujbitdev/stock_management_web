@@ -9,6 +9,19 @@ class Stok_awal_model extends CI_Model
         $this->load->database();
     }
 
+    // Fungsi untuk mengecek stok awal berdasarkan id_barang
+    public function get_stok_awal_by_barang($id_barang)
+    {
+        $this->db->where('id_barang', $id_barang);
+        $query = $this->db->get('stok_awal');
+
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+
+        return array();
+    }
+
     // Get all stok awal with filter
     public function get_all_stok_awal($filter = [])
     {

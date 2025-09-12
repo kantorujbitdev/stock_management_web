@@ -115,29 +115,35 @@ class Barang extends CI_Controller
         $barang = $this->Barang_model->get_barang_with_stok_status($filter);
 
         // Get total items for pagination
-        $total_items = $this->Barang_model->count_barang_with_stok_status($filter);
-        $showing_count = ($offset + count($barang));
-        $has_more = ($offset + $limit) < $total_items;
+        try {
+            $total_items = $this->Barang_model->count_barang_with_stok_status($filter);
+            $showing_count = ($offset + count($barang));
+            $has_more = ($offset + $limit) < $total_items;
 
-        // Generate HTML for each item
-        $html = [];
-        foreach ($barang as $b) {
-            ob_start();
-            $this->load->view('master/barang_part/barang_card', ['b' => $b]);
-            $html[] = ob_get_clean();
+            // Generate HTML for each item
+            $html = [];
+            foreach ($barang as $b) {
+                ob_start();
+                $this->load->view('master/barang_part/barang_card', ['b' => $b]);
+                $html[] = ob_get_clean();
+            }
+
+            // Return JSON response
+            echo json_encode([
+                'success' => true,
+                'html' => $html,
+                'showing_count' => $showing_count,
+                'total_items' => $total_items,
+                'current_page' => $page,
+                'has_more' => $has_more
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
         }
-
-        // Return JSON response
-        echo json_encode([
-            'success' => true,
-            'html' => $html,
-            'showing_count' => $showing_count,
-            'total_items' => $total_items,
-            'current_page' => $page,
-            'has_more' => $has_more
-        ]);
     }
-
     // Get gudang by perusahaan for AJAX
     public function get_gudang_by_perusahaan()
     {

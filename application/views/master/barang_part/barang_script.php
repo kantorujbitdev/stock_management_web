@@ -6,11 +6,13 @@
             '<?php echo $this->security->get_csrf_token_name(); ?>': '<?php echo $this->security->get_csrf_hash(); ?>'
         }
     });
-    // Global variables
+    // Global variables - tambahkan variable baru
     let isLoading = false;
     let hasMoreData = <?php echo $has_more ? 'true' : 'false'; ?>;
     let currentPage = <?php echo $current_page; ?>;
     const itemsPerPage = <?php echo $items_per_page; ?>;
+    let totalItemsLoaded = 0; // Tambahkan ini untuk tracking total item
+
     document.addEventListener('DOMContentLoaded', function () {
         // Initialize filter toggle
         initializeFilterToggle();
@@ -76,7 +78,7 @@
             localStorage.setItem('filterVisible', 'false');
             // Trigger filter with server-side reload
             reloadWithFilters();
-            showNotification('Filter berhasil direset dan disembunyikan', 'info');
+            // showNotification('Filter berhasil direset dan disembunyikan', 'info');
         });
     }
     // Initialize filter listeners
@@ -148,10 +150,12 @@
         // Reset pagination
         currentPage = 1;
         hasMoreData = true;
+        totalItemsLoaded = 0; // Reset counter item
 
         // Clear existing items
         const barangGrid = document.getElementById('barangGrid');
         barangGrid.innerHTML = '';
+
 
         // Show loading indicator
         const loadingIndicator = document.getElementById('loadingIndicator');
@@ -265,8 +269,9 @@
 
         // Load more items function
         function loadMoreItems() {
+
             if (isLoading || !hasMoreData) return;
-            console.log('Loading more items...'); // Debug log
+            console.log('Loading more items...');
             isLoading = true;
             loadingIndicator.style.display = 'block';
 
@@ -301,23 +306,32 @@
                 contentType: false,
                 dataType: 'json',
                 success: function (data) {
-                    console.log('Server response:', data); // Debug log
+                    console.log('Server response:', data);
                     if (data.success) {
-                        // Check if there are items
                         if (data.html && data.html.length > 0) {
                             // Append new items
-                            data.html.forEach(itemHtml => {
+                            data.html.forEach((itemHtml, index) => {
                                 const tempDiv = document.createElement('div');
                                 tempDiv.innerHTML = itemHtml;
-                                barangGrid.appendChild(tempDiv.firstElementChild);
+
+                                // Update nomor urut untuk item baru
+                                const newItem = tempDiv.firstElementChild;
+                                const nomorUrutElement = newItem.querySelector('.nomor-urut');
+                                if (nomorUrutElement) {
+                                    nomorUrutElement.textContent = totalItemsLoaded + index + 1;
+                                }
+
+                                barangGrid.appendChild(newItem);
                             });
+
                             // Update variables
                             currentPage = data.current_page;
                             hasMoreData = data.has_more;
+                            totalItemsLoaded += data.html.length; // Update counter
+
                             // Attach event listeners
                             attachEventListenersToNewItems();
                         } else {
-                            // No more data, but don't show message for infinite scroll
                             hasMoreData = false;
                         }
                     } else {
@@ -328,9 +342,6 @@
                 },
                 error: function (xhr, status, error) {
                     console.error('AJAX Error:', status, error);
-                    console.log('Response Text:', xhr.responseText);
-
-                    // For infinite scroll, just set hasMoreData to false
                     hasMoreData = false;
                     isLoading = false;
                     loadingIndicator.style.display = 'none';
@@ -493,30 +504,6 @@
         });
     }
 
-    // Show notification
-    function showNotification(message, type) {
-        const notification = document.createElement('div');
-        notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-        notification.style.top = '20px';
-        notification.style.right = '20px';
-        notification.style.zIndex = '9999';
-        notification.style.minWidth = '250px';
-        notification.innerHTML = `
-            ${message}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        `;
-        document.body.appendChild(notification);
-        setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    document.body.removeChild(notification);
-                }
-            }, 150);
-        }, 3000);
-    }
 
     // Modal functions (keep existing modal functions)
     function showDetailModal(barangItem) {
