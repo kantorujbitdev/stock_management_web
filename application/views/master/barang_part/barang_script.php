@@ -6,33 +6,37 @@
             '<?php echo $this->security->get_csrf_token_name(); ?>': '<?php echo $this->security->get_csrf_hash(); ?>'
         }
     });
-
     // Global variables
     let isLoading = false;
     let hasMoreData = <?php echo $has_more ? 'true' : 'false'; ?>;
     let currentPage = <?php echo $current_page; ?>;
     const itemsPerPage = <?php echo $items_per_page; ?>;
-
     document.addEventListener('DOMContentLoaded', function () {
         // Initialize filter toggle
         initializeFilterToggle();
-
+        // Initialize filter listeners
+        initializeFilterListeners();
         // Initialize infinite scroll
         initializeInfiniteScroll();
-
         // Attach event listeners to existing items
         attachEventListenersToItems();
+        // Handle modal close to fix focus issue
+        $('#detailModal').on('hidden.bs.modal', function () {
+            // Remove focus from any element inside the modal
+            $(this).find('button, a, input, select, textarea').blur();
+        });
+        $('#inputStokModal').on('hidden.bs.modal', function () {
+            // Remove focus from any element inside the modal
+            $(this).find('button, a, input, select, textarea').blur();
+        });
     });
-
     // Initialize filter toggle
     function initializeFilterToggle() {
         const filterCardBody = document.getElementById('filterCardBody');
         const toggleFilterBtn = document.getElementById('toggleFilter');
         const toggleIcon = toggleFilterBtn.querySelector('i');
-
         // Get saved preference
         const isFilterVisible = localStorage.getItem('filterVisible') === 'true';
-
         // Set initial state
         if (isFilterVisible) {
             filterCardBody.style.display = 'block';
@@ -41,7 +45,6 @@
             filterCardBody.style.display = 'none';
             toggleIcon.className = 'fas fa-chevron-down';
         }
-
         // Toggle filter
         toggleFilterBtn.addEventListener('click', function () {
             if (filterCardBody.style.display === 'none') {
@@ -54,7 +57,6 @@
                 localStorage.setItem('filterVisible', 'false');
             }
         });
-
         // Reset filter
         document.getElementById('resetFilter').addEventListener('click', function () {
             // Reset all inputs
@@ -63,24 +65,197 @@
             document.getElementById('filterStatus').selectedIndex = 0;
             document.getElementById('filterStok').selectedIndex = 0;
             document.getElementById('sortBy').selectedIndex = 0;
-
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 document.getElementById('filterPerusahaan').selectedIndex = 0;
+                // Reset kategori options when perusahaan is reset
+                loadKategoriOptions('');
             <?php endif; ?>
-
             // Hide filter panel
             filterCardBody.style.display = 'none';
             toggleIcon.className = 'fas fa-chevron-down';
             localStorage.setItem('filterVisible', 'false');
-
-            // Trigger filter
-            filterBarang();
-
-            // Reset pagination
-            resetPagination();
-
+            // Trigger filter with server-side reload
+            reloadWithFilters();
             showNotification('Filter berhasil direset dan disembunyikan', 'info');
         });
+    }
+    // Initialize filter listeners
+    function initializeFilterListeners() {
+        // Event listener untuk pencarian - tambahkan debounce untuk mengurangi request
+        let searchTimeout;
+        document.getElementById('searchBarang').addEventListener('input', function () {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function () {
+                reloadWithFilters();
+            }, 500); // Delay 500ms setelah user berhenti mengetik
+        });
+
+        // Event listener untuk filter kategori
+        document.getElementById('filterKategori').addEventListener('change', function () {
+            reloadWithFilters();
+        });
+
+        // Event listener untuk filter status
+        document.getElementById('filterStatus').addEventListener('change', function () {
+            reloadWithFilters();
+        });
+
+        // Event listener untuk filter stok
+        document.getElementById('filterStok').addEventListener('change', function () {
+            reloadWithFilters();
+        });
+
+        // Event listener untuk sort
+        document.getElementById('sortBy').addEventListener('change', function () {
+            reloadWithFilters();
+        });
+
+        <?php if ($this->session->userdata('id_role') == 5): ?>
+            // Event listener untuk filter perusahaan (hanya untuk Super Admin)
+            document.getElementById('filterPerusahaan').addEventListener('change', function () {
+                const idPerusahaan = this.value;
+                // Update kategori dropdown based on selected perusahaan
+                loadKategoriOptions(idPerusahaan);
+                // Reload data with new filters
+                reloadWithFilters();
+            });
+        <?php endif; ?>
+    }
+    // Load kategori options based on perusahaan
+    function loadKategoriOptions(idPerusahaan) {
+        $.ajax({
+            url: "<?php echo site_url('barang/get_kategori_by_perusahaan'); ?>",
+            type: "GET",
+            data: { id_perusahaan: idPerusahaan },
+            dataType: "json",
+            success: function (response) {
+                let options = '<option value="">Semua Kategori</option>';
+                if (response && Array.isArray(response)) {
+                    response.forEach(function (kategori) {
+                        options += `<option value="${kategori.id_kategori}">${kategori.nama_kategori}</option>`;
+                    });
+                }
+                document.getElementById('filterKategori').innerHTML = options;
+            },
+            error: function (xhr, status, error) {
+                console.error("Error loading kategori:", error);
+                document.getElementById('filterKategori').innerHTML = '<option value="">-- Error --</option>';
+            }
+        });
+    }
+    // Reload data with current filters
+    function reloadWithFilters() {
+        // Reset pagination
+        currentPage = 1;
+        hasMoreData = true;
+
+        // Clear existing items
+        const barangGrid = document.getElementById('barangGrid');
+        barangGrid.innerHTML = '';
+
+        // Show loading indicator
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        loadingIndicator.style.display = 'block';
+
+        // Remove any existing "no data" message
+        const existingNoDataMsg = document.getElementById('noDataMessage');
+        if (existingNoDataMsg) {
+            existingNoDataMsg.remove();
+        }
+
+        // Get filter values
+        const searchValue = document.getElementById('searchBarang').value;
+        const kategoriValue = document.getElementById('filterKategori').value;
+        const statusValue = document.getElementById('filterStatus').value;
+        const stokValue = document.getElementById('filterStok').value;
+        const sortByValue = document.getElementById('sortBy').value;
+        <?php if ($this->session->userdata('id_role') == 5): ?>
+            const perusahaanValue = document.getElementById('filterPerusahaan').value;
+        <?php endif; ?>
+
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('page', currentPage);
+        formData.append('search', searchValue);
+        formData.append('id_kategori', kategoriValue);
+        formData.append('status', statusValue);
+        formData.append('stock_status', stokValue);
+        formData.append('sort_by', sortByValue);
+        <?php if ($this->session->userdata('id_role') == 5): ?>
+            formData.append('id_perusahaan', perusahaanValue);
+        <?php endif; ?>
+
+        // Send AJAX request
+        $.ajax({
+            url: '<?php echo site_url("barang/load_more"); ?>',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function (data) {
+                console.log('Server response:', data); // Debug log
+                if (data.success) {
+                    // Check if there are items
+                    if (data.html && data.html.length > 0) {
+                        // Append new items
+                        data.html.forEach(itemHtml => {
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = itemHtml;
+                            barangGrid.appendChild(tempDiv.firstElementChild);
+                        });
+                        // Update variables
+                        currentPage = data.current_page;
+                        hasMoreData = data.has_more;
+                        // Attach event listeners
+                        attachEventListenersToItems();
+                    } else {
+                        // No data found, show message
+                        showNoDataMessage();
+                    }
+                } else {
+                    showNotification('Gagal memuat data: ' + (data.message || 'Unknown error'), 'danger');
+                }
+                isLoading = false;
+                loadingIndicator.style.display = 'none';
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                console.log('Response Text:', xhr.responseText);
+
+                // Try to parse response as JSON to see if there's a specific error message
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response && response.message) {
+                        showNotification('Error: ' + response.message, 'danger');
+                    } else {
+                        showNotification('Terjadi kesalahan saat memuat data', 'danger');
+                    }
+                } catch (e) {
+                    // If response is not JSON, show no data message
+                    showNoDataMessage();
+                }
+
+                isLoading = false;
+                loadingIndicator.style.display = 'none';
+            }
+        });
+    }
+
+    // Function to show "no data" message
+    function showNoDataMessage() {
+        const barangGrid = document.getElementById('barangGrid');
+        const noDataMsg = document.createElement('div');
+        noDataMsg.id = 'noDataMessage';
+        noDataMsg.className = 'col-12 text-center py-5';
+        noDataMsg.innerHTML = `
+            <div class="text-muted">
+                <i class="fas fa-search fa-3x mb-3"></i>
+                <h4>Data tidak tersedia</h4>
+                <p>Tidak ada barang yang sesuai dengan filter yang dipilih</p>
+            </div>
+        `;
+        barangGrid.appendChild(noDataMsg);
     }
 
     // Initialize infinite scroll
@@ -91,9 +266,7 @@
         // Load more items function
         function loadMoreItems() {
             if (isLoading || !hasMoreData) return;
-
             console.log('Loading more items...'); // Debug log
-
             isLoading = true;
             loadingIndicator.style.display = 'block';
 
@@ -103,7 +276,6 @@
             const statusValue = document.getElementById('filterStatus').value;
             const stokValue = document.getElementById('filterStok').value;
             const sortByValue = document.getElementById('sortBy').value;
-
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 const perusahaanValue = document.getElementById('filterPerusahaan').value;
             <?php endif; ?>
@@ -116,55 +288,54 @@
             formData.append('status', statusValue);
             formData.append('stock_status', stokValue);
             formData.append('sort_by', sortByValue);
-
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 formData.append('id_perusahaan', perusahaanValue);
             <?php endif; ?>
 
             // Send AJAX request
-            fetch('<?php echo site_url("barang/load_more"); ?>', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
+            $.ajax({
+                url: '<?php echo site_url("barang/load_more"); ?>',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function (data) {
                     console.log('Server response:', data); // Debug log
-
                     if (data.success) {
-                        // Append new items
-                        data.html.forEach(itemHtml => {
-                            const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = itemHtml;
-                            barangGrid.appendChild(tempDiv.firstElementChild);
-                        });
-
-                        // Update counters
-                        document.getElementById('showing-count').textContent = data.showing_count;
-                        document.getElementById('total-count').textContent = data.total_items;
-                        document.getElementById('current-page').textContent = data.current_page;
-
-                        // Update variables
-                        currentPage = data.current_page;
-                        hasMoreData = data.has_more;
-
-                        // Attach event listeners
-                        attachEventListenersToNewItems();
+                        // Check if there are items
+                        if (data.html && data.html.length > 0) {
+                            // Append new items
+                            data.html.forEach(itemHtml => {
+                                const tempDiv = document.createElement('div');
+                                tempDiv.innerHTML = itemHtml;
+                                barangGrid.appendChild(tempDiv.firstElementChild);
+                            });
+                            // Update variables
+                            currentPage = data.current_page;
+                            hasMoreData = data.has_more;
+                            // Attach event listeners
+                            attachEventListenersToNewItems();
+                        } else {
+                            // No more data, but don't show message for infinite scroll
+                            hasMoreData = false;
+                        }
                     } else {
-                        showNotification('Gagal memuat data: ' + data.message, 'danger');
+                        showNotification('Gagal memuat data: ' + (data.message || 'Unknown error'), 'danger');
                     }
+                    isLoading = false;
+                    loadingIndicator.style.display = 'none';
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                    console.log('Response Text:', xhr.responseText);
 
+                    // For infinite scroll, just set hasMoreData to false
+                    hasMoreData = false;
                     isLoading = false;
                     loadingIndicator.style.display = 'none';
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('Terjadi kesalahan saat memuat data', 'danger');
-                    isLoading = false;
-                    loadingIndicator.style.display = 'none';
-                });
+                }
+            });
         }
 
         // Scroll event listener
@@ -186,56 +357,47 @@
         });
     }
 
-    // Reset pagination
     function resetPagination() {
         currentPage = 1;
         hasMoreData = true;
-
         // Remove items beyond first page
         const items = document.querySelectorAll('#barangGrid .barang-item');
         for (let i = itemsPerPage; i < items.length; i++) {
             items[i].remove();
         }
-
         // Reset counters
         const totalItems = parseInt(document.getElementById('total-count').textContent);
         const initialShowing = Math.min(itemsPerPage, totalItems);
-
         document.getElementById('showing-count').textContent = initialShowing;
         document.getElementById('current-page').textContent = 1;
     }
 
-    // Filter functionality
+    // Filter functionality - kept for compatibility but not used with new reload approach
     function filterBarang() {
         const searchValue = document.getElementById('searchBarang').value.toLowerCase();
         const kategoriValue = document.getElementById('filterKategori').value;
         const statusValue = document.getElementById('filterStatus').value;
         const stokValue = document.getElementById('filterStok').value;
         const items = document.querySelectorAll('.barang-item');
-
         <?php if ($this->session->userdata('id_role') == 5): ?>
             const perusahaanValue = document.getElementById('filterPerusahaan').value;
         <?php endif; ?>
-
         items.forEach(item => {
             const nama = item.getAttribute('data-nama');
             const sku = item.getAttribute('data-sku');
             const kategori = item.getAttribute('data-kategori');
             const status = item.getAttribute('data-status');
             const hasStokAwal = item.getAttribute('data-hasstokawal');
-
             const matchSearch = nama.includes(searchValue) || sku.includes(searchValue);
             const matchKategori = kategoriValue === '' || kategori === kategoriValue;
             const matchStatus = statusValue === '' || status === statusValue;
             const matchStok = stokValue === '' ||
                 (stokValue === 'empty' && hasStokAwal === '0') ||
                 (stokValue === 'has_stock' && hasStokAwal === '1');
-
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 const perusahaan = item.getAttribute('data-idperusahaan');
                 const matchPerusahaan = perusahaanValue === '' || perusahaan === perusahaanValue;
             <?php endif; ?>
-
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 if (matchSearch && matchKategori && matchStatus && matchStok && matchPerusahaan) {
                 <?php else: ?>
@@ -253,7 +415,6 @@
         const sortBy = document.getElementById('sortBy').value;
         const grid = document.getElementById('barangGrid');
         const items = Array.from(grid.querySelectorAll('.barang-item'));
-
         items.sort((a, b) => {
             let aValue, bValue;
             switch (sortBy) {
@@ -273,7 +434,6 @@
                     return 0;
             }
         });
-
         // Re-append sorted items
         items.forEach(item => grid.appendChild(item));
     }
@@ -347,13 +507,13 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         `;
-
         document.body.appendChild(notification);
-
         setTimeout(() => {
             notification.classList.remove('show');
             setTimeout(() => {
-                document.body.removeChild(notification);
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
             }, 150);
         }, 3000);
     }
@@ -475,7 +635,14 @@
         document.getElementById('namaBarangDisplay').value = nama;
         document.getElementById('qty_awal').value = '';
         document.getElementById('keterangan').value = '';
+
+        // Reset gudang options
         document.getElementById('id_gudang').innerHTML = '<option value="">-- Pilih Gudang --</option>';
+
+        // Load gudang options
+        if (idPerusahaan) {
+            loadGudangOptions(idPerusahaan);
+        }
 
         // Show modal
         $('#inputStokModal').modal('show');
@@ -489,9 +656,11 @@
             dataType: "json",
             success: function (response) {
                 let options = '<option value="">-- Pilih Gudang --</option>';
-                response.forEach(function (gudang) {
-                    options += `<option value="${gudang.id_gudang}">${gudang.nama_gudang}</option>`;
-                });
+                if (response && Array.isArray(response)) {
+                    response.forEach(function (gudang) {
+                        options += `<option value="${gudang.id_gudang}">${gudang.nama_gudang}</option>`;
+                    });
+                }
                 document.getElementById('id_gudang').innerHTML = options;
             },
             error: function (xhr, status, error) {

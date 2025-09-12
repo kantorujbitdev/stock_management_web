@@ -90,6 +90,14 @@ application/
 │   │   ├── gudang_list.php
 │   │   └── gudang_form.php
 │   ├── master/
+│   │   ├── barang_part
+│   │   ├───└── barang_card.php
+│   │   ├───└── barang_detail_modal.php
+│   │   ├───└── barang_filter.php
+│   │   ├───└── barang_script.php
+│   │   ├───└── barang_stok_modal.php
+│   │   ├───└── barang_style.php
+│   │   ├───└── index.php
 │   │   ├── kategori_list.php
 │   │   ├── kategori_form.php
 │   │   ├── barang_list.php

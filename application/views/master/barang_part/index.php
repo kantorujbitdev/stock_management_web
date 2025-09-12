@@ -28,36 +28,13 @@
         <!-- Load Filter -->
         <?php $this->load->view('master/barang_part/barang_filter', ['kategori' => $kategori, 'filter' => $filter, 'perusahaan' => $perusahaan]); ?>
 
-        <!-- Info Items -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <span class="text-muted">
-                    <span id="showing-count"><?php echo count($barang); ?></span> dari
-                    <span id="total-count"><?php echo $total_items; ?></span> barang
-                </span>
-            </div>
-            <div>
-                <span class="text-muted">Halaman <span id="current-page"><?php echo $current_page; ?></span></span>
-            </div>
-        </div>
         <!-- Grid Barang -->
         <div class="row" id="barangGrid">
             <?php foreach ($barang as $b): ?>
                 <?php $this->load->view('master/barang_part/barang_card', ['b' => $b]); ?>
             <?php endforeach; ?>
         </div>
-        <!-- Info Items -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <span class="text-muted">
-                    <span id="showing-count"><?php echo count($barang); ?></span> dari
-                    <span id="total-count"><?php echo $total_items; ?></span> barang
-                </span>
-            </div>
-            <div>
-                <span class="text-muted">Halaman <span id="current-page"><?php echo $current_page; ?></span></span>
-            </div>
-        </div>
+
         <!-- Loading Indicator -->
         <div id="loadingIndicator" class="text-center py-4" style="display: none;">
             <div class="spinner-border text-primary" role="status">
