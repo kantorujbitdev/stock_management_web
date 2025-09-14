@@ -1,43 +1,73 @@
-<?php
-// Definisikan variabel yang diperlukan
-$role = $this->session->userdata('id_role');
-$uri1 = $this->uri->segment(1);
-$uri2 = $this->uri->segment(2);
-$uri3 = $this->uri->segment(3);
-$uriSegments = [$uri1, $uri2, $uri3];
+<!-- Top Menu -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary topbar mb-4 static-top shadow">
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark topbar mb-4 static-top shadow" -->
+    <!-- style="background: linear-gradient(135deg, #0733f6ff 0%, rgba(16, 55, 226, 0.62) 100%);"> -->
+    <!-- Brand -->
+    <a class="navbar-brand text-white" href="<?php echo site_url('dashboard') ?>">
+        <i class="fas fa-warehouse mr-2 ml-2"></i>
+        <span class="d-none d-lg-inline"><?= $this->session->userdata('nama_perusahaan') ?: 'Stok App' ?></span>
+    </a>
 
-// Fungsi untuk mengecek apakah URI mengandung segmen tertentu
-$hasSeg = function ($names) use ($uriSegments) {
-    foreach ((array) $names as $n) {
-        if (in_array($n, $uriSegments, true))
-            return true;
-    }
-    return false;
-};
-?>
-<nav class="navbar navbar-expand-lg navbar-light bg-white topbar static-top shadow"
-    style="margin-bottom: 0; border-bottom: 1px solid #e3e6f0;">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
-        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- Mobile Toggle Button -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
+
+    <!-- Menu Items -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <?php
+            $role = $this->session->userdata('id_role');
+            $uri1 = $this->uri->segment(1);
+            $uri2 = $this->uri->segment(2);
+            $uri3 = $this->uri->segment(3);
+            $uriSegments = [$uri1, $uri2, $uri3];
+            $hasSeg = function ($names) use ($uriSegments) {
+                foreach ((array) $names as $n) {
+                    if (in_array($n, $uriSegments, true))
+                        return true;
+                }
+                return false;
+            };
+            ?>
+
             <!-- Dashboard -->
             <?php if ($this->hak_akses->cek_akses('dashboard')): ?>
                 <li class="nav-item <?php echo $hasSeg(['dashboard']) ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?php echo site_url('dashboard') ?>">
-                        <i class="fas fa-fw fa-tachometer-alt"></i>
-                        <span>Dashboard</span>
+                    <a class="nav-link text-white" href="<?php echo site_url('dashboard') ?>">
+                        <i class="fas fa-fw fa-tachometer-alt mr-1"></i>
+                        <span class="d-none d-sm-inline">Dashboard</span>
                     </a>
                 </li>
             <?php endif; ?>
 
-            <!-- Master Data (menggantikan Setup) -->
+            <!-- Penjualan -->
+            <?php if ($this->hak_akses->cek_akses('penjualan')): ?>
+                <li class="nav-item <?php echo $hasSeg(['penjualan']) ? 'active' : '' ?>">
+                    <a class="nav-link text-white" href="<?php echo site_url('penjualan') ?>">
+                        <i class="fas fa-shopping-cart mr-1"></i>
+                        <span class="d-none d-sm-inline">Penjualan</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+
+            <!-- Retur -->
+            <?php if ($this->hak_akses->cek_akses('retur')): ?>
+                <li class="nav-item <?php echo $hasSeg(['retur']) ? 'active' : '' ?>">
+                    <a class="nav-link text-white" href="<?php echo site_url('retur') ?>">
+                        <i class="fas fa-undo mr-1"></i>
+                        <span class="d-none d-sm-inline">Retur</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+
+            <!-- Master Data Dropdown -->
             <?php
-            $master_children = ['kategori', 'barang', 'supplier', 'pelanggan', 'gudang'];
-            if ($role == 5) {
-                $master_children[] = 'perusahaan';
+            if ($role != 5) {
+                $master_children = ['kategori', 'barang', 'supplier', 'pelanggan', 'gudang'];
+            } else {
+                $master_children = ['kategori', 'barang', 'supplier', 'pelanggan', 'perusahaan', 'gudang'];
             }
             $master_active = $hasSeg($master_children);
             $show_master = false;
@@ -50,10 +80,10 @@ $hasSeg = function ($names) use ($uriSegments) {
             ?>
             <?php if ($show_master): ?>
                 <li class="nav-item dropdown <?php echo $master_active ? 'active' : '' ?>">
-                    <a class="nav-link dropdown-toggle" href="#" id="masterDropdown" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-database"></i>
-                        <span>Master Data</span>
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="masterDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-database mr-1"></i>
+                        <span class="d-none d-sm-inline">Master Data</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="masterDropdown">
                         <?php foreach ($master_children as $m): ?>
@@ -68,61 +98,31 @@ $hasSeg = function ($names) use ($uriSegments) {
                 </li>
             <?php endif; ?>
 
-            <!-- Penjualan (menggantikan Sales) -->
-            <?php if ($this->hak_akses->cek_akses('penjualan')): ?>
-                <li class="nav-item <?php echo $hasSeg(['penjualan']) ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?php echo site_url('penjualan') ?>">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Penjualan</span>
-                    </a>
-                </li>
-            <?php endif; ?>
-
-            <!-- Packing (khusus untuk Admin Packing) -->
-            <?php if ($role == 3 && $this->hak_akses->cek_akses('penjualan')): ?>
-                <li class="nav-item <?php echo $hasSeg(['packing']) ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?php echo site_url('packing') ?>">
-                        <i class="fas fa-box-open"></i>
-                        <span>Packing</span>
-                    </a>
-                </li>
-            <?php endif; ?>
-
-            <!-- Retur (menggantikan Retur Penjualan) -->
-            <?php if ($this->hak_akses->cek_akses('retur')): ?>
-                <li class="nav-item <?php echo $hasSeg(['retur']) ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?php echo site_url('retur') ?>">
-                        <i class="fas fa-undo"></i>
-                        <span>Retur Penjualan</span>
-                    </a>
-                </li>
-            <?php endif; ?>
-
-            <!-- Dropdown: Manajemen Stok (menggantikan Aktifitas) -->
+            <!-- Manajemen Stok Dropdown -->
             <?php
-            $stok_children = ['transfer', 'penyesuaian', 'riwayat'];
-            $stok_active = $hasSeg($stok_children);
-            $show_stok = false;
-            foreach ($stok_children as $sc) {
-                if ($this->hak_akses->cek_akses($sc)) {
-                    $show_stok = true;
+            $manajement_stok_children = ['transfer', 'penyesuaian', 'riwayat'];
+            $manajement_stok_active = $hasSeg($manajement_stok_children);
+            $show_manajement_stok = false;
+            foreach ($manajement_stok_children as $msc) {
+                if ($this->hak_akses->cek_akses($msc)) {
+                    $show_manajement_stok = true;
                     break;
                 }
             }
             ?>
-            <?php if ($show_stok): ?>
-                <li class="nav-item dropdown <?php echo $stok_active ? 'active' : '' ?>">
-                    <a class="nav-link dropdown-toggle" href="#" id="stokDropdown" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-warehouse"></i>
-                        <span>Manajemen Stok</span>
+            <?php if ($show_manajement_stok): ?>
+                <li class="nav-item dropdown <?php echo $manajement_stok_active ? 'active' : '' ?>">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="stokDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-boxes mr-1"></i>
+                        <span class="d-none d-sm-inline">Manajemen Stok</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="stokDropdown">
-                        <?php foreach ($stok_children as $sc): ?>
-                            <?php if ($this->hak_akses->cek_akses($sc)): ?>
-                                <a class="dropdown-item <?php echo $hasSeg([$sc]) ? 'active' : '' ?>"
-                                    href="<?php echo site_url($sc) ?>">
-                                    <?= ucwords(str_replace('_', ' ', $sc)) ?>
+                        <?php foreach ($manajement_stok_children as $msc): ?>
+                            <?php if ($this->hak_akses->cek_akses($msc)): ?>
+                                <a class="dropdown-item <?php echo $hasSeg([$msc]) ? 'active' : '' ?>"
+                                    href="<?php echo site_url($msc) ?>">
+                                    <?= ucwords(str_replace('_', ' ', $msc)) ?>
                                 </a>
                             <?php endif; ?>
                         <?php endforeach; ?>
@@ -130,9 +130,9 @@ $hasSeg = function ($names) use ($uriSegments) {
                 </li>
             <?php endif; ?>
 
-            <!-- Dropdown: Laporan -->
+            <!-- Laporan Dropdown -->
             <?php
-            $laporan_children = ['laporan_stok', 'laporan_penjualan', 'laporan_retur', 'laporan_transfer'];
+            $laporan_children = ['laporan_penjualan', 'laporan_stok', 'laporan_retur'];
             $laporan_active = $hasSeg($laporan_children);
             $show_laporan = false;
             foreach ($laporan_children as $l) {
@@ -144,46 +144,31 @@ $hasSeg = function ($names) use ($uriSegments) {
             ?>
             <?php if ($show_laporan): ?>
                 <li class="nav-item dropdown <?php echo $laporan_active ? 'active' : '' ?>">
-                    <a class="nav-link dropdown-toggle" href="#" id="laporanDropdown" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Laporan</span>
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="laporanDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-chart-line mr-1"></i>
+                        <span class="d-none d-sm-inline">Laporan</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="laporanDropdown">
-                        <?php if ($this->hak_akses->cek_akses('laporan_stok')): ?>
-                            <a class="dropdown-item <?php echo $hasSeg(['laporan_stok']) ? 'active' : '' ?>"
-                                href="<?php echo site_url('laporan_stok') ?>">
-                                Stok Terkini
-                            </a>
-                        <?php endif; ?>
                         <?php if ($this->hak_akses->cek_akses('laporan_penjualan')): ?>
                             <a class="dropdown-item <?php echo $hasSeg(['laporan_penjualan']) ? 'active' : '' ?>"
-                                href="<?php echo site_url('laporan_penjualan') ?>">
-                                Penjualan
-                            </a>
+                                href="<?php echo site_url('laporan_penjualan') ?>">Penjualan</a>
+                        <?php endif; ?>
+                        <?php if ($this->hak_akses->cek_akses('laporan_stok')): ?>
+                            <a class="dropdown-item <?php echo $hasSeg(['laporan_stok']) ? 'active' : '' ?>"
+                                href="<?php echo site_url('laporan_stok') ?>">Stok Terkini</a>
                         <?php endif; ?>
                         <?php if ($this->hak_akses->cek_akses('laporan_retur')): ?>
                             <a class="dropdown-item <?php echo $hasSeg(['laporan_retur']) ? 'active' : '' ?>"
-                                href="<?php echo site_url('laporan_retur') ?>">
-                                Retur Penjualan
-                            </a>
-                        <?php endif; ?>
-                        <?php if ($this->hak_akses->cek_akses('laporan_transfer')): ?>
-                            <a class="dropdown-item <?php echo $hasSeg(['laporan_transfer']) ? 'active' : '' ?>"
-                                href="<?php echo site_url('laporan_transfer') ?>">
-                                Transfer Barang
-                            </a>
+                                href="<?php echo site_url('laporan_retur') ?>">Retur</a>
                         <?php endif; ?>
                     </div>
                 </li>
             <?php endif; ?>
 
-            <!-- User Management (khusus untuk Super Admin dan Admin Pusat) -->
+            <!-- Manajemen User Dropdown -->
             <?php
-            $user_children = ['user'];
-            if ($role == 5) {
-                $user_children[] = 'hak_akses';
-            }
+            $user_children = ['user', 'hak_akses'];
             $user_active = $hasSeg($user_children);
             $show_user = false;
             foreach ($user_children as $u) {
@@ -195,27 +180,72 @@ $hasSeg = function ($names) use ($uriSegments) {
             ?>
             <?php if ($show_user): ?>
                 <li class="nav-item dropdown <?php echo $user_active ? 'active' : '' ?>">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-users-cog"></i>
-                        <span>Manajemen User</span>
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-users-cog mr-1"></i>
+                        <span class="d-none d-sm-inline">Manajemen User</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="userDropdown">
                         <?php if ($this->hak_akses->cek_akses('user')): ?>
                             <a class="dropdown-item <?php echo $hasSeg(['user']) ? 'active' : '' ?>"
-                                href="<?php echo site_url('user') ?>">
-                                User Pengguna
-                            </a>
+                                href="<?php echo site_url('user') ?>">User Pengguna</a>
                         <?php endif; ?>
-                        <?php if ($role == 5 && $this->hak_akses->cek_akses('hak_akses')): ?>
+                        <?php if ($this->hak_akses->cek_akses('hak_akses')): ?>
                             <a class="dropdown-item <?php echo $hasSeg(['hak_akses']) ? 'active' : '' ?>"
-                                href="<?php echo site_url('user/hak_akses') ?>">
-                                Hak Akses
-                            </a>
+                                href="<?php echo site_url('user/hak_akses') ?>">Hak Akses</a>
                         <?php endif; ?>
                     </div>
                 </li>
             <?php endif; ?>
+        </ul>
+
+        <!-- User Information -->
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown no-arrow">
+                <?php
+                $role_id = $this->session->userdata('id_role');
+                $nama_role = $this->session->userdata('nama_role');
+                $nama = $this->session->userdata('nama');
+
+                switch ($role_id) {
+                    case 2:
+                        $profile_img = 'undraw_profile_sales.svg';
+                        break;
+                    case 3:
+                        $profile_img = 'undraw_profile_packing.svg';
+                        break;
+                    case 4:
+                        $profile_img = 'undraw_profile_retur.svg';
+                        break;
+                    case 1:
+                    case 5:
+                    default:
+                        $profile_img = 'undraw_profile.svg';
+                        break;
+                }
+                ?>
+                <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="mr-2 d-none d-lg-inline text-white small">
+                        <?php echo $nama ?>
+                    </span>
+                    <img class="img-profile rounded-circle"
+                        src="<?php echo base_url('application/views/template/assets/img/profile/' . $profile_img) ?>">
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Profile
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="<?php echo site_url('auth/logout') ?>" data-toggle="modal"
+                        data-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Logout
+                    </a>
+                </div>
+            </li>
         </ul>
     </div>
 </nav>

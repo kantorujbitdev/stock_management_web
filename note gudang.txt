@@ -747,5 +747,7 @@ INSERT INTO `log_status_retur` (`id_retur`, `id_user`, `status`, `keterangan`) V
 (3, 6, 'diterima', 'Retur diterima');
 
 
-kebutuhan saat ini,
-Coba tolong sesuaikan dahulu menu menu yang dibutuhkan dan berikan perbaikan 
+beberapa tampilan sudah kita miliki bro
+kebutuhan saat ini yaitu kita perlu menyesuaikan tampilan dan posisi menu nya bro, kita sebelumnya sudah menggunakan sidebar yg artinya menu berada pada bagian kiri, sekarang akan kita rubah menjadi:
+1. Posisi Menu ada di atas dan di mulai dari posisi kiri (top menu)
+2. Menu logout tetap berada di paling kanan atas (tetap di top menu namun berada paling kanan)

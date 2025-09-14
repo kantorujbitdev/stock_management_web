@@ -7,10 +7,9 @@
 <!-- DataTables JS -->
 <script src="<?php echo base_url('application/views/template/assets/js/jquery.dataTables.min.js'); ?>"></script>
 <script src="<?php echo base_url('application/views/template/assets/js/dataTables.bootstrap4.min.js'); ?>"></script>
-
-<!-- Page level custom scripts -->
+<!-- Tambahkan sebelum </script> terakhir -->
 <script>
-    // Show notification
+    // Enhanced notification function
     function showNotification(message, type) {
         const notification = document.createElement('div');
         notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
@@ -18,6 +17,8 @@
         notification.style.right = '20px';
         notification.style.zIndex = '9999';
         notification.style.minWidth = '250px';
+        notification.style.boxShadow = '0 0.5rem 1rem rgba(0, 0, 0, 0.15)';
+        notification.style.borderRadius = '0.5rem';
         notification.innerHTML = `
             ${message}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -62,4 +63,31 @@
             });
         }
     });
+
+    // Mobile menu enhancements
+    $(document).ready(function () {
+        // Add animation to menu items on mobile
+        if ($(window).width() < 768) {
+            $('.navbar-nav .nav-item').each(function (index) {
+                $(this).css({
+                    'animation': `fadeInLeft 0.3s ${index * 0.1}s forwards`,
+                    'opacity': '0'
+                });
+            });
+        }
+    });
 </script>
+
+<style>
+    @keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+</style>
