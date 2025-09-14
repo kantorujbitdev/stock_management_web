@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+
 class Laporan_stok_model extends CI_Model
 {
     public function __construct()
@@ -13,7 +14,8 @@ class Laporan_stok_model extends CI_Model
     {
         $this->db->select('sg.*, b.nama_barang, b.sku, k.nama_kategori, 
                            p.nama_perusahaan, g.nama_gudang,
-                           COALESCE(sa.qty_awal, 0) as stok_awal');
+                           COALESCE(sa.qty_awal, 0) as stok_awal,
+                           sg.updated_at');
         $this->db->from('stok_gudang sg');
         $this->db->join('barang b', 'b.id_barang = sg.id_barang', 'left');
         $this->db->join('kategori k', 'k.id_kategori = b.id_kategori', 'left');
@@ -30,9 +32,11 @@ class Laporan_stok_model extends CI_Model
         if (!empty($filter['id_perusahaan'])) {
             $this->db->where('sg.id_perusahaan', $filter['id_perusahaan']);
         }
+
         if (!empty($filter['id_gudang'])) {
             $this->db->where('sg.id_gudang', $filter['id_gudang']);
         }
+
         if (!empty($filter['id_kategori'])) {
             $this->db->where('b.id_kategori', $filter['id_kategori']);
         }
@@ -58,7 +62,6 @@ class Laporan_stok_model extends CI_Model
         }
 
         $this->db->order_by('p.nama_perusahaan, g.nama_gudang, b.nama_barang');
-
         $query = $this->db->get();
         $result = $query->result();
 
@@ -127,9 +130,11 @@ class Laporan_stok_model extends CI_Model
         if (!empty($filter['id_perusahaan'])) {
             $this->db->where('sg.id_perusahaan', $filter['id_perusahaan']);
         }
+
         if (!empty($filter['id_gudang'])) {
             $this->db->where('sg.id_gudang', $filter['id_gudang']);
         }
+
         if (!empty($filter['id_kategori'])) {
             $this->db->where('b.id_kategori', $filter['id_kategori']);
         }
@@ -138,41 +143,5 @@ class Laporan_stok_model extends CI_Model
         $this->db->order_by('p.nama_perusahaan, g.nama_gudang, b.nama_barang');
 
         return $this->db->get()->result();
-    }
-
-    // Get perusahaan list
-    public function get_perusahaan_list()
-    {
-        return $this->db->get('perusahaan')->result();
-    }
-
-    // Get gudang by perusahaan
-    public function get_gudang_by_perusahaan($id_perusahaan)
-    {
-        $this->db->where('id_perusahaan', $id_perusahaan);
-        $this->db->where('status_aktif', 1);
-        $gudang = $this->db->get('gudang')->result();
-
-        $options = '';
-        foreach ($gudang as $row) {
-            $options .= '<option value="' . $row->id_gudang . '">' . $row->nama_gudang . '</option>';
-        }
-
-        return $options;
-    }
-
-    // Get kategori by perusahaan
-    public function get_kategori_by_perusahaan($id_perusahaan)
-    {
-        $this->db->where('id_perusahaan', $id_perusahaan);
-        $this->db->where('status_aktif', 1);
-        $kategori = $this->db->get('kategori')->result();
-
-        $options = '';
-        foreach ($kategori as $row) {
-            $options .= '<option value="' . $row->id_kategori . '">' . $row->nama_kategori . '</option>';
-        }
-
-        return $options;
     }
 }
