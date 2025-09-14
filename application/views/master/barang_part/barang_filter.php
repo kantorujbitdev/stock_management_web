@@ -1,18 +1,11 @@
 <!-- Filter dan Pencarian -->
 <div class="card shadow-sm mb-4">
-    <!-- <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
-        <i class="fas fa-filter mr-2"></i>Filter Barang
-        </h6>
-        <button type="button" class="btn btn-sm btn-outline-primary" id="toggleFilter">
-            <i class="fas fa-chevron-down"></i>
-        </button>
-    </div> -->
     <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center" id="filterHeader"
         style="cursor:pointer;">
         <h6 class="mb-0 text-primary font-weight-bold">
             <i class="fas fa-filter mr-2"></i>Filter Barang
         </h6>
-        <button type="button" class="btn btn-sm btn-outline-primary" id="toggleFilter">
+        <button type="button" class="btn btn-sm btn-outline-primary no-hover" id="toggleFilter" disabled>
             <i class="fas fa-chevron-down" id="toggleIcon"></i>
         </button>
     </div>

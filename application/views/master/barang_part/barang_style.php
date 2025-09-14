@@ -1,5 +1,20 @@
 <!-- CSS Custom -->
 <style>
+    .no-hover {
+        pointer-events: none;
+        /* nggak bisa diklik */
+        opacity: 1;
+        /* biar nggak abu-abu walau pakai disabled */
+    }
+
+    .no-hover:focus,
+    .no-hover:hover {
+        background-color: transparent !important;
+        border-color: #007bff !important;
+        /* warnanya tetep kayak tombol biasa */
+        color: inherit !important;
+    }
+
     /* Loading Indicator */
     #loadingIndicator {
         min-height: 100px;
