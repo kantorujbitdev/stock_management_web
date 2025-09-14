@@ -100,7 +100,7 @@ class LaporanStok extends CI_Controller
             }))
         ];
 
-        $data['content'] = 'laporan/laporan_stok';
+        $data['content'] = 'laporan/stok/index';
         $this->load->view('template/template', $data);
     }
 

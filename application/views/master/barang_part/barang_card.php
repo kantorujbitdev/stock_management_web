@@ -14,10 +14,9 @@ if (isset($b->has_stok_awal) && $b->has_stok_awal) {
     $hasStokAwal = !empty($stokAwal);
 }
 ?>
-<div class="col-lg-3 col-md-4 col-sm-6 mb-4 barang-item card-clickable"
-    data-nama="<?php echo strtolower($b->nama_barang); ?>" data-sku="<?php echo strtolower($b->sku); ?>"
-    data-kategori="<?php echo $b->id_kategori; ?>" data-status="<?php echo $b->aktif; ?>"
-    data-stok="<?php echo $stok; ?>" data-id="<?php echo $b->id_barang; ?>"
+<div class="col-lg-3 col-md-4 col-sm-6 mb-4 barang-item" data-nama="<?php echo strtolower($b->nama_barang); ?>"
+    data-sku="<?php echo strtolower($b->sku); ?>" data-kategori="<?php echo $b->id_kategori; ?>"
+    data-status="<?php echo $b->aktif; ?>" data-stok="<?php echo $stok; ?>" data-id="<?php echo $b->id_barang; ?>"
     data-gambar="<?php echo $b->gambar ? base_url('uploads/barang/' . $b->gambar) : ''; ?>"
     data-namabarang="<?php echo $b->nama_barang; ?>" data-skuvalue="<?php echo $b->sku; ?>"
     data-kategoriname="<?php echo $b->nama_kategori; ?>"
@@ -27,10 +26,6 @@ if (isset($b->has_stok_awal) && $b->has_stok_awal) {
     <div class="card h-100 shadow-sm border-0">
         <div class="card-img-top bg-light d-flex align-items-center justify-content-center position-relative"
             style="height: 180px; overflow: hidden;">
-            <!-- Tambahkan nomor urut di sini -->
-            <div class="position-absolute top-0 right-0 m-2">
-                <span class="badge badge-primary nomor-urut">#</span>
-            </div>
             <?php if ($b->gambar): ?>
                 <img src="<?php echo base_url('uploads/barang/' . $b->gambar); ?>" class="img-fluid"
                     style="max-height: 100%; width: auto; object-fit: contain;"
@@ -96,7 +91,7 @@ if (isset($b->has_stok_awal) && $b->has_stok_awal) {
                         </div>
                     </div>
                     <?php if (!$hasStokAwal): ?>
-                        <button type="button" class="btn btn-primary btn-sm w-100 input-stok-btn"
+                        <button type="button" class="btn btn-primary btn-sm w-100 input-stok-btn mb-1"
                             data-id="<?php echo $b->id_barang; ?>" data-nama="<?php echo $b->nama_barang; ?>"
                             data-idperusahaan="<?php echo $b->id_perusahaan; ?>">
                             <i class="fas fa-boxes mr-1"></i> Input Stok Awal

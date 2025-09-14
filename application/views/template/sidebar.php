@@ -166,7 +166,7 @@
                     <?php endif; ?>
                     <?php if ($this->hak_akses->cek_akses('laporan_stok')): ?>
                         <a class="collapse-item <?php echo $hasSeg(['laporan_stok']) ? 'active' : '' ?>"
-                            href="<?php echo site_url('laporan_stok') ?>">Stok</a>
+                            href="<?php echo site_url('laporan_stok') ?>">Stok Terkini</a>
                     <?php endif; ?>
                     <?php if ($this->hak_akses->cek_akses('laporan_retur')): ?>
                         <a class="collapse-item <?php echo $hasSeg(['laporan_retur']) ? 'active' : '' ?>"
