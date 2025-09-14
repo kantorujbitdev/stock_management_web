@@ -7,9 +7,10 @@
 <!-- DataTables JS -->
 <script src="<?php echo base_url('application/views/template/assets/js/jquery.dataTables.min.js'); ?>"></script>
 <script src="<?php echo base_url('application/views/template/assets/js/dataTables.bootstrap4.min.js'); ?>"></script>
-<!-- Tambahkan sebelum </script> terakhir -->
+
+<!-- Page level custom scripts -->
 <script>
-    // Enhanced notification function
+    // Show notification
     function showNotification(message, type) {
         const notification = document.createElement('div');
         notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
@@ -17,8 +18,6 @@
         notification.style.right = '20px';
         notification.style.zIndex = '9999';
         notification.style.minWidth = '250px';
-        notification.style.boxShadow = '0 0.5rem 1rem rgba(0, 0, 0, 0.15)';
-        notification.style.borderRadius = '0.5rem';
         notification.innerHTML = `
             ${message}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -63,31 +62,30 @@
             });
         }
     });
-
-    // Mobile menu enhancements
     $(document).ready(function () {
-        // Add animation to menu items on mobile
-        if ($(window).width() < 768) {
-            $('.navbar-nav .nav-item').each(function (index) {
-                $(this).css({
-                    'animation': `fadeInLeft 0.3s ${index * 0.1}s forwards`,
-                    'opacity': '0'
+        // Handle dropdown menus in mobile view
+        if ($(window).width() < 992) {
+            $('.dropdown-menu a.dropdown-toggle').on('click', function (e) {
+                if (!$(this).next().hasClass('show')) {
+                    $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+                }
+                var $subMenu = $(this).next(".dropdown-menu");
+                $subMenu.toggleClass('show');
+
+                $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function (e) {
+                    $('.dropdown-submenu .show').removeClass("show");
                 });
+
+                return false;
             });
         }
+
+        // Handle window resize
+        $(window).resize(function () {
+            if ($(window).width() >= 992) {
+                $('.dropdown-menu').removeClass('show');
+            }
+        });
     });
+
 </script>
-
-<style>
-    @keyframes fadeInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-</style>

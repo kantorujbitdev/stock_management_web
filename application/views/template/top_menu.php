@@ -1,11 +1,8 @@
 <!-- Top Menu -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary topbar mb-4 static-top shadow">
-    <!-- <nav class="navbar navbar-expand-lg navbar-dark topbar mb-4 static-top shadow" -->
-    <!-- style="background: linear-gradient(135deg, #0733f6ff 0%, rgba(16, 55, 226, 0.62) 100%);"> -->
-    <!-- Brand -->
     <a class="navbar-brand text-white" href="<?php echo site_url('dashboard') ?>">
         <i class="fas fa-warehouse mr-2 ml-2"></i>
-        <span class="d-none d-lg-inline"><?= $this->session->userdata('nama_perusahaan') ?: 'Stok App' ?></span>
+        <span class="company-name"><?= $this->session->userdata('nama_perusahaan') ?: 'Stok App' ?></span>
     </a>
 
     <!-- Mobile Toggle Button -->
@@ -37,7 +34,7 @@
                 <li class="nav-item <?php echo $hasSeg(['dashboard']) ? 'active' : '' ?>">
                     <a class="nav-link text-white" href="<?php echo site_url('dashboard') ?>">
                         <i class="fas fa-fw fa-tachometer-alt mr-1"></i>
-                        <span class="d-none d-sm-inline">Dashboard</span>
+                        <span>Dashboard</span>
                     </a>
                 </li>
             <?php endif; ?>
@@ -47,7 +44,7 @@
                 <li class="nav-item <?php echo $hasSeg(['penjualan']) ? 'active' : '' ?>">
                     <a class="nav-link text-white" href="<?php echo site_url('penjualan') ?>">
                         <i class="fas fa-shopping-cart mr-1"></i>
-                        <span class="d-none d-sm-inline">Penjualan</span>
+                        <span>Penjualan</span>
                     </a>
                 </li>
             <?php endif; ?>
@@ -57,7 +54,7 @@
                 <li class="nav-item <?php echo $hasSeg(['retur']) ? 'active' : '' ?>">
                     <a class="nav-link text-white" href="<?php echo site_url('retur') ?>">
                         <i class="fas fa-undo mr-1"></i>
-                        <span class="d-none d-sm-inline">Retur</span>
+                        <span>Retur</span>
                     </a>
                 </li>
             <?php endif; ?>
@@ -83,7 +80,7 @@
                     <a class="nav-link dropdown-toggle text-white" href="#" id="masterDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-database mr-1"></i>
-                        <span class="d-none d-sm-inline">Master Data</span>
+                        <span>Master Data</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="masterDropdown">
                         <?php foreach ($master_children as $m): ?>
@@ -115,7 +112,7 @@
                     <a class="nav-link dropdown-toggle text-white" href="#" id="stokDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-boxes mr-1"></i>
-                        <span class="d-none d-sm-inline">Manajemen Stok</span>
+                        <span>Manajemen Stok</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="stokDropdown">
                         <?php foreach ($manajement_stok_children as $msc): ?>
@@ -147,7 +144,7 @@
                     <a class="nav-link dropdown-toggle text-white" href="#" id="laporanDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-chart-line mr-1"></i>
-                        <span class="d-none d-sm-inline">Laporan</span>
+                        <span>Laporan</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="laporanDropdown">
                         <?php if ($this->hak_akses->cek_akses('laporan_penjualan')): ?>
@@ -183,7 +180,7 @@
                     <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-users-cog mr-1"></i>
-                        <span class="d-none d-sm-inline">Manajemen User</span>
+                        <span>Manajemen User</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="userDropdown">
                         <?php if ($this->hak_akses->cek_akses('user')): ?>
@@ -206,7 +203,6 @@
                 $role_id = $this->session->userdata('id_role');
                 $nama_role = $this->session->userdata('nama_role');
                 $nama = $this->session->userdata('nama');
-
                 switch ($role_id) {
                     case 2:
                         $profile_img = 'undraw_profile_sales.svg';
@@ -226,13 +222,16 @@
                 ?>
                 <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="img-profile rounded-circle mr-1"
+                        src="<?php echo base_url('application/views/template/assets/img/profile/' . $profile_img) ?>">
                     <span class="mr-2 d-none d-lg-inline text-white small">
+                        Hai, <?php echo $nama ?> (<?php echo $nama_role ?>)
+                    </span>
+                    <span class="mr-2 d-inline d-lg-none text-white small">
                         <?php echo $nama ?>
                     </span>
-                    <img class="img-profile rounded-circle"
-                        src="<?php echo base_url('application/views/template/assets/img/profile/' . $profile_img) ?>">
-                </a>
 
+                </a>
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                     <a class="dropdown-item" href="#">
                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
