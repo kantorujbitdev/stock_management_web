@@ -94,6 +94,7 @@ $route['pelanggan/delete/(:num)'] = 'master/Pelanggan/delete/$1';
 
 $route['transfer'] = 'stok/Transfer';
 $route['transfer/add'] = 'stok/Transfer/add';
+$route['transfer/add_process'] = 'stok/Transfer/add_process';
 $route['transfer/approve/(:num)'] = 'stok/Transfer/approve/$1';
 $route['transfer/reject/(:num)'] = 'stok/Transfer/reject/$1';
 $route['transfer/get_gudang_by_perusahaan'] = 'stok/Transfer/get_gudang_by_perusahaan';
