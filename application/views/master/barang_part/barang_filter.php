@@ -9,7 +9,6 @@
             <i class="fas fa-chevron-down" id="toggleIcon"></i>
         </button>
     </div>
-
     <!-- Pencarian (selalu tampil) -->
     <div class="card-body pt-3 pb-2">
         <div class="row">
@@ -24,7 +23,6 @@
             </div>
         </div>
     </div>
-
     <!-- Filter Tambahan (bisa disembunyikan) -->
     <div class="card-body pt-0" id="filterCardBody" style="display: none;">
         <div class="row align-items-end">
@@ -35,7 +33,7 @@
                     <select id="filterPerusahaan" class="form-control form-control-sm">
                         <option value="">Semua</option>
                         <?php foreach ($perusahaan as $p): ?>
-                            <option value="<?php echo $p->id_perusahaan; ?>" <?php echo ($filter['id_perusahaan'] == $p->id_perusahaan) ? 'selected' : ''; ?>>
+                            <option value="<?php echo $p->id_perusahaan; ?>" <?php echo (isset($filter['id_perusahaan']) && $filter['id_perusahaan'] == $p->id_perusahaan) ? 'selected' : ''; ?>>
                                 <?php echo substr($p->nama_perusahaan, 0, 25) . '...'; ?>
                             </option>
                         <?php endforeach; ?>
@@ -50,7 +48,7 @@
                     <option value="">Semua Gudang</option>
                     <?php if (isset($gudang) && is_array($gudang)): ?>
                         <?php foreach ($gudang as $g): ?>
-                            <option value="<?php echo $g->id_gudang; ?>" <?php echo ($filter['id_gudang'] == $g->id_gudang) ? 'selected' : ''; ?>>
+                            <option value="<?php echo $g->id_gudang; ?>" <?php echo (isset($filter['id_gudang']) && $filter['id_gudang'] == $g->id_gudang) ? 'selected' : ''; ?>>
                                 <?php echo $g->nama_gudang; ?>
                             </option>
                         <?php endforeach; ?>
@@ -64,7 +62,7 @@
                 <select id="filterKategori" class="form-control form-control-sm">
                     <option value="">Semua Kategori</option>
                     <?php foreach ($kategori as $k): ?>
-                        <option value="<?php echo $k->id_kategori; ?>" <?php echo ($filter['id_kategori'] == $k->id_kategori) ? 'selected' : ''; ?>>
+                        <option value="<?php echo $k->id_kategori; ?>" <?php echo (isset($filter['id_kategori']) && $filter['id_kategori'] == $k->id_kategori) ? 'selected' : ''; ?>>
                             <?php echo $k->nama_kategori; ?>
                         </option>
                     <?php endforeach; ?>
@@ -80,22 +78,21 @@
                     <option value="0">Tidak Aktif</option>
                 </select>
             </div>
+        </div>
 
+        <!-- Baris kedua -->
+        <div class="row mt-2">
             <!-- Stok -->
             <div class="col-md-3 mb-3">
                 <label class="form-label small text-muted">Stok</label>
                 <select id="filterStok" class="form-control form-control-sm">
                     <option value="">Semua Stok</option>
-                    <option value="empty" <?php echo ($filter['stock_status'] == 'empty') ? 'selected' : ''; ?>>Belum Ada
-                        Stok</option>
-                    <option value="has_stock" <?php echo ($filter['stock_status'] == 'has_stock') ? 'selected' : ''; ?>>
-                        Sudah Ada Stok</option>
+                    <option value="empty" <?php echo (isset($filter['stock_status']) && $filter['stock_status'] == 'empty') ? 'selected' : ''; ?>>Belum Ada Stok</option>
+                    <option value="has_stock" <?php echo (isset($filter['stock_status']) && $filter['stock_status'] == 'has_stock') ? 'selected' : ''; ?>>Sudah Ada Stok</option>
                 </select>
             </div>
-        </div>
 
-        <!-- Urutkan dan Reset -->
-        <div class="row mt-2">
+            <!-- Urutkan -->
             <div class="col-md-3 mb-3">
                 <label class="form-label small text-muted">Urutkan</label>
                 <select id="sortBy" class="form-control form-control-sm">
@@ -104,6 +101,8 @@
                     <option value="stok">Stok</option>
                 </select>
             </div>
+
+            <!-- Reset Filter -->
             <div class="col-md-3 mb-3 d-flex align-items-end">
                 <button type="button" class="btn btn-sm btn-outline-danger w-100" id="resetFilter">
                     <i class="fas fa-redo mr-1"></i> Reset Filter

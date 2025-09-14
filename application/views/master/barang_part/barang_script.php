@@ -6,6 +6,7 @@
             '<?php echo $this->security->get_csrf_token_name(); ?>': '<?php echo $this->security->get_csrf_hash(); ?>'
         }
     });
+
     // Global variables - tambahkan variable baru
     let isLoading = false;
     let hasMoreData = <?php echo $has_more ? 'true' : 'false'; ?>;
@@ -34,14 +35,17 @@
             $('body').focus();
         });
     });
+
     // Initialize filter toggle
     function initializeFilterToggle() {
         const filterCardBody = document.getElementById('filterCardBody');
         const toggleFilterBtn = document.getElementById('toggleFilter');
         const toggleHeaderFrame = document.getElementById('filterHeader');
         const toggleIcon = toggleFilterBtn.querySelector('i');
+
         // Get saved preference
         const isFilterVisible = localStorage.getItem('filterVisible') === 'true';
+
         // Set initial state
         if (isFilterVisible) {
             filterCardBody.style.display = 'block';
@@ -50,6 +54,7 @@
             filterCardBody.style.display = 'none';
             toggleIcon.className = 'fas fa-chevron-down';
         }
+
         // Toggle filter
         toggleHeaderFrame.addEventListener('click', function () {
             if (filterCardBody.style.display === 'none') {
@@ -62,6 +67,7 @@
                 localStorage.setItem('filterVisible', 'false');
             }
         });
+
         toggleFilterBtn.addEventListener('click', function () {
             if (filterCardBody.style.display === 'none') {
                 filterCardBody.style.display = 'block';
@@ -73,6 +79,7 @@
                 localStorage.setItem('filterVisible', 'false');
             }
         });
+
         // Reset filter
         document.getElementById('resetFilter').addEventListener('click', function () {
             // Reset all inputs
@@ -82,20 +89,28 @@
             document.getElementById('filterStok').selectedIndex = 0;
             document.getElementById('filterGudang').selectedIndex = 0; // Reset filter gudang
             document.getElementById('sortBy').selectedIndex = 0;
+
             <?php if ($this->session->userdata('id_role') == 5): ?>
-                document.getElementById('filterPerusahaan').selectedIndex = 0;
-                // Reset kategori options when perusahaan is reset
-                loadKategoriOptions('');
+                const filterPerusahaan = document.getElementById('filterPerusahaan');
+                if (filterPerusahaan) {
+                    filterPerusahaan.selectedIndex = 0;
+                    // Reset kategori options when perusahaan is reset
+                    loadKategoriOptions('');
+                    // Reset gudang options when perusahaan is reset
+                    loadGudangOptionsFilter('');
+                }
             <?php endif; ?>
+
             // Hide filter panel
             filterCardBody.style.display = 'none';
             toggleIcon.className = 'fas fa-chevron-down';
             localStorage.setItem('filterVisible', 'false');
+
             // Trigger filter with server-side reload
             reloadWithFilters();
-            // showNotification('Filter berhasil direset dan disembunyikan', 'info');
         });
     }
+
     // Initialize filter listeners
     function initializeFilterListeners() {
         // Event listener untuk pencarian - tambahkan debounce untuk mengurangi request
@@ -113,9 +128,12 @@
         });
 
         // Event listener untuk filter gudang
-        document.getElementById('filterGudang').addEventListener('change', function () {
-            reloadWithFilters();
-        });
+        const filterGudang = document.getElementById('filterGudang');
+        if (filterGudang) {
+            filterGudang.addEventListener('change', function () {
+                reloadWithFilters();
+            });
+        }
 
         // Event listener untuk filter status
         document.getElementById('filterStatus').addEventListener('change', function () {
@@ -132,24 +150,39 @@
             reloadWithFilters();
         });
 
-
         <?php if ($this->session->userdata('id_role') == 5): ?>
             // Event listener untuk filter perusahaan (hanya untuk Super Admin)
-            document.getElementById('filterPerusahaan').addEventListener('change', function () {
-                const idPerusahaan = this.value;
-                // Update kategori dropdown based on selected perusahaan
-                loadKategoriOptions(idPerusahaan);
-                // Reload data with new filters
-                reloadWithFilters();
-            });
+            const filterPerusahaan = document.getElementById('filterPerusahaan');
+            if (filterPerusahaan) {
+                filterPerusahaan.addEventListener('change', function () {
+                    const idPerusahaan = this.value;
+                    // Update kategori dropdown based on selected perusahaan
+                    loadKategoriOptions(idPerusahaan);
+                    // Update gudang dropdown based on selected perusahaan
+                    loadGudangOptionsFilter(idPerusahaan);
+                    // Reload data with new filters
+                    reloadWithFilters();
+                });
+            }
         <?php endif; ?>
     }
 
+    // Load gudang options based on perusahaan untuk filtering
+    function loadGudangOptionsFilter(idPerusahaan) {
+        // Tampilkan loading atau kosongkan dropdown
+        const gudangSelect = document.getElementById('filterGudang');
+        if (!gudangSelect) return;
 
-    // Load gudang options based on perusahaan
-    function loadGudangOptions(idPerusahaan) {
+        gudangSelect.innerHTML = '<option value="">Memuat data...</option>';
+
+        if (!idPerusahaan) {
+            // Jika tidak ada perusahaan yang dipilih, kosongkan dropdown
+            gudangSelect.innerHTML = '<option value="">Semua Gudang</option>';
+            return;
+        }
+
         $.ajax({
-            url: "<?php echo site_url('barang/get_gudang_by_perusahaan'); ?>",
+            url: "<?php echo site_url('barang/get_gudang_by_perusahaan_filter'); ?>", // Gunakan endpoint baru
             type: "GET",
             data: { id_perusahaan: idPerusahaan },
             dataType: "json",
@@ -160,17 +193,55 @@
                         options += `<option value="${gudang.id_gudang}">${gudang.nama_gudang}</option>`;
                     });
                 }
-                document.getElementById('filterGudang').innerHTML = options;
+                gudangSelect.innerHTML = options;
             },
             error: function (xhr, status, error) {
                 console.error("Error loading gudang:", error);
-                document.getElementById('filterGudang').innerHTML = '<option value="">-- Error --</option>';
+                gudangSelect.innerHTML = '<option value="">-- Error --</option>';
+            }
+        });
+    }
+
+    // Load gudang options based on perusahaan untuk insert stok awal
+    function loadGudangOptions(idPerusahaan) {
+        // Reset gudang options
+        const gudangSelect = document.getElementById('id_gudang');
+        if (!gudangSelect) return;
+
+        gudangSelect.innerHTML = '<option value="">-- Pilih Gudang --</option>';
+
+        if (!idPerusahaan) {
+            return;
+        }
+
+        $.ajax({
+            url: "<?php echo site_url('barang/get_gudang_by_perusahaan'); ?>", // Endpoint yang sudah ada
+            type: "GET",
+            data: { id_perusahaan: idPerusahaan },
+            dataType: "json",
+            success: function (response) {
+                let options = '<option value="">-- Pilih Gudang --</option>';
+                if (response && Array.isArray(response)) {
+                    response.forEach(function (gudang) {
+                        options += `<option value="${gudang.id_gudang}">${gudang.nama_gudang}</option>`;
+                    });
+                }
+                gudangSelect.innerHTML = options;
+            },
+            error: function (xhr, status, error) {
+                console.error("Error loading gudang:", error);
+                gudangSelect.innerHTML = '<option value="">-- Error --</option>';
             }
         });
     }
 
     // Load kategori options based on perusahaan
     function loadKategoriOptions(idPerusahaan) {
+        const kategoriSelect = document.getElementById('filterKategori');
+        if (!kategoriSelect) return;
+
+        kategoriSelect.innerHTML = '<option value="">Semua Kategori</option>';
+
         $.ajax({
             url: "<?php echo site_url('barang/get_kategori_by_perusahaan'); ?>",
             type: "GET",
@@ -183,14 +254,15 @@
                         options += `<option value="${kategori.id_kategori}">${kategori.nama_kategori}</option>`;
                     });
                 }
-                document.getElementById('filterKategori').innerHTML = options;
+                kategoriSelect.innerHTML = options;
             },
             error: function (xhr, status, error) {
                 console.error("Error loading kategori:", error);
-                document.getElementById('filterKategori').innerHTML = '<option value="">-- Error --</option>';
+                kategoriSelect.innerHTML = '<option value="">-- Error --</option>';
             }
         });
     }
+
     // Reload data with current filters
     function reloadWithFilters() {
         // Reset pagination
@@ -201,7 +273,6 @@
         // Clear existing items
         const barangGrid = document.getElementById('barangGrid');
         barangGrid.innerHTML = '';
-
 
         // Show loading indicator
         const loadingIndicator = document.getElementById('loadingIndicator');
@@ -218,10 +289,11 @@
         const kategoriValue = document.getElementById('filterKategori').value;
         const statusValue = document.getElementById('filterStatus').value;
         const stokValue = document.getElementById('filterStok').value;
-        const gudangValue = document.getElementById('filterGudang').value;
+        const gudangValue = document.getElementById('filterGudang') ? document.getElementById('filterGudang').value : '';
         const sortByValue = document.getElementById('sortBy').value;
+
         <?php if ($this->session->userdata('id_role') == 5): ?>
-            const perusahaanValue = document.getElementById('filterPerusahaan').value;
+            const perusahaanValue = document.getElementById('filterPerusahaan') ? document.getElementById('filterPerusahaan').value : '';
         <?php endif; ?>
 
         // Prepare form data
@@ -233,6 +305,7 @@
         formData.append('stock_status', stokValue);
         formData.append('id_gudang', gudangValue);
         formData.append('sort_by', sortByValue);
+
         <?php if ($this->session->userdata('id_role') == 5): ?>
             formData.append('id_perusahaan', perusahaanValue);
         <?php endif; ?>
@@ -246,19 +319,30 @@
             contentType: false,
             dataType: 'json',
             success: function (data) {
-                console.log('Server response:', data); // Debug log
+                console.log('Server response:', data);
                 if (data.success) {
                     // Check if there are items
                     if (data.html && data.html.length > 0) {
                         // Append new items
-                        data.html.forEach(itemHtml => {
+                        data.html.forEach((itemHtml, index) => {
                             const tempDiv = document.createElement('div');
                             tempDiv.innerHTML = itemHtml;
-                            barangGrid.appendChild(tempDiv.firstElementChild);
+
+                            // Update nomor urut untuk item baru
+                            const newItem = tempDiv.firstElementChild;
+                            const nomorUrutElement = newItem.querySelector('.nomor-urut');
+                            if (nomorUrutElement) {
+                                nomorUrutElement.textContent = totalItemsLoaded + index + 1;
+                            }
+
+                            barangGrid.appendChild(newItem);
                         });
+
                         // Update variables
                         currentPage = data.current_page;
                         hasMoreData = data.has_more;
+                        totalItemsLoaded += data.html.length; // Update counter
+
                         // Attach event listeners
                         attachEventListenersToItems();
                     } else {
@@ -274,7 +358,6 @@
             error: function (xhr, status, error) {
                 console.error('AJAX Error:', status, error);
                 console.log('Response Text:', xhr.responseText);
-
                 // Try to parse response as JSON to see if there's a specific error message
                 try {
                     const response = JSON.parse(xhr.responseText);
@@ -287,27 +370,10 @@
                     // If response is not JSON, show no data message
                     showNoDataMessage();
                 }
-
                 isLoading = false;
                 loadingIndicator.style.display = 'none';
             }
         });
-    }
-
-    // Function to show "no data" message
-    function showNoDataMessage() {
-        const barangGrid = document.getElementById('barangGrid');
-        const noDataMsg = document.createElement('div');
-        noDataMsg.id = 'noDataMessage';
-        noDataMsg.className = 'col-12 text-center py-5';
-        noDataMsg.innerHTML = `
-            <div class="text-muted">
-                <i class="fas fa-search fa-3x mb-3"></i>
-                <h4>Data tidak tersedia</h4>
-                <p>Tidak ada barang yang sesuai dengan filter yang dipilih</p>
-            </div>
-        `;
-        barangGrid.appendChild(noDataMsg);
     }
 
     // Initialize infinite scroll
@@ -317,7 +383,6 @@
 
         // Load more items function
         function loadMoreItems() {
-
             if (isLoading || !hasMoreData) return;
             console.log('Loading more items...');
             isLoading = true;
@@ -328,10 +393,11 @@
             const kategoriValue = document.getElementById('filterKategori').value;
             const statusValue = document.getElementById('filterStatus').value;
             const stokValue = document.getElementById('filterStok').value;
-            const gudangValue = document.getElementById('filterGudang').value;
+            const gudangValue = document.getElementById('filterGudang') ? document.getElementById('filterGudang').value : '';
             const sortByValue = document.getElementById('sortBy').value;
+
             <?php if ($this->session->userdata('id_role') == 5): ?>
-                const perusahaanValue = document.getElementById('filterPerusahaan').value;
+                const perusahaanValue = document.getElementById('filterPerusahaan') ? document.getElementById('filterPerusahaan').value : '';
             <?php endif; ?>
 
             // Prepare form data
@@ -343,6 +409,7 @@
             formData.append('stock_status', stokValue);
             formData.append('id_gudang', gudangValue);
             formData.append('sort_by', sortByValue);
+
             <?php if ($this->session->userdata('id_role') == 5): ?>
                 formData.append('id_perusahaan', perusahaanValue);
             <?php endif; ?>
@@ -417,6 +484,23 @@
             }
         });
     }
+
+    // Function to show "no data" message
+    function showNoDataMessage() {
+        const barangGrid = document.getElementById('barangGrid');
+        const noDataMsg = document.createElement('div');
+        noDataMsg.id = 'noDataMessage';
+        noDataMsg.className = 'col-12 text-center py-5';
+        noDataMsg.innerHTML = `
+            <div class="text-muted">
+                <i class="fas fa-search fa-3x mb-3"></i>
+                <h4>Data tidak tersedia</h4>
+                <p>Tidak ada barang yang sesuai dengan filter yang dipilih</p>
+            </div>
+        `;
+        barangGrid.appendChild(noDataMsg);
+    }
+
 
     function resetPagination() {
         currentPage = 1;

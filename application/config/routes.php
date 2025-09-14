@@ -70,6 +70,7 @@ $route['barang/nonaktif/(:num)'] = 'master/Barang/nonaktif/$1';
 $route['barang/delete/(:num)'] = 'master/Barang/delete/$1';
 $route['barang/get_kategori_by_perusahaan'] = 'master/Barang/get_kategori_by_perusahaan';
 $route['barang/get_gudang_by_perusahaan'] = 'master/Barang/get_gudang_by_perusahaan';
+$route['barang/get_gudang_by_perusahaan_filter'] = 'master/Barang/get_gudang_by_perusahaan_filter';
 $route['barang/input_stok_awal_process'] = 'master/Barang/input_stok_awal_process';
 $route['barang/load_more'] = 'master/Barang/load_more';
 
