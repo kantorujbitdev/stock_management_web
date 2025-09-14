@@ -1,11 +1,19 @@
 <!-- Filter dan Pencarian -->
 <div class="card shadow-sm mb-4">
-    <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+    <!-- <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+        <i class="fas fa-filter mr-2"></i>Filter Barang
+        </h6>
+        <button type="button" class="btn btn-sm btn-outline-primary" id="toggleFilter">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+    </div> -->
+    <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center" id="filterHeader"
+        style="cursor:pointer;">
         <h6 class="mb-0 text-primary font-weight-bold">
             <i class="fas fa-filter mr-2"></i>Filter Barang
         </h6>
         <button type="button" class="btn btn-sm btn-outline-primary" id="toggleFilter">
-            <i class="fas fa-chevron-down"></i>
+            <i class="fas fa-chevron-down" id="toggleIcon"></i>
         </button>
     </div>
 
@@ -41,37 +49,6 @@
                     </select>
                 </div>
             <?php endif; ?>
-            <!-- Gudang -->
-            <div class="col-md-3 mb-3">
-                <label class="form-label small text-muted">Gudang</label>
-                <select id="filterGudang" class="form-control form-control-sm">
-                    <option value="">Semua Gudang</option>
-                    <?php
-                    // Load gudang options based on role
-                    if ($this->session->userdata('id_role') == 5) {
-                        // Super Admin - load gudang based on selected perusahaan
-                        if (!empty($filter['id_perusahaan'])) {
-                            $this->load->model('perusahaan/Gudang_model');
-                            $gudang_list = $this->Gudang_model->get_gudang_by_perusahaan($filter['id_perusahaan']);
-                            foreach ($gudang_list as $g): ?>
-                                <option value="<?php echo $g->id_gudang; ?>" <?php echo ($filter['id_gudang'] == $g->id_gudang) ? 'selected' : ''; ?>>
-                                    <?php echo $g->nama_gudang; ?>
-                                </option>
-                            <?php endforeach;
-                        }
-                    } else {
-                        // Role lainnya - load gudang based on user's perusahaan
-                        $this->load->model('perusahaan/Gudang_model');
-                        $gudang_list = $this->Gudang_model->get_gudang_by_perusahaan($this->session->userdata('id_perusahaan'));
-                        foreach ($gudang_list as $g): ?>
-                            <option value="<?php echo $g->id_gudang; ?>" <?php echo ($filter['id_gudang'] == $g->id_gudang) ? 'selected' : ''; ?>>
-                                <?php echo $g->nama_gudang; ?>
-                            </option>
-                        <?php endforeach;
-                    }
-                    ?>
-                </select>
-            </div>
 
             <!-- Kategori -->
             <div class="col-md-3 mb-3">
@@ -107,26 +84,10 @@
                         Sudah Ada Stok</option>
                 </select>
             </div>
-
-            <!-- Urutkan dan Reset -->
-            <div class="col-md-3 mb-3">
-                <label class="form-label small text-muted">Urutkan</label>
-                <select id="sortBy" class="form-control form-control-sm">
-                    <option value="nama_barang">Nama</option>
-                    <option value="sku">SKU</option>
-                    <option value="stok">Stok</option>
-                </select>
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <button type="button" class="btn btn-sm btn-outline-danger w-100" id="resetFilter">
-                    <i class="fas fa-redo mr-1"></i> Reset Filter
-                </button>
-            </div>
         </div>
 
         <!-- Urutkan dan Reset -->
-        <!-- <div class="row mt-2">
+        <div class="row mt-2">
             <div class="col-md-3 mb-3">
                 <label class="form-label small text-muted">Urutkan</label>
                 <select id="sortBy" class="form-control form-control-sm">
@@ -140,6 +101,6 @@
                     <i class="fas fa-redo mr-1"></i> Reset Filter
                 </button>
             </div>
-        </div> -->
+        </div>
     </div>
 </div>

@@ -38,6 +38,7 @@
     function initializeFilterToggle() {
         const filterCardBody = document.getElementById('filterCardBody');
         const toggleFilterBtn = document.getElementById('toggleFilter');
+        const toggleHeaderFrame = document.getElementById('filterHeader');
         const toggleIcon = toggleFilterBtn.querySelector('i');
         // Get saved preference
         const isFilterVisible = localStorage.getItem('filterVisible') === 'true';
@@ -50,6 +51,17 @@
             toggleIcon.className = 'fas fa-chevron-down';
         }
         // Toggle filter
+        toggleHeaderFrame.addEventListener('click', function () {
+            if (filterCardBody.style.display === 'none') {
+                filterCardBody.style.display = 'block';
+                toggleIcon.className = 'fas fa-chevron-up';
+                localStorage.setItem('filterVisible', 'true');
+            } else {
+                filterCardBody.style.display = 'none';
+                toggleIcon.className = 'fas fa-chevron-down';
+                localStorage.setItem('filterVisible', 'false');
+            }
+        });
         toggleFilterBtn.addEventListener('click', function () {
             if (filterCardBody.style.display === 'none') {
                 filterCardBody.style.display = 'block';
