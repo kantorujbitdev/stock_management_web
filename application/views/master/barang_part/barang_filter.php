@@ -13,7 +13,7 @@
     <!-- Pencarian (selalu tampil) -->
     <div class="card-body pt-3 pb-2">
         <div class="row">
-            <div class="col-md-3 mb-3">
+            <div class="col-12 col-md-6 mb-3">
                 <label class="form-label small text-muted">Pencarian</label>
                 <div class="input-group">
                     <input type="text" id="searchBarang" class="form-control" placeholder="Cari barang...">
@@ -42,6 +42,21 @@
                     </select>
                 </div>
             <?php endif; ?>
+
+            <!-- Gudang -->
+            <div class="col-md-3 mb-3">
+                <label class="form-label small text-muted">Gudang</label>
+                <select id="filterGudang" class="form-control form-control-sm">
+                    <option value="">Semua Gudang</option>
+                    <?php if (isset($gudang) && is_array($gudang)): ?>
+                        <?php foreach ($gudang as $g): ?>
+                            <option value="<?php echo $g->id_gudang; ?>" <?php echo ($filter['id_gudang'] == $g->id_gudang) ? 'selected' : ''; ?>>
+                                <?php echo $g->nama_gudang; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+            </div>
 
             <!-- Kategori -->
             <div class="col-md-3 mb-3">
