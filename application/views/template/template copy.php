@@ -3,14 +3,18 @@
 <body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper">
+        <!-- Sidebar -->
+        <?php $this->load->view('template/sidebar') ?>
+        <!-- End of Sidebar -->
+
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
             <!-- Main Content -->
             <div id="content">
-                <!-- Top Menu (Horizontal) -->
-                <?php $this->load->view('template/top_menu') ?>
-                <!-- Topbar (User Info and Logout) -->
+                <!-- Topbar -->
                 <?php $this->load->view('template/topbar') ?>
+                <!-- End of Topbar -->
+
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <?php $this->load->view($content) ?>
@@ -18,6 +22,7 @@
                 <!-- /.container-fluid -->
             </div>
             <!-- End of Main Content -->
+
             <!-- Footer -->
             <?php $this->load->view('template/footer') ?>
             <!-- End of Footer -->
@@ -54,12 +59,15 @@
     <?php $this->load->view('template/js') ?>
     <script>
         $(document).ready(function () {
-            // Script untuk menu mobile
-            $('.navbar-toggler').on('click', function () {
-                $('#navbarNavDropdown').toggleClass('show');
+            // Tutup sidebar otomatis kalau link di dalam sidebar di klik (di HP)
+            $('.sidebar a.nav-link, .sidebar a.collapse-item').on('click', function () {
+                if ($(window).width() < 768) {
+                    $('#accordionSidebar').collapse('hide');
+                }
             });
         });
     </script>
+
 </body>
 
 </html>

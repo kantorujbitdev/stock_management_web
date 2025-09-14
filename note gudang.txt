@@ -747,7 +747,5 @@ INSERT INTO `log_status_retur` (`id_retur`, `id_user`, `status`, `keterangan`) V
 (3, 6, 'diterima', 'Retur diterima');
 
 
-kebutan saat ini,
-membuat data dummy sebanyak 30 row data ya bro,
-namun untuk tabel "user dan role_user" tidak perlu sebab sudah ada datanya,
-dan untuk tabel "hak_akses_fitur, supplier, pengaturan_sistem" ini tidak perlu dibuatkan data dummy nya bro. buat dalam bentuk sql agar mudah kita copas bro
+kebutuhan saat ini,
+Coba tolong sesuaikan dahulu menu menu yang dibutuhkan dan berikan perbaikan 

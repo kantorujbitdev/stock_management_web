@@ -1,16 +1,121 @@
-/* Judul Responsif */
+/* =============================
+   NAVBAR & TOPBAR STYLE
+============================= */
+.navbar {
+	padding: 0.5rem 1rem;
+}
+
+.navbar-nav .nav-link {
+	color: #5a5c69;
+	padding: 0.5rem 1rem;
+	font-weight: 500;
+	transition: color 0.2s;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-item.active .nav-link {
+	color: #4e73df;
+	font-weight: 600;
+}
+
+/* Dropdown Menu */
+.navbar-nav .dropdown-menu {
+	background-color: #fff;
+	border: 1px solid #e3e6f0;
+	box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.navbar-nav .dropdown-item {
+	padding: 0.75rem 1rem;
+	color: #5a5c69;
+	font-weight: 400;
+	transition: all 0.2s;
+}
+
+.navbar-nav .dropdown-item:hover,
+.navbar-nav .dropdown-item.active {
+	color: #4e73df;
+	background-color: #eaecf4;
+	font-weight: 600;
+}
+
+/* Topbar */
+.topbar {
+	height: auto;
+	padding: 0.5rem 1rem;
+}
+
+/* Hilangkan margin kiri (buat sidebar off) */
+body {
+	background-color: #f8f9fc;
+}
+#content-wrapper {
+	margin-left: 0 !important;
+}
+#wrapper {
+	width: 100%;
+}
+
+/* =============================
+   RESPONSIVE ADJUSTMENTS
+============================= */
+@media (max-width: 768px) {
+	.navbar-nav {
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.navbar-nav .nav-item {
+		width: 100%;
+	}
+
+	.navbar-nav .dropdown-menu {
+		position: static;
+		float: none;
+		width: auto;
+		margin-top: 0;
+		background-color: transparent;
+		border: 0;
+		box-shadow: none;
+	}
+
+	.navbar-nav .dropdown-item {
+		color: rgba(255, 255, 255, 0.75);
+		padding: 0.5rem 1.5rem;
+	}
+
+	.navbar-nav .dropdown-item.active {
+		color: #fff;
+		font-weight: bold;
+	}
+}
+
+/* =============================
+   TITLE STYLE
+============================= */
+.title-responsive,
+.title-blue-responsive {
+	font-weight: bold;
+	white-space: normal;
+	word-wrap: break-word;
+	flex: 1;
+}
+
 .title-responsive {
 	font-size: 1.1rem;
-	font-weight: bold;
 	color: #fff;
-	white-space: normal; /* biar teks bisa turun ke bawah */
-	word-wrap: break-word;
-	flex: 1; /* isi sisa ruang */
+}
+.title-blue-responsive {
+	font-size: 1.2rem;
+	color: #4e73df;
 }
 
 @media (max-width: 768px) {
 	.title-responsive {
 		font-size: 1rem !important;
+	}
+	.title-blue-responsive {
+		font-size: 1.1rem !important;
 	}
 }
 
@@ -18,46 +123,29 @@
 	.title-responsive {
 		font-size: 0.85rem !important;
 	}
-}
-
-/* Judul Biru */
-.title-blue-responsive {
-	font-weight: bold;
-	white-space: normal; /* biar teks bisa turun ke bawah */
-	word-wrap: break-word;
-	flex: 1; /* isi sisa ruang */
-}
-
-@media (max-width: 768px) {
-	.title-blue-responsive {
-		font-size: 1.1rem !important;
-	}
-}
-
-@media (max-width: 576px) {
 	.title-blue-responsive {
 		font-size: 0.9rem !important;
 	}
 }
 
-/* Responsif untuk tombol back */
+/* =============================
+   BUTTON RESPONSIVE
+============================= */
 .btn-responsive {
 	font-size: 0.9rem;
 	padding: 0.4rem 0.75rem;
 }
 
-/* Layar tablet */
 @media (max-width: 768px) {
 	.btn-responsive {
 		font-size: 0.8rem;
 		padding: 0.35rem 0.6rem;
 	}
 	.btn-responsive .btn-label {
-		display: none; /* Hanya icon panah kalau layar kecil */
+		display: none;
 	}
 }
 
-/* Layar HP kecil */
 @media (max-width: 480px) {
 	.btn-responsive {
 		font-size: 0.8rem;
