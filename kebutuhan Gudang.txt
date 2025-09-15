@@ -1,0 +1,57 @@
+- Barang Terlaris berdasarkan 10
+bandingan tiap bulan, 3 bulan 6bln, tahunan
+
+Sistem pemindahan barang
+
+sort by user by toko by date
+
+supplier no
+
+stok awal disiapkan template
+setelah berjalan lanjut penerimaan(restok)
+
+perlu ada tipe gudang
+
+laporan
+dilengkapi perperiode
+
+
+admin packing berada di 1 gudang
+
+
+ada summary kerjaan untuk tiap paking dan sales
+
+
+
+admindbs
+admindbs
+MGV MANDIRI MOTORINDO
+
+├Dashboard
+├Setup
+├──Barang
+├──Gudang
+3. Susunan menu berubah menjadi
+├Dashboard
+├Setup
+├──Barang
+├──Gudang
+├──Sales
+├──Packing
+├──Pelanggan
+├──Supplier
+├Aktifitas (Entry data)
+├──Pemindahan Barang(Sales/Pelanggan/Gudang)
+├──Penerimaan Barang
+├──Retur Penjualan
+├──Retur Pembelian
+├Daftar (List/Revisi)
+├──Pemindahan Barang
+├──Penerimaan Barang
+├──Retur Penjualan
+├──Retur Pembelian
+├Laporan
+├──Sales
+├──Packing
+├──Mutasi Rincian Mutasi Barang *By barang By Gudang
+├──Summary (MASUK -> KELUAR -> AKHIR)
